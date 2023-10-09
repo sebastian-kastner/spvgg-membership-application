@@ -1,4 +1,11 @@
-.form-container input[type=text], .form-container select, .form-container textarea{
+.form-container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+
+  input[type="text"],
+  select,
+  textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid #ccc;
@@ -6,14 +13,14 @@
     box-sizing: border-box;
     resize: vertical;
   }
-  
-  .form-container label {
+
+  label {
     padding: 12px 12px 12px 0;
     display: inline-block;
   }
-  
-  .form-container input[type=submit] {
-    background-color: #04AA6D;
+
+  input[type="submit"] {
+    background-color: rgb(16, 59, 94);
     color: white;
     padding: 12px 20px;
     border: none;
@@ -21,35 +28,53 @@
     cursor: pointer;
     float: right;
   }
-  
-  .form-container {
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    padding: 20px;
+
+  input[type="radio"] {
+    text-align: justify;
   }
-  
-  .form-container .col-35 {
+
+  .d-flex {
+    display: flex;
+  }
+
+  .align-items-center {
+    align-items: center;
+  }
+
+  .col-35 {
     float: left;
     width: 35%;
-    margin-top: 6px;
   }
-  
-  .form-container .col-65 {
+
+  .col-65 {
     float: left;
     width: 65%;
-    margin-top: 6px;
   }
-  
+
+  .col-50 {
+    float: left;
+    width: 50%;
+  }
+
   /* Clear floats after the columns */
-  .form-container .row:after {
+  .row:after {
     content: "";
     display: table;
     clear: both;
   }
-  
+
+  .header-row {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+
   @media screen and (max-width: 600px) {
-    .form-container .col-35, .form-container .col-65, .form-container input[type=submit] {
+    .col-35,
+    .col-65,
+    .col-50,
+    input[type="submit"] {
       width: 100%;
       margin-top: 0;
     }
   }
+}

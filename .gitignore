@@ -1,3 +1,4 @@
 *.docx
+*.docx#
 public/assets/*.css
 public/assets/*.js
