@@ -1,4 +1,5 @@
 $min-label-width: 150px;
+$validation-color: #e6a19c;
 
 .form-container {
   border-radius: 5px;
@@ -8,7 +9,7 @@ $min-label-width: 150px;
   justify-content: center;
   align-items: center;
   
-  form {
+  .membership-form {
     max-width: 750px;
   }
 
@@ -71,6 +72,10 @@ $min-label-width: 150px;
     font-size: 1.2rem;
   }
 
+  .row {
+    border: 1px solid transparent;
+  }
+
   .row:after {
     content: "";
     display: table;
@@ -90,10 +95,16 @@ $min-label-width: 150px;
     visibility: hidden;
   }
 
+  .invalid {
+    border: 1px solid darken($validation-color, 30%);
+    background-color: $validation-color;
+    border-radius: 4px;
+  }
+
   @media screen and (max-width: 600px) {
     .col-50,
     input[type="submit"] {
-      width: 100%;
+      width: 100%; 
       margin-top: 0;
     }
     .padded-float {

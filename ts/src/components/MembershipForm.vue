@@ -1,27 +1,39 @@
 <template>
   <div class="form-container">
-    <form action="/action_page.php">
-      <div class="row header-row">Wer soll Mitglied werden?</div>
-      <div class="row">
+    <div class="membership-form">
+      <!-- MEMBERSHIP OWNER -->
+      <div class="row header-row">Wer soll Mitglied werden? *</div>
+      <div class="row" :class="{ invalid: !isFieldSet(application.membership_owner) }">
         <div class="form-input">
-          <input type="radio" id="new_member_self" value="self" v-model="new_nember" />
+          <input
+            type="radio"
+            id="new_member_self"
+            :value="MembershipOwnerTypes.SELF"
+            v-model="application.membership_owner"
+          />
           <label for="new_member_self">Ich möchte Mitglied werden</label>
         </div>
         <div class="form-input">
-          <input type="radio" id="new_member_other" value="other" v-model="new_nember" />
+          <input
+            type="radio"
+            id="new_member_other"
+            :value="MembershipOwnerTypes.OTHER"
+            v-model="application.membership_owner"
+          />
           <label for="new_member_other"
             >Ich möchte die Mitgliedschaft für eine andere Person beantragen</label
           >
         </div>
       </div>
-      <div class="row header-row">Ab wann möchtest Du als Mitglied aufgenommen werden?</div>
-      <div class="row">
+      <!-- MEMBERSHIP START DATE -->
+      <div class="row header-row">Ab wann möchtest Du als Mitglied aufgenommen werden? *</div>
+      <div class="row" :class="{ invalid: !isFieldSet(application.membership_start) }">
         <div class="form-input">
           <input
             type="radio"
             id="membership_start_now"
-            :value="membership_start_types.now"
-            v-model="membership_start"
+            :value="MembershipStartTypes.NOW"
+            v-model="application.membership_start"
           />
           <label for="membership_start_now">Nächstmöglicher Zeitpunkt</label>
         </div>
@@ -29,30 +41,31 @@
           <input
             type="radio"
             id="membership_start_from"
-            :value="membership_start_types.from"
-            v-model="membership_start"
+            :value="MembershipStartTypes.FROM"
+            v-model="application.membership_start"
           />
           <label for="membership_start_from" style="align-self: center">Ab dem...</label>
           <span>
             <datepicker
-              v-model="membership_start_date"
+              v-model="application.membership_start_date"
               :lowerLimit="new Date()"
               :locale="locale"
               inputFormat="dd.MM.yyyy"
               :clearable="false"
-              :disabled="membership_start !== membership_start_types.from"
+              :disabled="application.membership_start !== MembershipStartTypes.FROM"
             />
           </span>
         </div>
       </div>
-      <div class="row header-row">Welche Art von Mitgliedschaft möchtest du beantragen?</div>
-      <div class="row">
+      <!-- MEMBERSHIP TYPE -->
+      <div class="row header-row">Welche Art von Mitgliedschaft möchtest du beantragen? *</div>
+      <div class="row" :class="{ invalid: !isFieldSet(application.membership_type) }">
         <div class="form-input">
           <input
             type="radio"
             id="membership_type_family"
-            :value="membership_types.family"
-            v-model="membership_type"
+            :value="MembershipTypes.FAMILY"
+            v-model="application.membership_type"
           />
           <label for="membership_type_family">Familienmitgliedschaft</label>
         </div>
@@ -60,97 +73,110 @@
           <input
             type="radio"
             id="membership_type_single"
-            :value="membership_types.single"
-            v-model="membership_type"
+            :value="MembershipTypes.SINGLE"
+            v-model="application.membership_type"
           />
           <label for="membership_type_single">Einzelmitgliedschaft</label>
         </div>
       </div>
+      <!-- MEMBERSHIP SECTIONS -->
       <div class="row header-row">
-        In welcher Abteilung möchtest Du/Ihr Mitglied sein? (Mehrfachauswahl möglich)
+        In welcher Abteilung möchtest Du/Ihr Mitglied sein? (Mehrfachauswahl möglich) *
       </div>
-      <div class="row">
+      <div class="row" :class="{ invalid: !isSectionSet() }">
         <div class="col-50">
           <div class="form-input">
             <input
               id="section_football"
               type="checkbox"
-              v-model="sections.football"
-              true-value="yes"
-              false-value="no"
+              v-model="application.sections.football"
+              :true-value="Checked.YES"
+              :false-value="Checked.NO"
             />
             <label for="section_football">Fußball</label>
           </div>
-
           <div class="form-input">
             <input
               id="section_bowling"
               type="checkbox"
-              v-model="sections.bowling"
-              true-value="yes"
-              false-value="no"
+              v-model="application.sections.bowling"
+              :true-value="Checked.YES"
+              :false-value="Checked.NO"
             />
             <label for="section_bowling">Kegeln</label>
           </div>
         </div>
-
         <div class="col-50">
           <div class="form-input">
             <input
               id="section_theatre"
               type="checkbox"
-              v-model="sections.theatre"
-              true-value="yes"
-              false-value="no"
+              v-model="application.sections.theatre"
+              :true-value="Checked.YES"
+              :false-value="Checked.NO"
             />
             <label for="section_theatre">Theater</label>
           </div>
-
           <div class="form-input">
             <input
               id="section_fitness"
               type="checkbox"
-              v-model="sections.fitness"
-              true-value="yes"
-              false-value="no"
+              v-model="application.sections.fitness"
+              :true-value="Checked.YES"
+              :false-value="Checked.NO"
             />
             <label for="section_fitness">Fitness &amp; Freizeit</label>
           </div>
         </div>
       </div>
+      <!-- MEMBERSHIP PEOPLE -->
       <div class="row header-row">Hier kannst du Deine/Eure Mitgliederdaten eintragen</div>
-      <person-list :people="people" :isFamily="membership_type === membership_types.family" />
+      <person-list
+        :people="application.people"
+        :isFamily="application.membership_type === MembershipTypes.FAMILY"
+      />
       <div class="row header-row">Kontodaten</div>
       <div class="row">
         <div class="text-input">
           <label for="bic">BIC:</label>
-          <input type="text" id="bic" v-model="bic" />
+          <input type="text" id="bic" v-model="application.bic" />
         </div>
       </div>
+      <!-- IBAN -->
       <div class="row">
         <div class="text-input">
           <label for="bic">IBAN:</label>
-          <input type="text" id="iban" v-model="iban" />
+          <input type="text" id="iban" v-model="application.iban" />
         </div>
       </div>
+      <!-- BANK NAME -->
       <div class="row">
         <div class="text-input">
           <label for="bankName">Kreditinstitut:</label>
-          <input type="text" id="bankName" v-model="bankName" />
+          <input type="text" id="bankName" v-model="application.bankName" />
         </div>
       </div>
+      <!-- ACCOUNT OWNER -->
       <div class="row">
         <div class="text-input">
           <label for="accountOwner">Kontoinhaber:</label>
-          <input type="text" id="bic" v-model="accountOwner" />
+          <input type="text" id="bic" v-model="application.accountOwner" />
         </div>
       </div>
+      <!-- AGREEMENTS -->
       <div class="row header-row">Einverständniserklärung</div>
-      <div class="row">
+      <!-- SEPA -->
+      <div class="row" :class="{ invalid: !isChecked(application.sepaAgreement) }">
         <div class="labelled-checkbox">
-          <input type="checkbox" id="sepaAgreement" v-model="sepaAgreement" />
+          <input
+            type="checkbox"
+            id="sepaAgreement"
+            v-model="application.sepaAgreement"
+            :true-value="Checked.YES"
+            :false-value="Checked.NO"
+          />
           <label for="sepaAgreement">
-            SEPA-Lastschriftenmandat Hiermit ermächtige/n ich/wir Sie, die Beitragsgebühren von
+            * SEPA-Lastschriftenmandat Hiermit ermächtige/n ich/wir Sie, die Beitragsgebühren von
             meinem /unserem Konto mittels Lastschrift einzuziehen. Zugleich weise/n ich/wir
             mein/unser Kreditinstitut an, die SpVgg Deuringen e.V. auf mein/unser Konto gezogene
             Lastschriften einzulösen. Hinweis: ich kann/wir können innerhalb von acht Wochen,
@@ -159,11 +185,18 @@
           </label>
         </div>
       </div>
-      <div class="row">
+      <!-- DATA PROTECTION -->
+      <div class="row" :class="{ invalid: !isChecked(application.dataProtectionAgreement) }">
         <div class="labelled-checkbox">
-          <input type="checkbox" id="dataProtectionAgreement" v-model="dataProtectionAgreement" />
+          <input
+            type="checkbox"
+            id="dataProtectionAgreement"
+            v-model="application.dataProtectionAgreement"
+            :true-value="Checked.YES"
+            :false-value="Checked.NO"
+          />
           <label for="dataProtectionAgreement">
-            Datenschutzerklärung Ich willige ein, dass die SpVgg Deuringen, als verantwortliche
+            * Datenschutzerklärung Ich willige ein, dass die SpVgg Deuringen, als verantwortliche
             Stelle, die in der Beitrittserklärung erhobenen personenbezogenen Daten, wie Namen,
             Vorname, Geburtsdatum, Adresse, E-Mail-Adresse, Telefonnummer und Bankverbindung
             ausschließlich zum Zwecke der Mitgliederverwaltung, des Beitragseinzuges und der
@@ -185,11 +218,18 @@
           </label>
         </div>
       </div>
-      <div class="row">
+      <!-- PUBLICATION -->
+      <div class="row" :class="{ invalid: !isChecked(application.publicationAgreement) }">
         <div class="labelled-checkbox">
-          <input type="checkbox" id="publicationAgreement" v-model="publicationAgreement" />
+          <input
+            type="checkbox"
+            id="publicationAgreement"
+            v-model="application.publicationAgreement"
+            :true-value="Checked.YES"
+            :false-value="Checked.NO"
+          />
           <label for="publicationAgreement">
-            Weiter willige ich ein, dass die SpVgg Deuringen von sportbezogenen oder
+            * Weiter willige ich ein, dass die SpVgg Deuringen von sportbezogenen oder
             gesellschaftlichen Veranstaltungen auf der Website des Vereines oder sonstigen
             Vereinspublikationen veröffentlicht und an die Presse zum Zwecke der Veröffentlichung
             ohne spezielle Einwilligung weitergibt. Abbildungen von genannten Einzelpersonen oder
@@ -198,9 +238,9 @@
         </div>
       </div>
       <div class="row">
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Submit" @click="initValidation" />
       </div>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -209,44 +249,80 @@ import { Component, Vue } from 'vue-facing-decorator'
 import Datepicker from 'vue3-datepicker'
 import { de } from 'date-fns/locale'
 import PersonList from './PersonList.vue'
-import type { Person } from '../types'
+import { MembershipOwnerTypes, MembershipStartTypes, MembershipTypes, Checked } from '../types'
+import type { Application } from '../types'
 
 @Component({
   components: { Datepicker, PersonList }
 })
 export default class MembershipForm extends Vue {
-  membership_start_types = {
-    now: 'now',
-    from: 'from'
-  }
-  membership_types = {
-    family: 'family',
-    single: 'single',
-  }
-
-  new_nember = ''
-  membership_start = ''
-  membership_start_date = new Date()
-  membership_type = this.membership_types.family;
+  MembershipStartTypes = MembershipStartTypes
+  MembershipTypes = MembershipTypes
+  MembershipOwnerTypes = MembershipOwnerTypes
+  Checked = Checked
 
   locale = de
 
-  bic = ''
-  iban = ''
-  bankName = ''
-  accountOwner = ''
+  validationActive = false
 
-  sepaAgreement = false
-  dataProtectionAgreement = false
-  publicationAgreement = false
+  application: Application = {
+    membership_start_date: new Date(),
+    people: [],
+    sections: {
+      football: Checked.NO,
+      bowling: Checked.NO,
+      fitness: Checked.NO,
+      theatre: Checked.NO
+    }
+  }
 
-  people: Person[] = [];
+  initValidation(): void {
+    this.validationActive = true
+  }
 
-  sections = {
-    football: false,
-    bowling: false,
-    theatre: false,
-    fitness: false
+  isFieldSet(value: any): boolean {
+    // always validate to true if validation is not yet active
+    if (!this.validationActive) {
+      return true
+    }
+    
+    console.log(value);
+    // return false if no value is set
+    if (!value) {
+      // TODO: set overall "all-required-fields-must-be-set-flag"
+      return false
+    }
+    return true
+  }
+
+  isSectionSet(): boolean {
+    const sections = this.application.sections
+    // always validate to true if validation is not yet active
+    if (!this.validationActive) {
+      return true
+    }
+    // this is me failing with js types..
+    if (
+      sections.football !== Checked.YES &&
+      sections.bowling !== Checked.YES &&
+      sections.fitness !== Checked.YES &&
+      sections.theatre !== Checked.YES
+    ) {
+      // TODO: set overall "all-required-fields-must-be-set-flag"
+      return false
+    }
+    return true
+  }
+
+  isChecked(value?: Checked): boolean {
+    if (!this.validationActive) {
+      return true;
+    }
+    if (value !== Checked.YES) {
+      // TODO: set overall "all-required-fields-must-be-set-flag"
+      return false;
+    }
+    return true;
   }
 }
 </script>
