@@ -1,6 +1,6 @@
 export type ValidationIssues = {
     missingRequiredFields: Set<string>;
-    validationIssues: Map<string, string>;
+    issues: Map<string, string>;
 }
 
 export enum Checked {

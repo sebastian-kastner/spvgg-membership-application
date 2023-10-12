@@ -4,7 +4,10 @@
       <div class="required-fields-hint">Mit * markierte Felder müssen ausgefüllt werden</div>
       <!-- MEMBERSHIP OWNER -->
       <div class="row header-row">Wer soll Mitglied werden? *</div>
-      <div class="row" :class="{ invalid: !isFieldSet(application.membership_owner, 'membershipOwner') }">
+      <div
+        class="row"
+        :class="{ invalid: !isFieldSet(application.membership_owner, 'membershipOwner') }"
+      >
         <div class="form-input">
           <input
             type="radio"
@@ -28,7 +31,10 @@
       </div>
       <!-- MEMBERSHIP START DATE -->
       <div class="row header-row">Ab wann möchtest Du als Mitglied aufgenommen werden? *</div>
-      <div class="row" :class="{ invalid: !isFieldSet(application.membership_start, 'membershipStart') }">
+      <div
+        class="row"
+        :class="{ invalid: !isFieldSet(application.membership_start, 'membershipStart') }"
+      >
         <div class="form-input">
           <input
             type="radio"
@@ -60,7 +66,10 @@
       </div>
       <!-- MEMBERSHIP TYPE -->
       <div class="row header-row">Welche Art von Mitgliedschaft möchtest du beantragen? *</div>
-      <div class="row" :class="{ invalid: !isFieldSet(application.membership_type, 'membershipType') }">
+      <div
+        class="row"
+        :class="{ invalid: !isFieldSet(application.membership_type, 'membershipType') }"
+      >
         <div class="form-input">
           <input
             type="radio"
@@ -190,7 +199,12 @@
         </div>
       </div>
       <!-- DATA PROTECTION -->
-      <div class="row" :class="{ invalid: !isChecked('dataProtectionAgreement', application.dataProtectionAgreement) }">
+      <div
+        class="row"
+        :class="{
+          invalid: !isChecked('dataProtectionAgreement', application.dataProtectionAgreement)
+        }"
+      >
         <div class="labeled-checkbox">
           <input
             type="checkbox"
@@ -223,7 +237,10 @@
         </div>
       </div>
       <!-- PUBLICATION -->
-      <div class="row" :class="{ invalid: !isChecked('publicationAgreement', application.publicationAgreement) }">
+      <div
+        class="row"
+        :class="{ invalid: !isChecked('publicationAgreement', application.publicationAgreement) }"
+      >
         <div class="labeled-checkbox">
           <input
             type="checkbox"
@@ -242,7 +259,12 @@
         </div>
       </div>
       <div class="row">
-        <input type="submit" value="Submit" @click="initValidation" />
+        <input
+          type="submit"
+          value="Submit"
+          @click="initValidation"
+          :disabled="hasValidationIssues()"
+        />
       </div>
     </div>
   </div>
@@ -265,13 +287,13 @@ export default class MembershipForm extends Vue {
   MembershipOwnerTypes = MembershipOwnerTypes
   Checked = Checked
 
-  missingRequiredFields = false;
+  missingRequiredFields = false
 
   locale = de
 
   validationIssues: ValidationIssues = {
     missingRequiredFields: new Set(),
-    validationIssues: new Map(),
+    issues: new Map()
   }
   validationActive = false
 
@@ -288,8 +310,8 @@ export default class MembershipForm extends Vue {
 
   async initValidation(): Promise<void> {
     this.validationActive = true
-    await this.$nextTick();
-    console.log(this.validationIssues.missingRequiredFields);
+    await this.$nextTick()
+    console.log(this.validationIssues.missingRequiredFields)
   }
 
   isFieldSet(value: any, key: string): boolean {
@@ -300,10 +322,10 @@ export default class MembershipForm extends Vue {
 
     // return false if no value is set
     if (!value) {
-      this.validationIssues.missingRequiredFields.add(key);
+      this.validationIssues.missingRequiredFields.add(key)
       return false
     }
-    this.validationIssues.missingRequiredFields.delete(key);
+    this.validationIssues.missingRequiredFields.delete(key)
     return true
   }
 
@@ -313,7 +335,7 @@ export default class MembershipForm extends Vue {
     if (!this.validationActive) {
       return true
     }
-    const fieldKey = "sections";
+    const fieldKey = 'sections'
     // this is me failing with js types..
     if (
       sections.football !== Checked.YES &&
@@ -321,10 +343,10 @@ export default class MembershipForm extends Vue {
       sections.fitness !== Checked.YES &&
       sections.theatre !== Checked.YES
     ) {
-      this.validationIssues.missingRequiredFields.add(fieldKey);
+      this.validationIssues.missingRequiredFields.add(fieldKey)
       return false
     }
-    this.validationIssues.missingRequiredFields.delete(fieldKey);
+    this.validationIssues.missingRequiredFields.delete(fieldKey)
     return true
   }
 
@@ -333,10 +355,23 @@ export default class MembershipForm extends Vue {
       return true
     }
     if (value !== Checked.YES) {
-      this.validationIssues.missingRequiredFields.add(key);
+      this.validationIssues.missingRequiredFields.add(key)
       return false
     }
-    this.validationIssues.missingRequiredFields.delete(key);
+    this.validationIssues.missingRequiredFields.delete(key)
+    return true
+  }
+
+  hasValidationIssues(): boolean {
+    if (!this.validationActive) {
+      return false
+    }
+    if (
+      this.validationIssues.missingRequiredFields.size === 0 &&
+      this.validationIssues.issues.size === 0
+    ) {
+      return false
+    }
     return true
   }
 }
