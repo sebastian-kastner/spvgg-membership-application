@@ -1,6 +1,18 @@
 <template>
-  <person-view v-for="(person, index) in people" :key="index" :person="person" :index="index" />
-  <div v-if="isFamily">Add someone!</div>
+  <div class="person-list">
+    <person-view
+      class="member"
+      v-for="(person, index) in people"
+      :key="index"
+      :person="person"
+      :index="index"
+    />
+  </div>
+  <div class="add-member-container" :class="{ hidden: !isFamily }">
+    <div>
+      <input type="button" value="+ Weiteres Familienmitglied hinzufügen" @click="addMember" />
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -14,7 +26,53 @@ import PersonView from './PersonView.vue'
 export default class PersonList extends Vue {
   @Prop people!: Person[]
   @Prop isFamily!: false
+
+  public mounted(): void {
+    if (this.people.length === 0) {
+      this.addMember()
+    }
+  }
+
+  public addMember(): void {
+    const newMember: Person = {
+      isStudent: false
+    }
+    if (this.people.length >= 1) {
+      const memberOne = this.people[0]
+      newMember.lastName = memberOne.lastName
+      newMember.street = memberOne.street
+      newMember.streetNumber = memberOne.streetNumber
+      newMember.city = memberOne.city
+      newMember.zipCode = memberOne.zipCode
+    }
+    this.people.push(newMember)
+  }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.add-member-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+input[type='button'] {
+  background-color: lighten(rgb(16, 59, 94), 30%);
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+
+.person-list > .member:not(:last-child) {
+  border-bottom: 1px solid lightgray;
+}
+
+.member {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+}
+</style>

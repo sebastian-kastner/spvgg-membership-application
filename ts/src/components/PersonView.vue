@@ -33,12 +33,6 @@
       </div>
     </div>
     <div class="row">
-      <div class="text-input">
-        <label :for="getFieldName('street')">Straße:</label>
-        <input type="text" :id="getFieldName('street')" v-model="person.street" />
-      </div>
-    </div>
-    <div class="row">
       <div class="text-input col-50">
         <label :for="getFieldName('street')">Straße:</label>
         <input type="text" :id="getFieldName('street')" v-model="person.street" />

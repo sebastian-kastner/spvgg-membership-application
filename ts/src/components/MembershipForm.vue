@@ -51,7 +51,7 @@
           <input
             type="radio"
             id="membership_type_family"
-            value="family"
+            :value="membership_types.family"
             v-model="membership_type"
           />
           <label for="membership_type_family">Familienmitgliedschaft</label>
@@ -60,7 +60,7 @@
           <input
             type="radio"
             id="membership_type_single"
-            value="single"
+            :value="membership_types.single"
             v-model="membership_type"
           />
           <label for="membership_type_single">Einzelmitgliedschaft</label>
@@ -119,7 +119,7 @@
         </div>
       </div>
       <div class="row header-row">Hier kannst du Deine/Eure Mitgliederdaten eintragen</div>
-      <person-list :people="people" :isFamily="membership_type === 'family'" />
+      <person-list :people="people" :isFamily="membership_type === membership_types.family" />
       <div class="row header-row">Kontodaten</div>
       <div class="row">
         <div class="text-input">
@@ -219,11 +219,15 @@ export default class MembershipForm extends Vue {
     now: 'now',
     from: 'from'
   }
+  membership_types = {
+    family: 'family',
+    single: 'single',
+  }
 
   new_nember = ''
   membership_start = ''
   membership_start_date = new Date()
-  membership_type = ''
+  membership_type = this.membership_types.family;
 
   locale = de
 
@@ -236,12 +240,7 @@ export default class MembershipForm extends Vue {
   dataProtectionAgreement = false
   publicationAgreement = false
 
-  people: Person[] = [
-    {
-      firstName: 'Franz',
-      isStudent: false
-    }
-  ]
+  people: Person[] = [];
 
   sections = {
     football: false,

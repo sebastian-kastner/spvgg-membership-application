@@ -86,6 +86,10 @@ $min-label-width: 150px;
     margin-right: 5px;
   }
 
+  .hidden {
+    visibility: hidden;
+  }
+
   @media screen and (max-width: 600px) {
     .col-50,
     input[type="submit"] {

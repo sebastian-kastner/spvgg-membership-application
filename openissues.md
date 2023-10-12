@@ -5,3 +5,9 @@
 - Was sind die Optionen für "Mitgliedschaft ab dem.."? Geht jeder beliebige Tag? Oder Beispielsweise jeweils der erste und der 15. eines Monats?
 
 - Ist für jedes Mitglied eine Telefonnummer und eMail notwendig? Oder nur für die erste Person?
+
+- Möglichkeit um Mitglieder zu entfernen?
+  - Nicht möglich bei erstem Mitglied
+  - Dialog zur Bestätigung wird angezeigt wenn Werte enthalten sind
+
+- Was sind Pflichtfelder? Habe einen best guess implementiert
