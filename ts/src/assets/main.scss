@@ -1,3 +1,5 @@
+$min-label-width: 110px;
+
 .form-container {
   border-radius: 5px;
   background-color: #f2f2f2;
@@ -7,7 +9,7 @@
   select,
   textarea {
     width: 100%;
-    padding: 12px;
+    padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
@@ -15,8 +17,7 @@
   }
 
   label {
-    padding: 12px 12px 12px 0;
-    display: inline-block;
+    padding-right: 10px;
   }
 
   input[type="submit"] {
@@ -37,44 +38,56 @@
     display: flex;
   }
 
-  .align-items-center {
-    align-items: center;
-  }
-
-  .col-35 {
-    float: left;
-    width: 35%;
-  }
-
-  .col-65 {
-    float: left;
-    width: 65%;
-  }
-
   .col-50 {
     float: left;
     width: 50%;
   }
 
-  /* Clear floats after the columns */
+  .form-input, .text-input {
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+
+  .text-input {
+    display: flex;
+
+    label {
+      align-self: center;
+      min-width: $min-label-width;
+    }
+  }
+
+  .header-row {
+    padding-top: 10px;
+    padding-bottom: 4px;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+
   .row:after {
     content: "";
     display: table;
     clear: both;
   }
 
-  .header-row {
-    font-weight: bold;
-    font-size: 1.2rem;
+  .padded-float {
+    padding-left: 10px;
+    min-width: 50px !important;
+  }
+
+  .form-group {
+    max-width: 650px;
   }
 
   @media screen and (max-width: 600px) {
-    .col-35,
-    .col-65,
     .col-50,
     input[type="submit"] {
       width: 100%;
       margin-top: 0;
+    }
+    .padded-float {
+      padding-left: 0;
+      min-width: $min-label-width !important;
     }
   }
 }
