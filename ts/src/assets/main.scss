@@ -1,4 +1,4 @@
-$min-label-width: 110px;
+$min-label-width: 150px;
 
 .form-container {
   border-radius: 5px;
@@ -79,7 +79,11 @@ $min-label-width: 110px;
 
   .padded-float {
     padding-left: 10px;
-    min-width: 50px !important;
+    min-width: 80px !important;
+  }
+
+  input[type="radio"], input[type="checkbox"] {
+    margin-right: 5px;
   }
 
   @media screen and (max-width: 600px) {

@@ -14,7 +14,7 @@
           >
         </div>
       </div>
-      <div class="row header-row">Ab wann willst Du als Mitglied aufgenommen werden?</div>
+      <div class="row header-row">Ab wann möchtest Du als Mitglied aufgenommen werden?</div>
       <div class="row">
         <div class="form-input">
           <input
@@ -45,7 +45,7 @@
           </span>
         </div>
       </div>
-      <div class="row header-row">Welche Art von Mitgliedschaft willst du beantragen?</div>
+      <div class="row header-row">Welche Art von Mitgliedschaft möchtest du beantragen?</div>
       <div class="row">
         <div class="form-input">
           <input
@@ -261,7 +261,7 @@ export default class MembershipForm extends Vue {
 
   input {
     margin-right: 10px;
-    align-self: top;
+    margin-top: 8px;
   }
 
   label {
