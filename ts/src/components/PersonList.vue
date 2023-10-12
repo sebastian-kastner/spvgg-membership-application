@@ -1,14 +1,12 @@
 <template>
-  <div class="form-group">
-    <person-view v-for="(person, index) in people" :key="index" :person="person" :index="index" />
-    <div v-if="isFamily">Add someone!</div>
-  </div>
+  <person-view v-for="(person, index) in people" :key="index" :person="person" :index="index" />
+  <div v-if="isFamily">Add someone!</div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-facing-decorator';
-import type { Person } from '../types';
-import PersonView from './PersonView.vue';
+import { Component, Vue, Prop } from 'vue-facing-decorator'
+import type { Person } from '../types'
+import PersonView from './PersonView.vue'
 
 @Component({
   components: { PersonView }

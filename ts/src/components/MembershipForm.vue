@@ -121,85 +121,80 @@
       <div class="row header-row">Hier kannst du Deine/Eure Mitgliederdaten eintragen</div>
       <person-list :people="people" :isFamily="membership_type === 'family'" />
       <div class="row header-row">Kontodaten</div>
-      <div class="form-group">
-        <div class="row">
-          <div class="text-input">
-            <label for="bic">BIC:</label>
-            <input type="text" id="bic" v-model="bic" />
-          </div>
+      <div class="row">
+        <div class="text-input">
+          <label for="bic">BIC:</label>
+          <input type="text" id="bic" v-model="bic" />
         </div>
-        <div class="row">
-          <div class="text-input">
-            <label for="bic">IBAN:</label>
-            <input type="text" id="iban" v-model="iban" />
-          </div>
+      </div>
+      <div class="row">
+        <div class="text-input">
+          <label for="bic">IBAN:</label>
+          <input type="text" id="iban" v-model="iban" />
         </div>
-        <div class="row">
-          <div class="text-input">
-            <label for="bankName">Kreditinstitut:</label>
-            <input type="text" id="bankName" v-model="bankName" />
-          </div>
+      </div>
+      <div class="row">
+        <div class="text-input">
+          <label for="bankName">Kreditinstitut:</label>
+          <input type="text" id="bankName" v-model="bankName" />
         </div>
-        <div class="row">
-          <div class="text-input">
-            <label for="accountOwner">Kontoinhaber:</label>
-            <input type="text" id="bic" v-model="accountOwner" />
-          </div>
+      </div>
+      <div class="row">
+        <div class="text-input">
+          <label for="accountOwner">Kontoinhaber:</label>
+          <input type="text" id="bic" v-model="accountOwner" />
         </div>
       </div>
       <div class="row header-row">Einverständniserklärung</div>
-      <div class="form-group">
-        <div class="row">
-          <div class="labelled-checkbox">
-            <input type="checkbox" id="sepaAgreement" v-model="sepaAgreement" />
-            <label for="sepaAgreement">
-              SEPA-Lastschriftenmandat Hiermit ermächtige/n ich/wir Sie, die Beitragsgebühren von
-              meinem /unserem Konto mittels Lastschrift einzuziehen. Zugleich weise/n ich/wir
-              mein/unser Kreditinstitut an, die SpVgg Deuringen e.V. auf mein/unser Konto gezogene
-              Lastschriften einzulösen. Hinweis: ich kann/wir können innerhalb von acht Wochen,
-              beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrags verlangen. Es
-              gelten dabei die mit meinem/unserem Kreditinstitut vereinbarten Bedingungen.
-            </label>
-          </div>
+      <div class="row">
+        <div class="labelled-checkbox">
+          <input type="checkbox" id="sepaAgreement" v-model="sepaAgreement" />
+          <label for="sepaAgreement">
+            SEPA-Lastschriftenmandat Hiermit ermächtige/n ich/wir Sie, die Beitragsgebühren von
+            meinem /unserem Konto mittels Lastschrift einzuziehen. Zugleich weise/n ich/wir
+            mein/unser Kreditinstitut an, die SpVgg Deuringen e.V. auf mein/unser Konto gezogene
+            Lastschriften einzulösen. Hinweis: ich kann/wir können innerhalb von acht Wochen,
+            beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrags verlangen. Es
+            gelten dabei die mit meinem/unserem Kreditinstitut vereinbarten Bedingungen.
+          </label>
         </div>
-        <div class="row">
-          <div class="labelled-checkbox">
-            <input type="checkbox" id="dataProtectionAgreement" v-model="dataProtectionAgreement" />
-            <label for="dataProtectionAgreement">
-              Datenschutzerklärung Ich willige ein, dass die SpVgg Deuringen, als verantwortliche
-              Stelle, die in der Beitrittserklärung erhobenen personenbezogenen Daten, wie Namen,
-              Vorname, Geburtsdatum, Adresse, E-Mail-Adresse, Telefonnummer und Bankverbindung
-              ausschließlich zum Zwecke der Mitgliederverwaltung, des Beitragseinzuges und der
-              Übermittlung von Vereinsinformationen durch den Verein verarbeitet und genutzt werden.
-              Eine Übermittlung von Teilen dieser Daten an die jeweiligen Sportfachverbände und den
-              Bayerischen Landes Sportverband e.V. (BLSV) findet nur im Rahmen der in den Satzungen
-              der Fachverbände bzw. des BLSV festgelegten Zwecke statt. Diese Datenübermittlungen
-              sind notwendig zum Zweck der Mitgliederverwaltung, zum Zwecke der Organisation eines
-              Spiel- bzw. Wettkampfbetriebes und zum Zwecke der Einwerbung von öffentlichen
-              Fördermitteln. Eine Datenübermittlung an Dritte, außerhalb der Fachverbände und des
-              BLSV, findet nicht statt. Eine Datennutzung für Werbezwecke findet ebenfalls nicht
-              statt. Bei Beendigung der Mitgliedschaft werden die personenbezogenen Daten gelöscht,
-              soweit sie nicht entsprechend der steuerrechtlichen Vorgaben aufbewahrt werden müssen.
-              Neben dem Recht auf Auskunft bezüglich der zu seiner Person bei der verantwortlichen
-              SpVgg Deuringen gespeicherten Daten hat jedes Mitglied, im Rahmen der Vorgaben der
-              DSGVO, das Recht, der Speicherung der Daten, die nicht im Rahmen der gesetzlichen
-              Vorgaben für bestimmte Zeiträume vorgehalten werden müssen, für die Zukunft zu
-              widersprechen. Ferner hat das Mitglied, im Falle von fehlerhaften Daten, ein
-              Korrekturrecht
-            </label>
-          </div>
+      </div>
+      <div class="row">
+        <div class="labelled-checkbox">
+          <input type="checkbox" id="dataProtectionAgreement" v-model="dataProtectionAgreement" />
+          <label for="dataProtectionAgreement">
+            Datenschutzerklärung Ich willige ein, dass die SpVgg Deuringen, als verantwortliche
+            Stelle, die in der Beitrittserklärung erhobenen personenbezogenen Daten, wie Namen,
+            Vorname, Geburtsdatum, Adresse, E-Mail-Adresse, Telefonnummer und Bankverbindung
+            ausschließlich zum Zwecke der Mitgliederverwaltung, des Beitragseinzuges und der
+            Übermittlung von Vereinsinformationen durch den Verein verarbeitet und genutzt werden.
+            Eine Übermittlung von Teilen dieser Daten an die jeweiligen Sportfachverbände und den
+            Bayerischen Landes Sportverband e.V. (BLSV) findet nur im Rahmen der in den Satzungen
+            der Fachverbände bzw. des BLSV festgelegten Zwecke statt. Diese Datenübermittlungen sind
+            notwendig zum Zweck der Mitgliederverwaltung, zum Zwecke der Organisation eines Spiel-
+            bzw. Wettkampfbetriebes und zum Zwecke der Einwerbung von öffentlichen Fördermitteln.
+            Eine Datenübermittlung an Dritte, außerhalb der Fachverbände und des BLSV, findet nicht
+            statt. Eine Datennutzung für Werbezwecke findet ebenfalls nicht statt. Bei Beendigung
+            der Mitgliedschaft werden die personenbezogenen Daten gelöscht, soweit sie nicht
+            entsprechend der steuerrechtlichen Vorgaben aufbewahrt werden müssen. Neben dem Recht
+            auf Auskunft bezüglich der zu seiner Person bei der verantwortlichen SpVgg Deuringen
+            gespeicherten Daten hat jedes Mitglied, im Rahmen der Vorgaben der DSGVO, das Recht, der
+            Speicherung der Daten, die nicht im Rahmen der gesetzlichen Vorgaben für bestimmte
+            Zeiträume vorgehalten werden müssen, für die Zukunft zu widersprechen. Ferner hat das
+            Mitglied, im Falle von fehlerhaften Daten, ein Korrekturrecht
+          </label>
         </div>
-        <div class="row">
-          <div class="labelled-checkbox">
-            <input type="checkbox" id="publicationAgreement" v-model="publicationAgreement" />
-            <label for="publicationAgreement">
-              Weiter willige ich ein, dass die SpVgg Deuringen von sportbezogenen oder
-              gesellschaftlichen Veranstaltungen auf der Website des Vereines oder sonstigen
-              Vereinspublikationen veröffentlicht und an die Presse zum Zwecke der Veröffentlichung
-              ohne spezielle Einwilligung weitergibt. Abbildungen von genannten Einzelpersonen oder
-              Klein-Gruppen hingegen bedürfen einer Einwilligung der abgebildeten Personen.
-            </label>
-          </div>
+      </div>
+      <div class="row">
+        <div class="labelled-checkbox">
+          <input type="checkbox" id="publicationAgreement" v-model="publicationAgreement" />
+          <label for="publicationAgreement">
+            Weiter willige ich ein, dass die SpVgg Deuringen von sportbezogenen oder
+            gesellschaftlichen Veranstaltungen auf der Website des Vereines oder sonstigen
+            Vereinspublikationen veröffentlicht und an die Presse zum Zwecke der Veröffentlichung
+            ohne spezielle Einwilligung weitergibt. Abbildungen von genannten Einzelpersonen oder
+            Klein-Gruppen hingegen bedürfen einer Einwilligung der abgebildeten Personen.
+          </label>
         </div>
       </div>
       <div class="row">

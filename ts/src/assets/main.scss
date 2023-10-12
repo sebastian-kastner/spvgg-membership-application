@@ -4,6 +4,13 @@ $min-label-width: 110px;
   border-radius: 5px;
   background-color: #f2f2f2;
   padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  form {
+    max-width: 750px;
+  }
 
   input[type="text"],
   select,
@@ -73,10 +80,6 @@ $min-label-width: 110px;
   .padded-float {
     padding-left: 10px;
     min-width: 50px !important;
-  }
-
-  .form-group {
-    max-width: 650px;
   }
 
   @media screen and (max-width: 600px) {
