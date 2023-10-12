@@ -1,10 +1,10 @@
 <template>
-  <div class="row">
+  <div>
     <div class="row">
-      <div class="text-input col-50">
-        <label :for="getFieldName('anrede')">Anrede:</label>
+      <div class="text-input col-50" :class="{ invalid: !isFieldSet(person.anrede, getFieldName('anrede')) }">
+        <label :for="getFieldName('anrede')">Anrede: *</label>
         <select v-model="person.anrede" :id="getFieldName('anrede')">
-          <option value="">--</option>
+          <option value="--">--</option>
           <option value="Herr">Herr</option>
           <option value="Frau">Frau</option>
         </select>
@@ -14,43 +14,48 @@
         <input type="text" :id="getFieldName('title')" v-model="person.title" />
       </div>
     </div>
-    <div class="row">
+    <div class="row" :class="{ invalid: !isFieldSet(person.firstName, getFieldName('firstName')) }">
       <div class="text-input">
-        <label :for="getFieldName('firstName')">Vorname:</label>
+        <label :for="getFieldName('firstName')">Vorname: *</label>
         <input type="text" :id="getFieldName('firstName')" v-model="person.firstName" />
       </div>
     </div>
-    <div class="row">
+    <div class="row" :class="{ invalid: !isFieldSet(person.lastName, getFieldName('lastName')) }">
       <div class="text-input">
-        <label :for="getFieldName('lastName')">Nachname:</label>
+        <label :for="getFieldName('lastName')">Nachname: *</label>
         <input type="text" :id="getFieldName('lastName')" v-model="person.lastName" />
       </div>
     </div>
-    <div class="row">
+    <div class="row" :class="{ invalid: !isFieldSet(person.dateOfBirth, getFieldName('dateOfBirth')) }">
       <div class="text-input">
-        <label :for="getFieldName('dateOfBirth')">Geburtsdatum:</label>
-        <input type="text" :id="getFieldName('dateOfBirth')" v-model="person.dateOfBirth" placeholder="dd.mm.yyyy"/>
+        <label :for="getFieldName('dateOfBirth')">Geburtsdatum: *</label>
+        <input
+          type="text"
+          :id="getFieldName('dateOfBirth')"
+          v-model="person.dateOfBirth"
+          placeholder="dd.mm.yyyy"
+        />
       </div>
     </div>
     <div class="row">
-      <div class="text-input col-50">
-        <label :for="getFieldName('street')">Straße:</label>
+      <div class="text-input col-50" :class="{ invalid: !isFieldSet(person.street, getFieldName('street')) }">
+        <label :for="getFieldName('street')">Straße: *</label>
         <input type="text" :id="getFieldName('street')" v-model="person.street" />
       </div>
-      <div class="text-input col-50">
-        <label :for="getFieldName('streetNumber')" class="padded-float">Hausnr:</label>
+      <div class="text-input col-50" :class="{ invalid: !isFieldSet(person.streetNumber, getFieldName('streetNumber')) }">
+        <label :for="getFieldName('streetNumber')" class="padded-float">Hausnr: *</label>
         <input type="text" :id="getFieldName('streetNumber')" v-model="person.streetNumber" />
       </div>
     </div>
-    <div class="row">
+    <div class="row" :class="{ invalid: !isFieldSet(person.phoneNumber, getFieldName('phoneNumber')) }">
       <div class="text-input">
-        <label :for="getFieldName('phoneNumber')">Telefonnummer:</label>
+        <label :for="getFieldName('phoneNumber')">Telefonnummer: *</label>
         <input type="text" :id="getFieldName('phoneNumber')" v-model="person.phoneNumber" />
       </div>
     </div>
-    <div class="row">
+    <div class="row" :class="{ invalid: !isFieldSet(person.email, getFieldName('email')) }">
       <div class="text-input">
-        <label :for="getFieldName('email')">eMail:</label>
+        <label :for="getFieldName('email')">eMail: *</label>
         <input type="text" :id="getFieldName('email')" v-model="person.email" />
       </div>
     </div>
@@ -58,12 +63,8 @@
       <div class="text-input">
         <label :for="getFieldName('isStudent')">Student/Schüler:</label>
         <div>
-          <label>
-            <input type="radio" v-model="person.isStudent" value="true" /> Ja
-          </label>
-          <label>
-            <input type="radio" v-model="person.isStudent" value="false" /> Nein
-          </label>
+          <label> <input type="radio" v-model="person.isStudent" value="true" /> Ja </label>
+          <label> <input type="radio" v-model="person.isStudent" value="false" /> Nein </label>
         </div>
       </div>
     </div>
@@ -72,17 +73,34 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-facing-decorator'
-import type { Person } from '../types';
+import type { Person, ValidationIssues } from '../types'
 
 @Component({
-  components: { }
+  components: {}
 })
 export default class PersonView extends Vue {
-  @Prop person!: Person;
-  @Prop index!: number;
+  @Prop({ required: true }) person!: Person
+  @Prop({ required: true }) index!: number
+  @Prop({ required: true }) validationActive!: boolean
+  @Prop({ required: true }) validationIssues!: ValidationIssues
 
   public getFieldName(name: string) {
-    return name + '_' + this.index;
+    return name + '_' + this.index
+  }
+
+  isFieldSet(value: any, key: string): boolean {
+    // always validate to true if validation is not yet active
+    if (!this.validationActive) {
+      return true
+    }
+
+    // return false if no value is set
+    if (!value) {
+      this.validationIssues.missingRequiredFields.add(key);
+      return false
+    }
+    this.validationIssues.missingRequiredFields.delete(key);
+    return true
   }
 }
 </script>

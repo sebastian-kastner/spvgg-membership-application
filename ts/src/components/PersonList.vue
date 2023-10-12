@@ -6,6 +6,8 @@
       :key="index"
       :person="person"
       :index="index"
+      :validation-active="validationActive"
+      :validation-issues="validationIssues"
     />
   </div>
   <div class="add-member-container" :class="{ hidden: !isFamily }">
@@ -17,15 +19,17 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-facing-decorator'
-import type { Person } from '../types'
+import type { Person, ValidationIssues } from '../types'
 import PersonView from './PersonView.vue'
 
 @Component({
   components: { PersonView }
 })
 export default class PersonList extends Vue {
-  @Prop people!: Person[]
-  @Prop isFamily!: false
+  @Prop({ required: true }) people!: Person[]
+  @Prop({ required: true }) isFamily!: false
+  @Prop({ required: true }) validationActive!: boolean
+  @Prop({ required: true }) validationIssues!: ValidationIssues
 
   public mounted(): void {
     if (this.people.length === 0) {
@@ -72,7 +76,7 @@ input[type='button'] {
 }
 
 .member {
-  margin-bottom: 20px;
-  padding-bottom: 20px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
 }
 </style>

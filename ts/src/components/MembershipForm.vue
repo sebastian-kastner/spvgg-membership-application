@@ -1,9 +1,10 @@
 <template>
   <div class="form-container">
     <div class="membership-form">
+      <div class="required-fields-hint">Mit * markierte Felder müssen ausgefüllt werden</div>
       <!-- MEMBERSHIP OWNER -->
       <div class="row header-row">Wer soll Mitglied werden? *</div>
-      <div class="row" :class="{ invalid: !isFieldSet(application.membership_owner) }">
+      <div class="row" :class="{ invalid: !isFieldSet(application.membership_owner, 'membershipOwner') }">
         <div class="form-input">
           <input
             type="radio"
@@ -27,7 +28,7 @@
       </div>
       <!-- MEMBERSHIP START DATE -->
       <div class="row header-row">Ab wann möchtest Du als Mitglied aufgenommen werden? *</div>
-      <div class="row" :class="{ invalid: !isFieldSet(application.membership_start) }">
+      <div class="row" :class="{ invalid: !isFieldSet(application.membership_start, 'membershipStart') }">
         <div class="form-input">
           <input
             type="radio"
@@ -44,7 +45,7 @@
             :value="MembershipStartTypes.FROM"
             v-model="application.membership_start"
           />
-          <label for="membership_start_from" style="align-self: center">Ab dem...</label>
+          <label for="membership_start_from">Ab dem...</label>
           <span>
             <datepicker
               v-model="application.membership_start_date"
@@ -59,7 +60,7 @@
       </div>
       <!-- MEMBERSHIP TYPE -->
       <div class="row header-row">Welche Art von Mitgliedschaft möchtest du beantragen? *</div>
-      <div class="row" :class="{ invalid: !isFieldSet(application.membership_type) }">
+      <div class="row" :class="{ invalid: !isFieldSet(application.membership_type, 'membershipType') }">
         <div class="form-input">
           <input
             type="radio"
@@ -134,40 +135,43 @@
       <person-list
         :people="application.people"
         :isFamily="application.membership_type === MembershipTypes.FAMILY"
+        :validationActive="validationActive"
+        :validationIssues="validationIssues"
       />
       <div class="row header-row">Kontodaten</div>
-      <div class="row">
-        <div class="text-input">
-          <label for="bic">BIC:</label>
-          <input type="text" id="bic" v-model="application.bic" />
-        </div>
-      </div>
       <!-- IBAN -->
-      <div class="row">
+      <div class="row" :class="{ invalid: !isFieldSet(application.iban, 'iban') }">
         <div class="text-input">
-          <label for="bic">IBAN:</label>
+          <label for="bic">IBAN: *</label>
           <input type="text" id="iban" v-model="application.iban" />
         </div>
       </div>
-      <!-- BANK NAME -->
-      <div class="row">
+      <!-- BIC -->
+      <div class="row" :class="{ invalid: !isFieldSet(application.bic, 'bic') }">
         <div class="text-input">
-          <label for="bankName">Kreditinstitut:</label>
+          <label for="bic">BIC: *</label>
+          <input type="text" id="bic" v-model="application.bic" />
+        </div>
+      </div>
+      <!-- BANK NAME -->
+      <div class="row" :class="{ invalid: !isFieldSet(application.bankName, 'bankName') }">
+        <div class="text-input">
+          <label for="bankName">Kreditinstitut: *</label>
           <input type="text" id="bankName" v-model="application.bankName" />
         </div>
       </div>
       <!-- ACCOUNT OWNER -->
-      <div class="row">
+      <div class="row" :class="{ invalid: !isFieldSet(application.accountOwner, 'accountOwner') }">
         <div class="text-input">
-          <label for="accountOwner">Kontoinhaber:</label>
+          <label for="accountOwner">Kontoinhaber: *</label>
           <input type="text" id="bic" v-model="application.accountOwner" />
         </div>
       </div>
       <!-- AGREEMENTS -->
       <div class="row header-row">Einverständniserklärung</div>
       <!-- SEPA -->
-      <div class="row" :class="{ invalid: !isChecked(application.sepaAgreement) }">
-        <div class="labelled-checkbox">
+      <div class="row" :class="{ invalid: !isChecked('sepaAgreement', application.sepaAgreement) }">
+        <div class="labeled-checkbox">
           <input
             type="checkbox"
             id="sepaAgreement"
@@ -186,8 +190,8 @@
         </div>
       </div>
       <!-- DATA PROTECTION -->
-      <div class="row" :class="{ invalid: !isChecked(application.dataProtectionAgreement) }">
-        <div class="labelled-checkbox">
+      <div class="row" :class="{ invalid: !isChecked('dataProtectionAgreement', application.dataProtectionAgreement) }">
+        <div class="labeled-checkbox">
           <input
             type="checkbox"
             id="dataProtectionAgreement"
@@ -219,8 +223,8 @@
         </div>
       </div>
       <!-- PUBLICATION -->
-      <div class="row" :class="{ invalid: !isChecked(application.publicationAgreement) }">
-        <div class="labelled-checkbox">
+      <div class="row" :class="{ invalid: !isChecked('publicationAgreement', application.publicationAgreement) }">
+        <div class="labeled-checkbox">
           <input
             type="checkbox"
             id="publicationAgreement"
@@ -250,7 +254,7 @@ import Datepicker from 'vue3-datepicker'
 import { de } from 'date-fns/locale'
 import PersonList from './PersonList.vue'
 import { MembershipOwnerTypes, MembershipStartTypes, MembershipTypes, Checked } from '../types'
-import type { Application } from '../types'
+import type { Application, ValidationIssues } from '../types'
 
 @Component({
   components: { Datepicker, PersonList }
@@ -261,8 +265,14 @@ export default class MembershipForm extends Vue {
   MembershipOwnerTypes = MembershipOwnerTypes
   Checked = Checked
 
+  missingRequiredFields = false;
+
   locale = de
 
+  validationIssues: ValidationIssues = {
+    missingRequiredFields: new Set(),
+    validationIssues: new Map(),
+  }
   validationActive = false
 
   application: Application = {
@@ -276,22 +286,24 @@ export default class MembershipForm extends Vue {
     }
   }
 
-  initValidation(): void {
+  async initValidation(): Promise<void> {
     this.validationActive = true
+    await this.$nextTick();
+    console.log(this.validationIssues.missingRequiredFields);
   }
 
-  isFieldSet(value: any): boolean {
+  isFieldSet(value: any, key: string): boolean {
     // always validate to true if validation is not yet active
     if (!this.validationActive) {
       return true
     }
-    
-    console.log(value);
+
     // return false if no value is set
     if (!value) {
-      // TODO: set overall "all-required-fields-must-be-set-flag"
+      this.validationIssues.missingRequiredFields.add(key);
       return false
     }
+    this.validationIssues.missingRequiredFields.delete(key);
     return true
   }
 
@@ -301,6 +313,7 @@ export default class MembershipForm extends Vue {
     if (!this.validationActive) {
       return true
     }
+    const fieldKey = "sections";
     // this is me failing with js types..
     if (
       sections.football !== Checked.YES &&
@@ -308,27 +321,29 @@ export default class MembershipForm extends Vue {
       sections.fitness !== Checked.YES &&
       sections.theatre !== Checked.YES
     ) {
-      // TODO: set overall "all-required-fields-must-be-set-flag"
+      this.validationIssues.missingRequiredFields.add(fieldKey);
       return false
     }
+    this.validationIssues.missingRequiredFields.delete(fieldKey);
     return true
   }
 
-  isChecked(value?: Checked): boolean {
+  isChecked(key: string, value?: Checked): boolean {
     if (!this.validationActive) {
-      return true;
+      return true
     }
     if (value !== Checked.YES) {
-      // TODO: set overall "all-required-fields-must-be-set-flag"
-      return false;
+      this.validationIssues.missingRequiredFields.add(key);
+      return false
     }
-    return true;
+    this.validationIssues.missingRequiredFields.delete(key);
+    return true
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.labelled-checkbox {
+.labeled-checkbox {
   display: flex;
   margin-left: 20px;
   align-items: flex-start;
@@ -342,5 +357,11 @@ export default class MembershipForm extends Vue {
   label {
     text-align: justify;
   }
+}
+
+.required-fields-hint {
+  width: 100%;
+  text-align: right;
+  font-size: 0.8rem;
 }
 </style>

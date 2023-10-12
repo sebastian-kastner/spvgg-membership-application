@@ -48,6 +48,7 @@ $validation-color: #e6a19c;
 
   .col-50 {
     float: left;
+    box-sizing: border-box;
     width: 50%;
   }
 
@@ -72,7 +73,7 @@ $validation-color: #e6a19c;
     font-size: 1.2rem;
   }
 
-  .row {
+  .row, .col-50 {
     border: 1px solid transparent;
   }
 
