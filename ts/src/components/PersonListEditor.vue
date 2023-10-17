@@ -1,6 +1,6 @@
 <template>
   <div class="person-list">
-    <person-view
+    <person-editor
       class="member"
       v-for="(person, index) in people"
       :key="index"
@@ -8,9 +8,10 @@
       :index="index"
       :validation-active="validationActive"
       :validation-issues="validationIssues"
+      @removeMember="removeMember"
     />
   </div>
-  <div class="add-member-container" :class="{ hidden: !isFamily }">
+  <div class="inline-button-container" :class="{ hidden: !isFamily }">
     <div>
       <input type="button" value="+ Weiteres Familienmitglied hinzufügen" @click="addMember" />
     </div>
@@ -20,12 +21,12 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-facing-decorator'
 import type { Person, ValidationIssues } from '../types'
-import PersonView from './PersonView.vue'
+import PersonEditor from './PersonEditor.vue'
 
 @Component({
-  components: { PersonView }
+  components: { PersonEditor }
 })
-export default class PersonList extends Vue {
+export default class PersonListEditor extends Vue {
   @Prop({ required: true }) people!: Person[]
   @Prop({ required: true }) isFamily!: false
   @Prop({ required: true }) validationActive!: boolean
@@ -51,26 +52,16 @@ export default class PersonList extends Vue {
     }
     this.people.push(newMember)
   }
+
+  public removeMember(indexToRemove: number): void {
+    if (indexToRemove >= 0 && indexToRemove < this.people.length) {
+      this.people.splice(indexToRemove, 1);
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-.add-member-container {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-}
-
-input[type='button'] {
-  background-color: lighten(rgb(16, 59, 94), 30%);
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  float: right;
-}
-
 .person-list > .member:not(:last-child) {
   border-bottom: 1px solid lightgray;
 }

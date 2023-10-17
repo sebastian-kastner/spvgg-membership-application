@@ -1,5 +1,10 @@
 <template>
   <div>
+    <div class="row" v-if="index > 0">
+      <div class="inline-button-container">
+        <input type="button" value="- Mitglied entfernen" @click="removeMember(index)" />
+      </div>
+    </div>
     <div class="row">
       <div class="text-input col-50" :class="{ invalid: !isFieldSet(person.anrede, getFieldName('anrede')) }">
         <label :for="getFieldName('anrede')">Anrede: *</label>
@@ -47,15 +52,15 @@
         <input type="text" :id="getFieldName('streetNumber')" v-model="person.streetNumber" />
       </div>
     </div>
-    <div class="row" :class="{ invalid: !isFieldSet(person.phoneNumber, getFieldName('phoneNumber')) }">
+    <div class="row" :class="{ invalid: !isFieldSet(person.phoneNumber, getFieldName('phoneNumber'), true) }">
       <div class="text-input">
-        <label :for="getFieldName('phoneNumber')">Telefonnummer: *</label>
+        <label :for="getFieldName('phoneNumber')">{{ getFieldWithConditionalRequiredMarker('Telefonnr:') }}</label>
         <input type="text" :id="getFieldName('phoneNumber')" v-model="person.phoneNumber" />
       </div>
     </div>
-    <div class="row" :class="{ invalid: !isFieldSet(person.email, getFieldName('email')) }">
+    <div class="row" :class="{ invalid: !isFieldSet(person.email, getFieldName('email'), true) }">
       <div class="text-input">
-        <label :for="getFieldName('email')">eMail: *</label>
+        <label :for="getFieldName('email')">{{ getFieldWithConditionalRequiredMarker('eMail:') }}</label>
         <input type="text" :id="getFieldName('email')" v-model="person.email" />
       </div>
     </div>
@@ -76,9 +81,10 @@ import { Component, Vue, Prop } from 'vue-facing-decorator'
 import type { Person, ValidationIssues } from '../types'
 
 @Component({
-  components: {}
+  components: {},
+  emits: [ 'removeMember' ]
 })
-export default class PersonView extends Vue {
+export default class PersonEditor extends Vue {
   @Prop({ required: true }) person!: Person
   @Prop({ required: true }) index!: number
   @Prop({ required: true }) validationActive!: boolean
@@ -88,10 +94,26 @@ export default class PersonView extends Vue {
     return name + '_' + this.index
   }
 
-  isFieldSet(value: any, key: string): boolean {
+  public removeMember(index: number) {
+    this.$emit("removeMember", index);
+  }
+
+  public getFieldWithConditionalRequiredMarker(fieldName: string): string {
+    if (this.index == 0) {
+      return fieldName + " *";
+    }
+    return fieldName;
+  }
+
+  public isFieldSet(value: any, key: string, onlyRequiredForFirst = false): boolean {
     // always validate to true if validation is not yet active
     if (!this.validationActive) {
       return true
+    }
+
+    // validate to true if index > 0 and only required for first person in list
+    if(onlyRequiredForFirst && this.index > 0) {
+      return true;
     }
 
     // return false if no value is set
@@ -105,4 +127,12 @@ export default class PersonView extends Vue {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.inline-button-container {
+  input[type='button'] {
+    background-color: lighten(orange, 20%);
+    color: black;
+  }
+}
+
+</style>

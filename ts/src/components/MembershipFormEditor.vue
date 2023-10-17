@@ -141,7 +141,7 @@
       </div>
       <!-- MEMBERSHIP PEOPLE -->
       <div class="row header-row">Hier kannst du Deine/Eure Mitgliederdaten eintragen</div>
-      <person-list
+      <person-list-editor
         :people="application.people"
         :isFamily="application.membership_type === MembershipTypes.FAMILY"
         :validationActive="validationActive"
@@ -274,14 +274,14 @@
 import { Component, Vue } from 'vue-facing-decorator'
 import Datepicker from 'vue3-datepicker'
 import { de } from 'date-fns/locale'
-import PersonList from './PersonList.vue'
+import PersonListEditor from './PersonListEditor.vue'
 import { MembershipOwnerTypes, MembershipStartTypes, MembershipTypes, Checked } from '../types'
 import type { Application, ValidationIssues } from '../types'
 
 @Component({
-  components: { Datepicker, PersonList }
+  components: { Datepicker, PersonListEditor }
 })
-export default class MembershipForm extends Vue {
+export default class MembershipFormEditor extends Vue {
   MembershipStartTypes = MembershipStartTypes
   MembershipTypes = MembershipTypes
   MembershipOwnerTypes = MembershipOwnerTypes
@@ -311,7 +311,6 @@ export default class MembershipForm extends Vue {
   async initValidation(): Promise<void> {
     this.validationActive = true
     await this.$nextTick()
-    console.log(this.validationIssues.missingRequiredFields)
   }
 
   isFieldSet(value: any, key: string): boolean {
