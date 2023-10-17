@@ -32,6 +32,7 @@ export function createDefaultMembership(): Application {
                 dateOfBirth: "28.08.2009",
                 street: "Invalidenstr",
                 streetNumber: "12",
+                zipCode: "86391",
                 city: "Augsburg",
                 phoneNumber: "08210815",
                 email: "dr@doktor.dr",

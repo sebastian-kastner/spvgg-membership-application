@@ -69,6 +69,22 @@
         <input type="text" :id="getFieldName('streetNumber')" v-model="person.streetNumber" />
       </div>
     </div>
+    <div class="row">
+      <div
+        class="text-input col-50"
+        :class="{ invalid: !isFieldSet(person.zipCode, getFieldName('zipCode')) }"
+      >
+        <label :for="getFieldName('street')">PLZ: *</label>
+        <input type="text" :id="getFieldName('zipCode')" v-model="person.zipCode" />
+      </div>
+      <div
+        class="text-input col-50"
+        :class="{ invalid: !isFieldSet(person.city, getFieldName('city')) }"
+      >
+        <label :for="getFieldName('city')" class="padded-float">Ort: *</label>
+        <input type="text" :id="getFieldName('city')" v-model="person.city" />
+      </div>
+    </div>
     <div
       class="row"
       :class="{ invalid: !isFieldSet(person.phoneNumber, getFieldName('phoneNumber'), true) }"
