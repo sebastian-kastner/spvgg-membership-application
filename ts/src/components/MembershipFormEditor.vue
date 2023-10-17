@@ -1,5 +1,5 @@
 <template>
-  <div class="form-container">
+  <div class="membership-container">
     <div class="membership-form">
       <div class="required-fields-hint">Mit * markierte Felder müssen ausgefüllt werden</div>
       <!-- MEMBERSHIP OWNER -->

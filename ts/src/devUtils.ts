@@ -8,8 +8,8 @@ export function printIssues(issues: Set<string>): void {
         issues.forEach((issue) => {
             console.log(issue)
         })
+        console.log("------------");
     }
-    console.log("------------");
 }
 
 export function createDefaultMembership(): Application {
