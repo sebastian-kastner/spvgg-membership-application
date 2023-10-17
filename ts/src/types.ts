@@ -1,5 +1,8 @@
+export type AppMode = {
+    isEditMode: boolean;
+}
+
 export type ValidationIssues = {
-    missingRequiredFields: Set<string>;
     issues: Set<string>;
 }
 
@@ -54,7 +57,7 @@ export type Application = {
     bic?: string;
     iban?: string;
     bankName?: string;
-    accountOwner?: string;
+    bankAccountOwner?: string;
 
     sepaAgreement?: Checked;
     dataProtectionAgreement?: Checked;

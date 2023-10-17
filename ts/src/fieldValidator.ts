@@ -12,7 +12,7 @@ export function fieldHasValue(validationActive: boolean, value: any): boolean {
 
 export function validateField(validationActive: boolean, value: any, key: string, issues: Set<string>) {
     const fieldSet = fieldHasValue(validationActive, value);
-    if (fieldSet) {
+    if (!fieldSet) {
         issues.add(key);
     } else {
         issues.delete(key);

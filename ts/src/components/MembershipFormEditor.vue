@@ -170,10 +170,10 @@
         </div>
       </div>
       <!-- ACCOUNT OWNER -->
-      <div class="row" :class="{ invalid: !isFieldSet(application.accountOwner, 'accountOwner') }">
+      <div class="row" :class="{ invalid: !isFieldSet(application.bankAccountOwner, 'bankAccountOwner') }">
         <div class="text-input">
-          <label for="accountOwner">Kontoinhaber: *</label>
-          <input type="text" id="bic" v-model="application.accountOwner" />
+          <label for="bankAccountOwner">Kontoinhaber: *</label>
+          <input type="text" id="bic" v-model="application.bankAccountOwner" />
         </div>
       </div>
       <!-- AGREEMENTS -->
@@ -259,13 +259,13 @@
         </div>
       </div>
       <div class="row">
-        <input
-          type="submit"
-          value="Submit"
-          @click="doSubmit"
-        />
+        <input type="submit" value="Weiter" @click="doSubmit" />
       </div>
-      <div class="row invalid" id="issue-marker" :class="{ hidden: !hasValidationIssues, truffleShuffle: truffleShuffle }" >
+      <div
+        class="row invalid"
+        id="issue-marker"
+        :class="{ hidden: !hasValidationIssues, truffleShuffle: truffleShuffle }"
+      >
         Rot hinterlegte Validierungsfehler müssen behoben werden um das Formular abzuschicken
       </div>
     </div>
@@ -273,57 +273,55 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-facing-decorator'
+import { Component, Vue, Prop } from 'vue-facing-decorator'
 import Datepicker from 'vue3-datepicker'
 import { de } from 'date-fns/locale'
 import PersonListEditor from './PersonListEditor.vue'
 import { MembershipOwnerTypes, MembershipStartTypes, MembershipTypes, Checked } from '../types'
 import { validateField } from '../fieldValidator'
-import type { Application, ValidationIssues } from '../types'
+import type { Application, ValidationIssues, AppMode } from '../types'
+import { printIssues } from '../devUtils'
 
 @Component({
   components: { Datepicker, PersonListEditor }
 })
 export default class MembershipFormEditor extends Vue {
+  @Prop({ required: true }) appMode!: AppMode
+  @Prop({ required: true }) application!: Application;
+
   MembershipStartTypes = MembershipStartTypes
   MembershipTypes = MembershipTypes
   MembershipOwnerTypes = MembershipOwnerTypes
   Checked = Checked
-  
+
   missingRequiredFields = false
 
   locale = de
 
-  truffleShuffle = false;
+  truffleShuffle = false
 
   validationIssues: ValidationIssues = {
-    missingRequiredFields: new Set(),
     issues: new Set()
   }
   validationActive = false
 
-  application: Application = {
-    membership_start_date: new Date(),
-    people: [],
-    sections: {
-      football: Checked.NO,
-      bowling: Checked.NO,
-      fitness: Checked.NO,
-      theatre: Checked.NO
-    }
-  }
-
   async doSubmit(): Promise<void> {
-    const issuesBefore = this.hasValidationIssues;
-    await this.initValidation();
+    const issuesBefore = this.hasValidationIssues
+    await this.initValidation()
     const issuesAfter = this.hasValidationIssues
 
     // IF NEED BE, DO THE TRUFFLE SHUFFLE!!!!!11
     if (issuesBefore && issuesAfter) {
-      this.truffleShuffle = true;
+      this.truffleShuffle = true
       setTimeout(() => {
-        this.truffleShuffle = false;
-      }, 1000);
+        this.truffleShuffle = false
+      }, 1000)
+    }
+
+    printIssues(this.validationIssues.issues)
+    console.log(this.application.bankAccountOwner);
+    if (!issuesAfter) {
+      this.appMode.isEditMode = false
     }
   }
 
@@ -333,7 +331,14 @@ export default class MembershipFormEditor extends Vue {
   }
 
   isFieldSet(value: any, key: string): boolean {
-    return validateField(this.validationActive, value, key, this.validationIssues.missingRequiredFields);
+    if (key === "membershipOwner") {
+        console.log("key:", key);
+        console.log("value:", value);
+        console.log("Account Owner: ", this.application.bankAccountOwner);
+        console.log("Membership Owner: ", this.application.membership_owner);
+    }
+
+    return validateField(this.validationActive, value, key, this.validationIssues.issues)
   }
 
   isSectionSet(): boolean {
@@ -350,10 +355,10 @@ export default class MembershipFormEditor extends Vue {
       sections.fitness !== Checked.YES &&
       sections.theatre !== Checked.YES
     ) {
-      this.validationIssues.missingRequiredFields.add(fieldKey)
+      this.validationIssues.issues.add(fieldKey)
       return false
     }
-    this.validationIssues.missingRequiredFields.delete(fieldKey)
+    this.validationIssues.issues.delete(fieldKey)
     return true
   }
 
@@ -362,10 +367,10 @@ export default class MembershipFormEditor extends Vue {
       return true
     }
     if (value !== Checked.YES) {
-      this.validationIssues.missingRequiredFields.add(key)
+      this.validationIssues.issues.add(key)
       return false
     }
-    this.validationIssues.missingRequiredFields.delete(key)
+    this.validationIssues.issues.delete(key)
     return true
   }
 
@@ -373,10 +378,7 @@ export default class MembershipFormEditor extends Vue {
     if (!this.validationActive) {
       return false
     }
-    if (
-      this.validationIssues.missingRequiredFields.size === 0 &&
-      this.validationIssues.issues.size === 0
-    ) {
+    if (this.validationIssues.issues.size === 0 && this.validationIssues.issues.size === 0) {
       return false
     }
     return true
@@ -417,11 +419,20 @@ export default class MembershipFormEditor extends Vue {
 }
 
 @keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-3px); }
-  50% { transform: translateX(3px); }
-  75% { transform: translateX(-3px); }
-  100% { transform: translateX(3px); }
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+  75% {
+    transform: translateX(-3px);
+  }
+  100% {
+    transform: translateX(3px);
+  }
 }
-
 </style>

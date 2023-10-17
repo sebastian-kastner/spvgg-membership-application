@@ -164,14 +164,14 @@ export default class PersonEditor extends Vue {
   public isFieldSet(value: any, key: string, onlyRequiredForFirst = false): boolean {
     // always validate to true if validation is not yet active
     if (onlyRequiredForFirst && this.index > 0) {
-      this.validationIssues.missingRequiredFields.delete(key)
+      this.validationIssues.issues.delete(key)
       return true
     }
     return validateField(
       this.validationActive,
       value,
       key,
-      this.validationIssues.missingRequiredFields
+      this.validationIssues.issues
     )
   }
 }

@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import MembershipFormEditor from './components/MembershipFormEditor.vue'
+import Wrapper from './components/Wrapper.vue'
 </script>
 
 <template>
-    <div class="wrapper">
-      <membership-form-editor />
-    </div>
+  <wrapper />
 </template>
