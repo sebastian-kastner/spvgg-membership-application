@@ -319,7 +319,6 @@ export default class MembershipFormEditor extends Vue {
     }
 
     printIssues(this.validationIssues.issues)
-    console.log(this.application.bankAccountOwner);
     if (!issuesAfter) {
       this.appMode.isEditMode = false
     }
@@ -331,13 +330,6 @@ export default class MembershipFormEditor extends Vue {
   }
 
   isFieldSet(value: any, key: string): boolean {
-    if (key === "membershipOwner") {
-        console.log("key:", key);
-        console.log("value:", value);
-        console.log("Account Owner: ", this.application.bankAccountOwner);
-        console.log("Membership Owner: ", this.application.membership_owner);
-    }
-
     return validateField(this.validationActive, value, key, this.validationIssues.issues)
   }
 
