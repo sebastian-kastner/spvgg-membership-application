@@ -8,7 +8,7 @@ $validation-color: rgba(230, 161, 156, 0.3);
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   .membership-form {
     max-width: 750px;
   }
@@ -52,7 +52,8 @@ $validation-color: rgba(230, 161, 156, 0.3);
     width: 50%;
   }
 
-  .form-input, .text-input {
+  .form-input,
+  .text-input {
     padding: 3px 3px 3px 0;
   }
 
@@ -72,7 +73,8 @@ $validation-color: rgba(230, 161, 156, 0.3);
     font-size: 1.2rem;
   }
 
-  .row, .col-50 {
+  .row,
+  .col-50 {
     border: 1px solid transparent;
   }
 
@@ -87,7 +89,8 @@ $validation-color: rgba(230, 161, 156, 0.3);
     min-width: 80px !important;
   }
 
-  input[type="radio"], input[type="checkbox"] {
+  input[type="radio"],
+  input[type="checkbox"] {
     margin-right: 5px;
   }
 
@@ -104,7 +107,7 @@ $validation-color: rgba(230, 161, 156, 0.3);
   @media screen and (max-width: 600px) {
     .col-50,
     input[type="submit"] {
-      width: 100%; 
+      width: 100%;
       margin-top: 0;
     }
     .padded-float {
@@ -117,8 +120,8 @@ $validation-color: rgba(230, 161, 156, 0.3);
     width: 100%;
     display: flex;
     justify-content: flex-end;
-  
-    input[type='button'] {
+
+    input[type="button"] {
       background-color: lighten(rgb(16, 59, 94), 30%);
       color: white;
       padding: 12px 20px;
@@ -127,5 +130,11 @@ $validation-color: rgba(230, 161, 156, 0.3);
       cursor: pointer;
       float: right;
     }
+  }
+
+  .field-error {
+    width: 100%;
+    text-align: center;
+    font-style: italic;
   }
 }

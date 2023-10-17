@@ -1,37 +1,38 @@
 # Open issues
 
-- wollen wir es wirklich ermöglichen online mitgliedschaften für andere abzuschließen? klingt für mich nach missbrauchspotential
-
-- Machen "Ich möchte Mitglied werden / Ich möchte die Mitgliedschaft für eine andere Person beantragen" zusammen mit "Welche Art von Mitgliedschaft möchtest du beantragen: Familienmitgliedschaft / Einzelmitgliedschaft" überhaupt Sinn? Oder sollte die Mitgliedschaft für eine andere Person nur bei Einzelmitgliedschaften möglich sein?
+## Offene Fragen
 
 - Was sind die Optionen für "Mitgliedschaft ab dem.."? Geht jeder beliebige Tag? Oder Beispielsweise jeweils der erste und der 15. eines Monats?
+- Wollen wir es wirklich ermöglichen online Mitgliedschaften für andere abzuschließen? Klingt für mich nach Missbrauchspotential
+- Für BIC und IBAN könnte ich noch eine Formatsvalidierung einführen. Hier bin ich mir aber nicht sicher was gültige Formate sind, deswegen
+  sollte man das bei Problemen im Nachgang über eMail/Telefon machen
+- Für die Telefonnummer habe ich ebenfalls keine Validierung hinterlegt, hier gibt es zu viele Formate
 
-- Ist für jedes Mitglied eine Telefonnummer und eMail notwendig? Oder nur für die erste Person?
+## Details zur Umsetzung
 
-- Möglichkeit um Mitglieder zu entfernen?
-  - Nicht möglich bei erstem Mitglied
-  - Dialog zur Bestätigung wird angezeigt wenn Werte enthalten sind
+- eMail und Telefonnummer sind nur für das erste Mitglied notwendig
+- Bei der Familienmitgliedschaft können Mitglieder entfernt werden (Mitglied 1 nicht!)
+- Was sind Pflichtfelder? Ich habe einen best gues implementiert und folgende Felder zu Pflichtfeldern gemacht:
 
-- Was sind Pflichtfelder? Habe einen best guess implementiert
-
-Pflichtfelder:
 - Wer
 - Wann
 - Art
-- Abteilung?
-- Member
+- Abteilung (mindestes eine Wahl)
+- Mitglieder Daten
   - Anrede?
   - Vorname
   - Nachname
   - Geburtsdatum
   - Straße
   - Hausnummer
-  - Telefonnummer (bei familienmitgliedschaft nur für erstes mitglied!)
-  - eMail (bei familienmitgliedschaft nur für erstes mitglied!)
+  - Telefonnummer (bei familienmitgliedschaft nur für erstes Mitglied!)
+  - eMail (bei familienmitgliedschaft nur für erstes Mitglied!)
 - SEPA
 - Datenschutz
 - Publikationen
 
-Custom validation:
+Validierung der Werte: (nicht nur "Gesetzt oder nicht gesetzt")
 
-- 
+- Mitglieder Daten
+  - eMail
+  - Geburtsdatum (Plausibilitätscheck fehlt; Daten in der Zukunft und aus dem Mittelalter sind aktuell möglich)

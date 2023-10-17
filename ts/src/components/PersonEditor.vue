@@ -6,7 +6,10 @@
       </div>
     </div>
     <div class="row">
-      <div class="text-input col-50" :class="{ invalid: !isFieldSet(person.anrede, getFieldName('anrede')) }">
+      <div
+        class="text-input col-50"
+        :class="{ invalid: !isFieldSet(person.anrede, getFieldName('anrede')) }"
+      >
         <label :for="getFieldName('anrede')">Anrede: *</label>
         <select v-model="person.anrede" :id="getFieldName('anrede')">
           <option value="--">--</option>
@@ -31,7 +34,15 @@
         <input type="text" :id="getFieldName('lastName')" v-model="person.lastName" />
       </div>
     </div>
-    <div class="row" :class="{ invalid: !isFieldSet(person.dateOfBirth, getFieldName('dateOfBirth')) }">
+    <div
+      class="row"
+      :class="{
+        invalid: !isFieldSet(person.dateOfBirth, getFieldName('dateOfBirth')) || invalidDateOfBirth
+      }"
+    >
+      <div class="field-error" v-if="invalidDateOfBirth">
+        Das Gebursdatum muss im Format dd.mm.yyyy angegeben werden (z.B. 27.03.2009)
+      </div>
       <div class="text-input">
         <label :for="getFieldName('dateOfBirth')">Geburtsdatum: *</label>
         <input
@@ -43,24 +54,41 @@
       </div>
     </div>
     <div class="row">
-      <div class="text-input col-50" :class="{ invalid: !isFieldSet(person.street, getFieldName('street')) }">
+      <div
+        class="text-input col-50"
+        :class="{ invalid: !isFieldSet(person.street, getFieldName('street')) }"
+      >
         <label :for="getFieldName('street')">Straße: *</label>
         <input type="text" :id="getFieldName('street')" v-model="person.street" />
       </div>
-      <div class="text-input col-50" :class="{ invalid: !isFieldSet(person.streetNumber, getFieldName('streetNumber')) }">
+      <div
+        class="text-input col-50"
+        :class="{ invalid: !isFieldSet(person.streetNumber, getFieldName('streetNumber')) }"
+      >
         <label :for="getFieldName('streetNumber')" class="padded-float">Hausnr: *</label>
         <input type="text" :id="getFieldName('streetNumber')" v-model="person.streetNumber" />
       </div>
     </div>
-    <div class="row" :class="{ invalid: !isFieldSet(person.phoneNumber, getFieldName('phoneNumber'), true) }">
+    <div
+      class="row"
+      :class="{ invalid: !isFieldSet(person.phoneNumber, getFieldName('phoneNumber'), true) }"
+    >
       <div class="text-input">
-        <label :for="getFieldName('phoneNumber')">{{ getFieldWithConditionalRequiredMarker('Telefonnr:') }}</label>
+        <label :for="getFieldName('phoneNumber')">{{
+          getFieldWithConditionalRequiredMarker('Telefonnr:')
+        }}</label>
         <input type="text" :id="getFieldName('phoneNumber')" v-model="person.phoneNumber" />
       </div>
     </div>
-    <div class="row" :class="{ invalid: !isFieldSet(person.email, getFieldName('email'), true) }">
+    <div
+      class="row"
+      :class="{ invalid: !isFieldSet(person.email, getFieldName('email'), true) || invalidEmail }"
+    >
+      <div class="field-error" v-if="invalidEmail">Die Adresse hat kein gültiges Format!</div>
       <div class="text-input">
-        <label :for="getFieldName('email')">{{ getFieldWithConditionalRequiredMarker('eMail:') }}</label>
+        <label :for="getFieldName('email')">{{
+          getFieldWithConditionalRequiredMarker('eMail:')
+        }}</label>
         <input type="text" :id="getFieldName('email')" v-model="person.email" />
       </div>
     </div>
@@ -78,12 +106,12 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-facing-decorator'
-import { isFieldSet } from '../fieldValidator'
+import { validateField } from '../fieldValidator'
 import type { Person, ValidationIssues } from '../types'
 
 @Component({
   components: {},
-  emits: [ 'removeMember' ]
+  emits: ['removeMember']
 })
 export default class PersonEditor extends Vue {
   @Prop({ required: true }) person!: Person
@@ -91,28 +119,60 @@ export default class PersonEditor extends Vue {
   @Prop({ required: true }) validationActive!: boolean
   @Prop({ required: true }) validationIssues!: ValidationIssues
 
+  emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+  dateOfBirthPattern = /^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$/
+
   public getFieldName(name: string) {
     return name + '_' + this.index
   }
 
   public removeMember(index: number) {
-    this.$emit("removeMember", index);
+    this.$emit('removeMember', index)
   }
 
   public getFieldWithConditionalRequiredMarker(fieldName: string): string {
     if (this.index == 0) {
-      return fieldName + " *";
+      return fieldName + ' *'
     }
-    return fieldName;
+    return fieldName
+  }
+
+  get invalidEmail(): boolean {
+    const issueKey = 'member.' + this.index + '.email'
+    if (this.validationActive && this.person.email && this.person.email.trim() !== '') {
+      if (!this.emailPattern.test(this.person.email.trim())) {
+        this.validationIssues.issues.add(issueKey)
+        return true
+      }
+    }
+    this.validationIssues.issues.delete(issueKey)
+    return false
+  }
+
+  get invalidDateOfBirth(): boolean {
+    const issueKey = 'member.' + this.index + '.dateOfBirth'
+    if (this.validationActive && this.person.dateOfBirth && this.person.dateOfBirth.trim() !== '') {
+      if (!this.dateOfBirthPattern.test(this.person.dateOfBirth.trim())) {
+        this.validationIssues.issues.add(issueKey);
+        return true;
+      }
+    }
+    this.validationIssues.issues.delete(issueKey);
+    return false
   }
 
   public isFieldSet(value: any, key: string, onlyRequiredForFirst = false): boolean {
     // always validate to true if validation is not yet active
-    if(onlyRequiredForFirst && this.index > 0) {
-      this.validationIssues.missingRequiredFields.delete(key);
-      return true;
+    if (onlyRequiredForFirst && this.index > 0) {
+      this.validationIssues.missingRequiredFields.delete(key)
+      return true
     }
-    return isFieldSet(this.validationActive, value, key, this.validationIssues.missingRequiredFields);
+    return validateField(
+      this.validationActive,
+      value,
+      key,
+      this.validationIssues.missingRequiredFields
+    )
   }
 }
 </script>
@@ -124,5 +184,4 @@ export default class PersonEditor extends Vue {
     color: black;
   }
 }
-
 </style>

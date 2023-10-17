@@ -262,9 +262,11 @@
         <input
           type="submit"
           value="Submit"
-          @click="initValidation"
-          :disabled="hasValidationIssues()"
+          @click="doSubmit"
         />
+      </div>
+      <div class="row invalid" :class="{ hidden: !hasValidationIssues }" >
+        Rot hinterlegte Validierungsfehler müssen behoben werden um das Formular abzuschicken
       </div>
     </div>
   </div>
@@ -276,7 +278,7 @@ import Datepicker from 'vue3-datepicker'
 import { de } from 'date-fns/locale'
 import PersonListEditor from './PersonListEditor.vue'
 import { MembershipOwnerTypes, MembershipStartTypes, MembershipTypes, Checked } from '../types'
-import { isFieldSet } from '../fieldValidator'
+import { validateField } from '../fieldValidator'
 import type { Application, ValidationIssues } from '../types'
 
 @Component({
@@ -294,7 +296,7 @@ export default class MembershipFormEditor extends Vue {
 
   validationIssues: ValidationIssues = {
     missingRequiredFields: new Set(),
-    issues: new Map()
+    issues: new Set()
   }
   validationActive = false
 
@@ -309,13 +311,18 @@ export default class MembershipFormEditor extends Vue {
     }
   }
 
+  async doSubmit(): Promise<void> {
+    await this.initValidation();
+    // do something else if validation is looking good..
+  }
+
   async initValidation(): Promise<void> {
     this.validationActive = true
     await this.$nextTick()
   }
 
   isFieldSet(value: any, key: string): boolean {
-    return isFieldSet(this.validationActive, value, key, this.validationIssues.missingRequiredFields);
+    return validateField(this.validationActive, value, key, this.validationIssues.missingRequiredFields);
   }
 
   isSectionSet(): boolean {
@@ -351,7 +358,7 @@ export default class MembershipFormEditor extends Vue {
     return true
   }
 
-  hasValidationIssues(): boolean {
+  get hasValidationIssues(): boolean {
     if (!this.validationActive) {
       return false
     }
