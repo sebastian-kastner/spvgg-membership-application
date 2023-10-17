@@ -13,28 +13,26 @@
 
 - nach dem ersten klick auf "Weiter" wird die live validierung aktiviert
 - wenn auf "Weiter" geklickt wird und keine validierungsfehler vorhanden sind kommt eine seite zur Überprüfung
-
 - eMail und Telefonnummer sind nur für das erste Mitglied notwendig
 - Bei der Familienmitgliedschaft können Mitglieder hinzugefügt und entfernt werden (Mitglied 1 nicht!)
   - wenn ein neues Mitglied hinzugefügt wird werden Nachname und Adresse übernommen
 - Was sind Pflichtfelder? Ich habe einen best gues implementiert und folgende Felder zu Pflichtfeldern gemacht:
-
-- Wer
-- Wann
-- Art
-- Abteilung (mindestes eine Wahl)
-- Mitglieder Daten
-  - Anrede?
-  - Vorname
-  - Nachname
-  - Geburtsdatum
-  - Straße
-  - Hausnummer
-  - Telefonnummer (bei familienmitgliedschaft nur für erstes Mitglied!)
-  - eMail (bei familienmitgliedschaft nur für erstes Mitglied!)
-- SEPA
-- Datenschutz
-- Publikationen
+  - Wer
+  - Wann
+  - Art
+  - Abteilung (mindestes eine Wahl)
+  - Mitglieder Daten
+    - Anrede?
+    - Vorname
+    - Nachname
+    - Geburtsdatum
+    - Straße
+    - Hausnummer
+    - Telefonnummer (bei familienmitgliedschaft nur für erstes Mitglied!)
+    - eMail (bei familienmitgliedschaft nur für erstes Mitglied!)
+  - SEPA
+  - Datenschutz
+  - Publikationen
 
 Validierung der Werte: (nicht nur "Gesetzt oder nicht gesetzt")
 
