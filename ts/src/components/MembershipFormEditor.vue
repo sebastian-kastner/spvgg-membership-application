@@ -265,7 +265,7 @@
           @click="doSubmit"
         />
       </div>
-      <div class="row invalid" :class="{ hidden: !hasValidationIssues }" >
+      <div class="row invalid" id="issue-marker" :class="{ hidden: !hasValidationIssues, truffleShuffle: truffleShuffle }" >
         Rot hinterlegte Validierungsfehler müssen behoben werden um das Formular abzuschicken
       </div>
     </div>
@@ -289,10 +289,12 @@ export default class MembershipFormEditor extends Vue {
   MembershipTypes = MembershipTypes
   MembershipOwnerTypes = MembershipOwnerTypes
   Checked = Checked
-
+  
   missingRequiredFields = false
 
   locale = de
+
+  truffleShuffle = false;
 
   validationIssues: ValidationIssues = {
     missingRequiredFields: new Set(),
@@ -312,8 +314,17 @@ export default class MembershipFormEditor extends Vue {
   }
 
   async doSubmit(): Promise<void> {
+    const issuesBefore = this.hasValidationIssues;
     await this.initValidation();
-    // do something else if validation is looking good..
+    const issuesAfter = this.hasValidationIssues
+
+    // IF NEED BE, DO THE TRUFFLE SHUFFLE!!!!!11
+    if (issuesBefore && issuesAfter) {
+      this.truffleShuffle = true;
+      setTimeout(() => {
+        this.truffleShuffle = false;
+      }, 1000);
+    }
   }
 
   async initValidation(): Promise<void> {
@@ -395,4 +406,22 @@ export default class MembershipFormEditor extends Vue {
   text-align: right;
   font-size: 0.8rem;
 }
+
+#issue-marker {
+  padding: 5px;
+  text-align: center;
+}
+
+.truffleShuffle {
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(5px); }
+}
+
 </style>
