@@ -2,3 +2,4 @@
 *.docx#
 public/assets/*.css
 public/assets/*.js
+public/*.html

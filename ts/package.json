@@ -6,6 +6,7 @@
     "dev": "vite",
     "serve": "vite",
     "build": "run-p type-check \"build-only {@}\" -- && rm ../public/index.html",
+    "build-local": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",

@@ -12,3 +12,12 @@ serve:
 # run npm build
 build:
 	find public/assets/ -type f \( -name "*.js" -o -name "*.css" \) -exec rm -f {} \; && cd ts && npm run build
+
+.PHONY: build-local
+build-local:
+	find public/assets/ -type f \( -name "*.js" -o -name "*.css" -o -name "*.html" \) -exec rm -f {} \;
+	cd ts && npm run build-local
+	@sed -i 's/\/assets\//.\/assets/g' public/index.html
+	@sed -i 's/crossorigin //g' public/index.html
+
+
