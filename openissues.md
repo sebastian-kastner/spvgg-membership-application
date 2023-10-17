@@ -26,8 +26,12 @@ Pflichtfelder:
   - Geburtsdatum
   - Straße
   - Hausnummer
-  - Telefonnummer (nur erster?)
-  - eMail (nur erster?)
+  - Telefonnummer (bei familienmitgliedschaft nur für erstes mitglied!)
+  - eMail (bei familienmitgliedschaft nur für erstes mitglied!)
 - SEPA
 - Datenschutz
 - Publikationen
+
+Custom validation:
+
+- 

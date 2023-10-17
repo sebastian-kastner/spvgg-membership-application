@@ -276,6 +276,7 @@ import Datepicker from 'vue3-datepicker'
 import { de } from 'date-fns/locale'
 import PersonListEditor from './PersonListEditor.vue'
 import { MembershipOwnerTypes, MembershipStartTypes, MembershipTypes, Checked } from '../types'
+import { isFieldSet } from '../fieldValidator'
 import type { Application, ValidationIssues } from '../types'
 
 @Component({
@@ -314,18 +315,7 @@ export default class MembershipFormEditor extends Vue {
   }
 
   isFieldSet(value: any, key: string): boolean {
-    // always validate to true if validation is not yet active
-    if (!this.validationActive) {
-      return true
-    }
-
-    // return false if no value is set
-    if (!value) {
-      this.validationIssues.missingRequiredFields.add(key)
-      return false
-    }
-    this.validationIssues.missingRequiredFields.delete(key)
-    return true
+    return isFieldSet(this.validationActive, value, key, this.validationIssues.missingRequiredFields);
   }
 
   isSectionSet(): boolean {

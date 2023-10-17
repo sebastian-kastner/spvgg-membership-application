@@ -78,6 +78,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-facing-decorator'
+import { isFieldSet } from '../fieldValidator'
 import type { Person, ValidationIssues } from '../types'
 
 @Component({
@@ -107,22 +108,11 @@ export default class PersonEditor extends Vue {
 
   public isFieldSet(value: any, key: string, onlyRequiredForFirst = false): boolean {
     // always validate to true if validation is not yet active
-    if (!this.validationActive) {
-      return true
-    }
-
-    // validate to true if index > 0 and only required for first person in list
     if(onlyRequiredForFirst && this.index > 0) {
+      this.validationIssues.missingRequiredFields.delete(key);
       return true;
     }
-
-    // return false if no value is set
-    if (!value) {
-      this.validationIssues.missingRequiredFields.add(key);
-      return false
-    }
-    this.validationIssues.missingRequiredFields.delete(key);
-    return true
+    return isFieldSet(this.validationActive, value, key, this.validationIssues.missingRequiredFields);
   }
 }
 </script>
