@@ -1,27 +1,68 @@
 <template>
   <div class="membership-container">
     <div class="row header-row">Antrag überprüfen</div>
-    <div class="row">Mitgliedschaft für: {{ membershipOwner }}</div>
-    <div class="row">Start der Mitgliedschaft: {{ membershipStart }}</div>
-    <div class="row">Mitgliedschaftstyp: {{ membershipType }}</div>
-    <div class="row">Abteilungen: {{ sections }}</div>
+    <div class="row">
+      <div class="label">Mitgliedschaft für:</div>
+      <div>{{ membershipOwner }}</div>
+    </div>
+    <div class="row">
+      <div class="label">Start der Mitgliedschaft:</div>
+      <div>{{ membershipStart }}</div>
+    </div>
+    <div class="row">
+      <div class="label">Mitgliedschaftstyp:</div>
+      <div>{{ membershipType }}</div>
+    </div>
+    <div class="row">
+      <div class="label">Abteilungen:</div>
+      <div>{{ sections }}</div>
+    </div>
     <div class="row header-row">Mitgliederdaten</div>
     <div v-for="(person, index) in application.people" :key="index">
-      <div class="row">Name: {{ person.anrede }} {{ person.firstName }} {{ person.lastName }}</div>
-      <div class="row">Geburtsdatum: {{ person.dateOfBirth }}</div>
       <div class="row">
-        Addresse: {{ person.street }} {{ person.streetNumber }}, {{ person.zipCode }}
-        {{ person.city }}
+        <div class="label">Name:</div>
+        <div>{{ person.anrede }} {{ person.firstName }} {{ person.lastName }}</div>
       </div>
-      <div class="row">Telefonnummer: {{ person.phoneNumber }}</div>
-      <div class="row">eMail: {{ person.email }}</div>
-      <div class="row">Student: {{ isStudent(person) }}</div>
+      <div class="row">
+        <div class="label">Geburtsdatum:</div>
+        <div>{{ person.dateOfBirth }}</div>
+      </div>
+      <div class="row">
+        <div class="label">Addresse:</div>
+        <div>
+          {{ person.street }} {{ person.streetNumber }}, {{ person.zipCode }} {{ person.city }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="label">Telefonnummer:</div>
+        <div>{{ person.phoneNumber }}</div>
+      </div>
+      <div class="row">
+        <div class="label">eMail:</div>
+        <div>{{ person.email }}</div>
+      </div>
+      <div class="row">
+        <div class="label">Student:</div>
+        <div>{{ isStudent(person) }}</div>
+      </div>
     </div>
     <div class="row header-row">Bankdaten</div>
-    <div class="row">IBAN: {{ application.iban }}</div>
-    <div class="row">BIC: {{ application.bic }}</div>
-    <div class="row">Kreditinstitut: {{ application.bankName }}</div>
-    <div class="row">Kontoinhaber: {{ application.bankAccountOwner }}</div>
+    <div class="row">
+      <div class="label">IBAN:</div>
+      <div>{{ application.iban }}</div>
+    </div>
+    <div class="row">
+      <div class="label">BIC:</div>
+      <div>{{ application.bic }}</div>
+    </div>
+    <div class="row">
+      <div class="label">Kreditinstitut:</div>
+      <div>{{ application.bankName }}</div>
+    </div>
+    <div class="row">
+      <div class="label">Kontoinhaber:</div>
+      <div>{{ application.bankAccountOwner }}</div>
+    </div>
     <div class="row inline-button-container">
       <input type="button" value="Editieren" @click="doEdit" />
     </div>
@@ -96,7 +137,7 @@ export default class MembershipConfirmation extends Vue {
   }
 
   doEdit(): void {
-    this.appMode.isEditMode = true;
+    this.appMode.isEditMode = true
   }
 }
 </script>
@@ -106,5 +147,15 @@ export default class MembershipConfirmation extends Vue {
 .membership-container {
   justify-content: start;
   display: block;
+  line-height: 1.5;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.label {
+  min-width: 200px;
 }
 </style>
