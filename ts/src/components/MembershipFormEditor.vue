@@ -8,7 +8,7 @@
         class="row"
         :class="{ invalid: !isFieldSet(application.membership_owner, 'membershipOwner') }"
       >
-        <div class="form-input">
+        <div class="form-input labeled-radio">
           <input
             type="radio"
             id="new_member_self"
@@ -17,7 +17,7 @@
           />
           <label for="new_member_self">Ich möchte Mitglied werden</label>
         </div>
-        <div class="form-input">
+        <div class="form-input labeled-radio">
           <input
             type="radio"
             id="new_member_other"
@@ -35,7 +35,7 @@
         class="row"
         :class="{ invalid: !isFieldSet(application.membership_start, 'membershipStart') }"
       >
-        <div class="form-input">
+        <div class="form-input labeled-radio">
           <input
             type="radio"
             id="membership_start_now"
@@ -44,7 +44,7 @@
           />
           <label for="membership_start_now">Nächstmöglicher Zeitpunkt</label>
         </div>
-        <div class="text-input">
+        <div class="text-input labeled-radio">
           <input
             type="radio"
             id="membership_start_from"
@@ -70,7 +70,7 @@
         class="row"
         :class="{ invalid: !isFieldSet(application.membership_type, 'membershipType') }"
       >
-        <div class="form-input">
+        <div class="form-input labeled-radio">
           <input
             type="radio"
             id="membership_type_family"
@@ -79,7 +79,7 @@
           />
           <label for="membership_type_family">Familienmitgliedschaft</label>
         </div>
-        <div class="form-input">
+        <div class="form-input labeled-radio">
           <input
             type="radio"
             id="membership_type_single"
@@ -94,7 +94,7 @@
         In welcher Abteilung möchtest Du/Ihr Mitglied sein? (Mehrfachauswahl möglich) *
       </div>
       <div class="row" :class="{ invalid: !isSectionSet() }">
-        <div class="col-50">
+        <div class="col-50 no-border">
           <div class="form-input">
             <input
               id="section_football"
@@ -116,7 +116,7 @@
             <label for="section_bowling">Kegeln</label>
           </div>
         </div>
-        <div class="col-50">
+        <div class="col-50 no-border">
           <div class="form-input">
             <input
               id="section_theatre"
@@ -170,7 +170,10 @@
         </div>
       </div>
       <!-- ACCOUNT OWNER -->
-      <div class="row" :class="{ invalid: !isFieldSet(application.bankAccountOwner, 'bankAccountOwner') }">
+      <div
+        class="row"
+        :class="{ invalid: !isFieldSet(application.bankAccountOwner, 'bankAccountOwner') }"
+      >
         <div class="text-input">
           <label for="bankAccountOwner">Kontoinhaber: *</label>
           <input type="text" id="bic" v-model="application.bankAccountOwner" />
@@ -189,12 +192,13 @@
             :false-value="Checked.NO"
           />
           <label for="sepaAgreement">
-            * SEPA-Lastschriftenmandat Hiermit ermächtige/n ich/wir Sie, die Beitragsgebühren von
-            meinem /unserem Konto mittels Lastschrift einzuziehen. Zugleich weise/n ich/wir
-            mein/unser Kreditinstitut an, die SpVgg Deuringen e.V. auf mein/unser Konto gezogene
-            Lastschriften einzulösen. Hinweis: ich kann/wir können innerhalb von acht Wochen,
-            beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrags verlangen. Es
-            gelten dabei die mit meinem/unserem Kreditinstitut vereinbarten Bedingungen.
+            * SEPA-Lastschriftenmandat <br />
+            Hiermit ermächtige/n ich/wir Sie, die Beitragsgebühren von meinem /unserem Konto mittels
+            Lastschrift einzuziehen. Zugleich weise/n ich/wir mein/unser Kreditinstitut an, die
+            SpVgg Deuringen e.V. auf mein/unser Konto gezogene Lastschriften einzulösen. Hinweis:
+            ich kann/wir können innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die
+            Erstattung des belasteten Betrags verlangen. Es gelten dabei die mit meinem/unserem
+            Kreditinstitut vereinbarten Bedingungen.
           </label>
         </div>
       </div>
@@ -214,25 +218,26 @@
             :false-value="Checked.NO"
           />
           <label for="dataProtectionAgreement">
-            * Datenschutzerklärung Ich willige ein, dass die SpVgg Deuringen, als verantwortliche
-            Stelle, die in der Beitrittserklärung erhobenen personenbezogenen Daten, wie Namen,
-            Vorname, Geburtsdatum, Adresse, E-Mail-Adresse, Telefonnummer und Bankverbindung
-            ausschließlich zum Zwecke der Mitgliederverwaltung, des Beitragseinzuges und der
-            Übermittlung von Vereinsinformationen durch den Verein verarbeitet und genutzt werden.
-            Eine Übermittlung von Teilen dieser Daten an die jeweiligen Sportfachverbände und den
-            Bayerischen Landes Sportverband e.V. (BLSV) findet nur im Rahmen der in den Satzungen
-            der Fachverbände bzw. des BLSV festgelegten Zwecke statt. Diese Datenübermittlungen sind
-            notwendig zum Zweck der Mitgliederverwaltung, zum Zwecke der Organisation eines Spiel-
-            bzw. Wettkampfbetriebes und zum Zwecke der Einwerbung von öffentlichen Fördermitteln.
-            Eine Datenübermittlung an Dritte, außerhalb der Fachverbände und des BLSV, findet nicht
-            statt. Eine Datennutzung für Werbezwecke findet ebenfalls nicht statt. Bei Beendigung
-            der Mitgliedschaft werden die personenbezogenen Daten gelöscht, soweit sie nicht
-            entsprechend der steuerrechtlichen Vorgaben aufbewahrt werden müssen. Neben dem Recht
-            auf Auskunft bezüglich der zu seiner Person bei der verantwortlichen SpVgg Deuringen
-            gespeicherten Daten hat jedes Mitglied, im Rahmen der Vorgaben der DSGVO, das Recht, der
-            Speicherung der Daten, die nicht im Rahmen der gesetzlichen Vorgaben für bestimmte
-            Zeiträume vorgehalten werden müssen, für die Zukunft zu widersprechen. Ferner hat das
-            Mitglied, im Falle von fehlerhaften Daten, ein Korrekturrecht
+            * Datenschutzerklärung <br />
+            Ich willige ein, dass die SpVgg Deuringen, als verantwortliche Stelle, die in der
+            Beitrittserklärung erhobenen personenbezogenen Daten, wie Namen, Vorname, Geburtsdatum,
+            Adresse, E-Mail-Adresse, Telefonnummer und Bankverbindung ausschließlich zum Zwecke der
+            Mitgliederverwaltung, des Beitragseinzuges und der Übermittlung von Vereinsinformationen
+            durch den Verein verarbeitet und genutzt werden. Eine Übermittlung von Teilen dieser
+            Daten an die jeweiligen Sportfachverbände und den Bayerischen Landes Sportverband e.V.
+            (BLSV) findet nur im Rahmen der in den Satzungen der Fachverbände bzw. des BLSV
+            festgelegten Zwecke statt. Diese Datenübermittlungen sind notwendig zum Zweck der
+            Mitgliederverwaltung, zum Zwecke der Organisation eines Spiel- bzw. Wettkampfbetriebes
+            und zum Zwecke der Einwerbung von öffentlichen Fördermitteln. Eine Datenübermittlung an
+            Dritte, außerhalb der Fachverbände und des BLSV, findet nicht statt. Eine Datennutzung
+            für Werbezwecke findet ebenfalls nicht statt. Bei Beendigung der Mitgliedschaft werden
+            die personenbezogenen Daten gelöscht, soweit sie nicht entsprechend der
+            steuerrechtlichen Vorgaben aufbewahrt werden müssen. Neben dem Recht auf Auskunft
+            bezüglich der zu seiner Person bei der verantwortlichen SpVgg Deuringen gespeicherten
+            Daten hat jedes Mitglied, im Rahmen der Vorgaben der DSGVO, das Recht, der Speicherung
+            der Daten, die nicht im Rahmen der gesetzlichen Vorgaben für bestimmte Zeiträume
+            vorgehalten werden müssen, für die Zukunft zu widersprechen. Ferner hat das Mitglied, im
+            Falle von fehlerhaften Daten, ein Korrekturrecht
           </label>
         </div>
       </div>
@@ -287,7 +292,7 @@ import { printIssues } from '../devUtils'
 })
 export default class MembershipFormEditor extends Vue {
   @Prop({ required: true }) appMode!: AppMode
-  @Prop({ required: true }) application!: Application;
+  @Prop({ required: true }) application!: Application
 
   MembershipStartTypes = MembershipStartTypes
   MembershipTypes = MembershipTypes
@@ -381,13 +386,25 @@ export default class MembershipFormEditor extends Vue {
 <style lang="scss" scoped>
 .labeled-checkbox {
   display: flex;
-  margin-left: 20px;
   align-items: flex-start;
   margin-top: 20px;
 
   input {
     margin-right: 10px;
-    margin-top: 8px;
+    margin-top: 5px;
+  }
+
+  label {
+    text-align: justify;
+  }
+}
+
+.labeled-radio {
+  display: flex;
+  align-items: center;
+
+  input {
+    margin-right: 10px;
   }
 
   label {

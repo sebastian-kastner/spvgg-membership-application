@@ -5,7 +5,7 @@
         <input type="button" value="- Mitglied entfernen" @click="removeMember(index)" />
       </div>
     </div>
-    <div class="row">
+    <div class="row no-border">
       <div
         class="text-input col-50"
         :class="{ invalid: !isFieldSet(person.anrede, getFieldName('anrede')) }"
@@ -53,7 +53,7 @@
         />
       </div>
     </div>
-    <div class="row">
+    <div class="row no-border">
       <div
         class="text-input col-50"
         :class="{ invalid: !isFieldSet(person.street, getFieldName('street')) }"
@@ -69,7 +69,7 @@
         <input type="text" :id="getFieldName('streetNumber')" v-model="person.streetNumber" />
       </div>
     </div>
-    <div class="row">
+    <div class="row no-border">
       <div
         class="text-input col-50"
         :class="{ invalid: !isFieldSet(person.zipCode, getFieldName('zipCode')) }"
@@ -111,9 +111,13 @@
     <div class="row">
       <div class="text-input">
         <label :for="getFieldName('isStudent')">Student/Schüler:</label>
-        <div>
-          <label> <input type="radio" v-model="person.isStudent" value="true" /> Ja </label>
-          <label> <input type="radio" v-model="person.isStudent" value="false" /> Nein </label>
+        <div class="student-selector">
+          <div>
+            <label> <input type="radio" v-model="person.isStudent" value="true" /> Ja </label>
+          </div>
+          <div>
+            <label> <input type="radio" v-model="person.isStudent" value="false" /> Nein </label>
+          </div>
         </div>
       </div>
     </div>
@@ -169,11 +173,11 @@ export default class PersonEditor extends Vue {
     const issueKey = 'member.' + this.index + '.dateOfBirth'
     if (this.validationActive && this.person.dateOfBirth && this.person.dateOfBirth.trim() !== '') {
       if (!this.dateOfBirthPattern.test(this.person.dateOfBirth.trim())) {
-        this.validationIssues.issues.add(issueKey);
-        return true;
+        this.validationIssues.issues.add(issueKey)
+        return true
       }
     }
-    this.validationIssues.issues.delete(issueKey);
+    this.validationIssues.issues.delete(issueKey)
     return false
   }
 
@@ -183,12 +187,7 @@ export default class PersonEditor extends Vue {
       this.validationIssues.issues.delete(key)
       return true
     }
-    return validateField(
-      this.validationActive,
-      value,
-      key,
-      this.validationIssues.issues
-    )
+    return validateField(this.validationActive, value, key, this.validationIssues.issues)
   }
 }
 </script>
@@ -199,5 +198,10 @@ export default class PersonEditor extends Vue {
     background-color: lighten(orange, 20%);
     color: black;
   }
+}
+
+.student-selector {
+  display: flex;
+  flex-wrap: wrap;
 }
 </style>
