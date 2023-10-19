@@ -35,7 +35,7 @@ $validation-color: rgba(230, 161, 156, 0.3);
   }
 
   label {
-    padding-right: 10px;
+    padding-right: 4px;
   }
 
   input[type="submit"] {
@@ -47,10 +47,6 @@ $validation-color: rgba(230, 161, 156, 0.3);
     cursor: pointer;
     float: right;
     margin-top: 10px;
-  }
-
-  input[type="radio"] {
-    text-align: justify;
   }
 
   .d-flex {
@@ -123,7 +119,7 @@ $validation-color: rgba(230, 161, 156, 0.3);
     border-radius: 4px;
   }
 
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: 650px) {
     .col-50,
     input[type="submit"] {
       width: 100% !important;

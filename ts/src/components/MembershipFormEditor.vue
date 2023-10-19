@@ -46,12 +46,12 @@
         </div>
         <div class="text-input labeled-radio">
           <div class="d-flex d-flex-wrap">
-          <input
-            type="radio"
-            id="membership_start_from"
-            :value="MembershipStartTypes.FROM"
-            v-model="application.membership_start"
-          />
+            <input
+              type="radio"
+              id="membership_start_from"
+              :value="MembershipStartTypes.FROM"
+              v-model="application.membership_start"
+            />
             <label for="membership_start_from">Ab dem...</label>
             <span>
               <datepicker
@@ -96,48 +96,50 @@
         In welcher Abteilung möchtest Du/Ihr Mitglied sein? (Mehrfachauswahl möglich) *
       </div>
       <div class="row" :class="{ invalid: !isSectionSet() }">
-        <div class="col-50 no-border">
-          <div class="form-input">
-            <input
-              id="section_football"
-              type="checkbox"
-              v-model="application.sections.football"
-              :true-value="Checked.YES"
-              :false-value="Checked.NO"
-            />
-            <label for="section_football">Fußball</label>
+        <div class="d-flex d-flex-wrap">
+          <div class="section-container">
+            <div class="form-input">
+              <input
+                id="section_football"
+                type="checkbox"
+                v-model="application.sections.football"
+                :true-value="Checked.YES"
+                :false-value="Checked.NO"
+              />
+              <label for="section_football">Fußball</label>
+            </div>
+            <div class="form-input">
+              <input
+                id="section_bowling"
+                type="checkbox"
+                v-model="application.sections.bowling"
+                :true-value="Checked.YES"
+                :false-value="Checked.NO"
+              />
+              <label for="section_bowling">Kegeln</label>
+            </div>
           </div>
-          <div class="form-input">
-            <input
-              id="section_bowling"
-              type="checkbox"
-              v-model="application.sections.bowling"
-              :true-value="Checked.YES"
-              :false-value="Checked.NO"
-            />
-            <label for="section_bowling">Kegeln</label>
-          </div>
-        </div>
-        <div class="col-50 no-border">
-          <div class="form-input">
-            <input
-              id="section_theatre"
-              type="checkbox"
-              v-model="application.sections.theatre"
-              :true-value="Checked.YES"
-              :false-value="Checked.NO"
-            />
-            <label for="section_theatre">Theater</label>
-          </div>
-          <div class="form-input">
-            <input
-              id="section_fitness"
-              type="checkbox"
-              v-model="application.sections.fitness"
-              :true-value="Checked.YES"
-              :false-value="Checked.NO"
-            />
-            <label for="section_fitness">Fitness &amp; Freizeit</label>
+          <div class="section-container">
+            <div class="form-input">
+              <input
+                id="section_theatre"
+                type="checkbox"
+                v-model="application.sections.theatre"
+                :true-value="Checked.YES"
+                :false-value="Checked.NO"
+              />
+              <label for="section_theatre">Theater</label>
+            </div>
+            <div class="form-input">
+              <input
+                id="section_fitness"
+                type="checkbox"
+                v-model="application.sections.fitness"
+                :true-value="Checked.YES"
+                :false-value="Checked.NO"
+              />
+              <label for="section_fitness">Fitness &amp; Freizeit</label>
+            </div>
           </div>
         </div>
       </div>
@@ -386,6 +388,10 @@ export default class MembershipFormEditor extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.section-container {
+  min-width: 35%;
+}
+
 .labeled-checkbox {
   display: flex;
   align-items: flex-start;
@@ -395,10 +401,6 @@ export default class MembershipFormEditor extends Vue {
     margin-right: 10px;
     margin-top: 5px;
   }
-
-  label {
-    text-align: justify;
-  }
 }
 
 .labeled-radio {
@@ -407,10 +409,6 @@ export default class MembershipFormEditor extends Vue {
 
   input {
     margin-right: 10px;
-  }
-
-  label {
-    text-align: justify;
   }
 }
 
