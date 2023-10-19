@@ -2,7 +2,7 @@
   <div>
     <div class="row" v-if="index > 0">
       <div class="inline-button-container">
-        <input type="button" value="- Mitglied entfernen" @click="removeMember(index)" />
+        <input class="secondary-btn" type="button" value="- Mitglied entfernen" @click="removeMember(index)" />
       </div>
     </div>
     <div class="row no-border">
@@ -192,12 +192,3 @@ export default class PersonEditor extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-.inline-button-container {
-  input[type='button'] {
-    background-color: lighten(orange, 20%);
-    color: black;
-  }
-}
-
-</style>

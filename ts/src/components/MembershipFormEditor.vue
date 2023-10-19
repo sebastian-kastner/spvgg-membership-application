@@ -1,6 +1,6 @@
 <template>
   <div class="membership-container">
-    <div class="membership-form">
+    <div class="membership-wrapper">
       <div class="required-fields-hint">Mit * markierte Felder müssen ausgefüllt werden</div>
       <!-- MEMBERSHIP OWNER -->
       <div class="row header-row">Wer soll Mitglied werden? *</div>
@@ -268,7 +268,7 @@
         </div>
       </div>
       <div class="row">
-        <input type="submit" value="Weiter" @click="doSubmit" />
+        <input type="button" class="primary-btn" value="Weiter" @click="doSubmit" />
       </div>
       <div
         class="row invalid"

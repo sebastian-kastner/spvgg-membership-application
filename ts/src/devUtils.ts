@@ -19,7 +19,7 @@ export function createDefaultMembership(): Application {
         membership_type: MembershipTypes.SINGLE,
         sections: {
             football: Checked.YES,
-            bowling: Checked.NO,
+            bowling: Checked.YES,
             fitness: Checked.NO,
             theatre: Checked.NO,
         },
@@ -36,6 +36,18 @@ export function createDefaultMembership(): Application {
                 city: "Augsburg",
                 phoneNumber: "08210815",
                 email: "dr@doktor.dr",
+                isStudent: true,
+            },
+            {
+                anrede: "--",
+                title: "Dr.",
+                firstName: "Klein",
+                lastName: "Doktormann",
+                dateOfBirth: "28.08.2015",
+                street: "Invalidenstr",
+                streetNumber: "12",
+                zipCode: "86391",
+                city: "Augsburg",
                 isStudent: true,
             }
         ],
