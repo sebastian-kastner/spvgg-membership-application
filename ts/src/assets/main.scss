@@ -1,13 +1,20 @@
-$min-label-width: 150px;
+$min-label-width: 125px;
 $validation-color: rgba(230, 161, 156, 0.3);
 
 .membership-container {
+  line-height: 1;
+  font-size: 14px;
   border-radius: 5px;
   background-color: #f2f2f2;
   padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  button, input, select {
+    font-size: 14px;
+    line-height: 1;
+  }
 
   .membership-form {
     max-width: 750px;
@@ -17,11 +24,14 @@ $validation-color: rgba(230, 161, 156, 0.3);
   select,
   textarea {
     width: 100%;
-    padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
     resize: vertical;
+  }
+
+  select {
+    padding: 5px 0 5px 0;
   }
 
   label {
@@ -47,10 +57,14 @@ $validation-color: rgba(230, 161, 156, 0.3);
     display: flex;
   }
 
+  .d-flex-wrap {
+    flex-wrap: wrap;
+  }
+
   .col-50 {
     float: left;
     box-sizing: border-box;
-    width: 50%;
+    width: 50% !important;
   }
 
   .form-input,
@@ -71,7 +85,7 @@ $validation-color: rgba(230, 161, 156, 0.3);
     padding-top: 10px;
     padding-bottom: 4px;
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 16px;
   }
 
   .row,
@@ -112,7 +126,7 @@ $validation-color: rgba(230, 161, 156, 0.3);
   @media screen and (max-width: 800px) {
     .col-50,
     input[type="submit"] {
-      width: 100%;
+      width: 100% !important;
     }
     .padded-float {
       padding-left: 0;

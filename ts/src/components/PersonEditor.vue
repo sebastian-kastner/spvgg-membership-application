@@ -111,7 +111,7 @@
     <div class="row">
       <div class="text-input">
         <label :for="getFieldName('isStudent')">Student/Schüler:</label>
-        <div class="student-selector">
+        <div class="d-flex d-flex-wrap">
           <div>
             <label> <input type="radio" v-model="person.isStudent" value="true" /> Ja </label>
           </div>
@@ -200,8 +200,4 @@ export default class PersonEditor extends Vue {
   }
 }
 
-.student-selector {
-  display: flex;
-  flex-wrap: wrap;
-}
 </style>

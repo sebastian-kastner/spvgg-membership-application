@@ -45,23 +45,25 @@
           <label for="membership_start_now">Nächstmöglicher Zeitpunkt</label>
         </div>
         <div class="text-input labeled-radio">
+          <div class="d-flex d-flex-wrap">
           <input
             type="radio"
             id="membership_start_from"
             :value="MembershipStartTypes.FROM"
             v-model="application.membership_start"
           />
-          <label for="membership_start_from">Ab dem...</label>
-          <span>
-            <datepicker
-              v-model="application.membership_start_date"
-              :lowerLimit="new Date()"
-              :locale="locale"
-              inputFormat="dd.MM.yyyy"
-              :clearable="false"
-              :disabled="application.membership_start !== MembershipStartTypes.FROM"
-            />
-          </span>
+            <label for="membership_start_from">Ab dem...</label>
+            <span>
+              <datepicker
+                v-model="application.membership_start_date"
+                :lowerLimit="new Date()"
+                :locale="locale"
+                inputFormat="dd.MM.yyyy"
+                :clearable="false"
+                :disabled="application.membership_start !== MembershipStartTypes.FROM"
+              />
+            </span>
+          </div>
         </div>
       </div>
       <!-- MEMBERSHIP TYPE -->
