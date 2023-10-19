@@ -1,6 +1,8 @@
 <template>
-  <div class="membership-container">
-    <div class="membership-wrapper">
+  <div class="membership-container" ref="scrollToDiv">
+    <form :action="action" class="membership-wrapper" method="post">
+      <input type="hidden" name="formatted_values" :value="formattedValues" />
+      <input type="hidden" name="plain_values" :value="plainValues" />
       <div class="row header-row">Antrag überprüfen</div>
       <div class="row">
         <div class="label conf-col-50">Mitgliedschaft für:</div>
@@ -72,13 +74,13 @@
       </div>
       <div class="row">
         <div class="conf-col-50">
-          <input type="button" class="primary-btn" value="Bestätigen" @click="doSubmit" />
+          <input type="submit" class="primary-btn" value="Bestätigen" @click="doSubmit" />
         </div>
         <div class="conf-col-50">
           <input type="button" class="secondary-btn" value="Überarbeiten" @click="doEdit" />
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
@@ -105,7 +107,25 @@ export default class MembershipConfirmation extends Vue {
   @Prop({ required: true }) appMode!: AppMode
   @Prop({ required: true }) application!: Application
 
-  contents = JSON.stringify(this.application, null, 2)
+  formattedValues = "";
+  plainValues = "";
+
+  public mounted(): void {
+    this.formattedValues = btoa(toString(this.application));
+    this.plainValues = btoa(JSON.stringify(this.application));
+
+    // Use $refs to access the element with the specified ref
+    const targetDiv = this.$refs.scrollToDiv as any;
+
+    if (targetDiv) {
+      // Scroll to the target div
+      targetDiv.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
+  get action(): string {
+    return window.location.toString();
+  }
 
   get membershipOwner(): string {
     return getMembershipOwner(this.application)

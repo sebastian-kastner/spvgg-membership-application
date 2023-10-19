@@ -59,7 +59,7 @@ export function getMembershipType(application: Application): string {
 
 export function getMembershipOwner(application: Application): string {
     if (application.membership_owner === MembershipOwnerTypes.SELF) {
-        return 'Antragssteller'
+        return 'Antragsteller'
     }
     return 'Andere Person'
 }

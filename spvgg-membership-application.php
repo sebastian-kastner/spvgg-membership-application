@@ -49,7 +49,7 @@ function show_membership_application()
 	if (empty($_POST)) {
 		return get_vue_form();
 	} else {
-		return "Post data";
+		return base64_decode($_POST['formatted_values']);
 	}
 }
 
