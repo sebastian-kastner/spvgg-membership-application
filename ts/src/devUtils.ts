@@ -15,7 +15,7 @@ export function printIssues(issues: Set<string>): void {
 export function createDefaultMembership(): Application {
     return {
         membership_owner: MembershipOwnerTypes.SELF,
-        membership_start: MembershipStartTypes.NOW,
+        membership_start: MembershipStartTypes.FROM,
         membership_type: MembershipTypes.SINGLE,
         sections: {
             football: Checked.YES,
@@ -49,7 +49,7 @@ export function createDefaultMembership(): Application {
                 zipCode: "86391",
                 city: "Augsburg",
                 isStudent: true,
-            }
+            },
         ],
         iban: "doktor-ban",
         bankAccountOwner: "Dr. Doktor Doktormann",

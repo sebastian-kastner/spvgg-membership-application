@@ -21,13 +21,12 @@
       <div class="row header-row">Mitgliederdaten</div>
       <div class="member-summary" v-for="(person, index) in application.people" :key="index">
         <div class="row">
-          <div class="member-header" v-if="index === 0">Antragsteller</div>
-          <div class="member-header" v-else>Mitglied {{ index + 1 }}</div>
+          <div class="member-header">{{ getMemberTitle(index) }}</div>
         </div>
         <div class="row">
           <div class="label conf-col-50">Name:</div>
           <div class="conf-col-50 value">
-            {{ getPersonName(person) }}
+            {{ getName(person) }}
           </div>
         </div>
         <div class="row">
@@ -37,8 +36,8 @@
         <div class="row">
           <div class="label conf-col-50">Addresse:</div>
           <div class="conf-col-50 value">
-            <div>{{ person.street }} {{ person.streetNumber }}</div>
-            <div>{{ person.zipCode }} {{ person.city }}</div>
+            <div>{{ getStreet(person) }}</div>
+            <div>{{ getCity(person) }}</div>
           </div>
         </div>
         <div class="row" v-if="person.email">
@@ -85,8 +84,19 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-facing-decorator'
-import { MembershipTypes, MembershipOwnerTypes, MembershipStartTypes, Checked } from '../types'
 import type { Application, AppMode, Person } from '../types'
+import {
+  getName,
+  getMembershipStart,
+  getCity,
+  getStreet,
+  getMemberTitle,
+  getMembershipOwner,
+  getMembershipType,
+  getSections,
+  getIsStudent,
+  toString
+} from '../membership_formatter'
 
 @Component({
   components: {}
@@ -98,73 +108,39 @@ export default class MembershipConfirmation extends Vue {
   contents = JSON.stringify(this.application, null, 2)
 
   get membershipOwner(): string {
-    if (this.application.membership_owner === MembershipOwnerTypes.SELF) {
-      return 'Antragssteller'
-    }
-    return 'Andere Person'
+    return getMembershipOwner(this.application)
   }
 
-  getPersonName(person: Person): string {
-    const parts: string[] = []
-    if (person.anrede && person.anrede !== '--') {
-      parts.push(person.anrede)
-    }
-    if (person.title) {
-      parts.push(person.title)
-    }
-    if (person.firstName) {
-      parts.push(person.firstName)
-    }
-    if (person.lastName) {
-      parts.push(person.lastName)
-    }
-    return parts.join(' ')
+  getMemberTitle(index: number): string {
+    return getMemberTitle(index)
+  }
+
+  getName(person: Person): string {
+    return getName(person)
+  }
+
+  getStreet(person: Person): string {
+    return getStreet(person)
+  }
+
+  getCity(person: Person): string {
+    return getCity(person)
   }
 
   get membershipStart(): string {
-    if (
-      this.application.membership_start === MembershipStartTypes.FROM &&
-      this.application.membership_start_date
-    ) {
-      const date = this.application.membership_start_date
-      const day = String(date.getDate()).padStart(2, '0')
-      const month = String(date.getMonth() + 1).padStart(2, '0') // Month is zero-based
-      const year = date.getFullYear()
-
-      return `${day}.${month}.${year}`
-    }
-    return 'Nächstmöglicher Zeitpunkt'
+    return getMembershipStart(this.application)
   }
 
   get membershipType(): string {
-    if (this.application.membership_type === MembershipTypes.FAMILY) {
-      return 'Familienmitgliedschaft'
-    }
-    return 'Einzelmitgliedschaft'
+    return getMembershipType(this.application);
   }
 
   get sections(): string {
-    const sections: string[] = []
-    if (this.application.sections.football === Checked.YES) {
-      sections.push('Fußball')
-    }
-    if (this.application.sections.bowling === Checked.YES) {
-      sections.push('Kegeln')
-    }
-    if (this.application.sections.fitness === Checked.YES) {
-      sections.push('Fitness & Freizeit')
-    }
-    if (this.application.sections.theatre === Checked.YES) {
-      sections.push('Theater')
-    }
-    return sections.join(', ')
+    return getSections(this.application);
   }
 
   isStudent(person: Person): string {
-    if (person.isStudent) {
-      return 'Ja'
-    }
-    return 'Nein'
+    return getIsStudent(person);
   }
 
   doEdit(): void {
@@ -172,7 +148,11 @@ export default class MembershipConfirmation extends Vue {
   }
 
   doSubmit(): void {
-    console.log('DO THE SUBMIT!')
+    const summary = toString(this.application);
+    console.log(summary);
+    const base64 = btoa(summary);
+    console.log(base64);
+    console.log(base64.length);
   }
 }
 </script>

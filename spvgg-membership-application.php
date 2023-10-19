@@ -55,11 +55,11 @@ function show_membership_application()
 
 function enqueue_form_assets()
 {
-	$dir = __DIR__  . '/public/assets/';
+	$dir = __DIR__ . '/public/assets/';
 	$files = scandir($dir);
 	foreach ($files as &$file) {
 		// add css js files
-		if(str_ends_with($file, ".js")) {
+		if (str_ends_with($file, ".js")) {
 			$script_name = 'spvgg-membership-' . $file;
 			$script_path = plugin_dir_url(__FILE__) . 'public/assets/' . $file;
 			wp_enqueue_script($script_name, $script_path);
@@ -71,7 +71,8 @@ function enqueue_form_assets()
 	}
 }
 
-function get_vue_form() {
+function get_vue_form()
+{
 	return '<div id="app"></div>';
 }
 
