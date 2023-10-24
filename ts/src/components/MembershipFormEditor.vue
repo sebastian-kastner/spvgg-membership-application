@@ -2,33 +2,6 @@
   <div class="membership-container">
     <div class="membership-wrapper">
       <div class="required-fields-hint">Mit * markierte Felder müssen ausgefüllt werden</div>
-      <!-- MEMBERSHIP OWNER -->
-      <div class="row header-row">Wer soll Mitglied werden? *</div>
-      <div
-        class="row"
-        :class="{ invalid: !isFieldSet(application.membership_owner, 'membershipOwner') }"
-      >
-        <div class="form-input labeled-radio">
-          <input
-            type="radio"
-            id="new_member_self"
-            :value="MembershipOwnerTypes.SELF"
-            v-model="application.membership_owner"
-          />
-          <label for="new_member_self">Ich möchte Mitglied werden</label>
-        </div>
-        <div class="form-input labeled-radio">
-          <input
-            type="radio"
-            id="new_member_other"
-            :value="MembershipOwnerTypes.OTHER"
-            v-model="application.membership_owner"
-          />
-          <label for="new_member_other"
-            >Ich möchte die Mitgliedschaft für eine andere Person beantragen</label
-          >
-        </div>
-      </div>
       <!-- MEMBERSHIP START DATE -->
       <div class="row header-row">Ab wann möchtest Du als Mitglied aufgenommen werden? *</div>
       <div
@@ -286,7 +259,7 @@ import { Component, Vue, Prop } from 'vue-facing-decorator'
 import Datepicker from 'vue3-datepicker'
 import { de } from 'date-fns/locale'
 import MemberListEditor from './MemberListEditor.vue'
-import { MembershipOwnerTypes, MembershipStartTypes, MembershipTypes, Checked } from '../types'
+import { MembershipStartTypes, MembershipTypes, Checked } from '../types'
 import { validateField } from '../fieldValidator'
 import type { Application, ValidationIssues, AppMode } from '../types'
 import { printIssues } from '../devUtils'
@@ -300,7 +273,6 @@ export default class MembershipFormEditor extends Vue {
 
   MembershipStartTypes = MembershipStartTypes
   MembershipTypes = MembershipTypes
-  MembershipOwnerTypes = MembershipOwnerTypes
   Checked = Checked
 
   missingRequiredFields = false

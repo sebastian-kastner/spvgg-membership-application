@@ -1,5 +1,5 @@
 import type { Application, Member } from './types'
-import { Checked, MembershipOwnerTypes, MembershipStartTypes, MembershipTypes } from './types';
+import { Checked, MembershipStartTypes, MembershipTypes } from './types';
 
 export function getName(member: Member): string {
     const parts: string[] = []
@@ -57,20 +57,6 @@ export function getMembershipType(application: Application): string {
     return 'Einzelmitgliedschaft'
 }
 
-export function getMembershipOwner(application: Application): string {
-    if (application.membership_owner === MembershipOwnerTypes.SELF) {
-        return 'Antragsteller'
-    }
-    return 'Andere Person'
-}
-
-export function getMemberTitle(index: number): string {
-    if (index === 0) {
-        return 'Antragsteller'
-    }
-    return 'Mitglied ' + (index + 1)
-}
-
 export function getMembershipStart(application: Application): string {
     if (
         application.membership_start === MembershipStartTypes.FROM
@@ -93,7 +79,6 @@ export function toString(application: Application): string {
     
     const contents: [string?, string?][] = [];
     // general data
-    contents.push(["Mitgliedschaft für", getMembershipOwner(application)])
     contents.push(["Start der Mitgliedschaft", getMembershipStart(application)])
     contents.push(["Mitgliedschaftstyp", getMembershipType(application)])
     contents.push(["Abteilungen", getSections(application)])
@@ -105,7 +90,6 @@ export function toString(application: Application): string {
 
     // member data
     application.members?.forEach((member, index) => {
-        contents.push([getMemberTitle(index)])
         contents.push(["Name", getName(member)])
         contents.push(["Geburtsdatum", member.dateOfBirth])
         contents.push(["Adresse", `${getStreet(member)}, ${getCity(member)}`])

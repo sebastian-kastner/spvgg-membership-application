@@ -5,10 +5,6 @@
       <input type="hidden" name="plain_values" :value="plainValues" />
       <div class="row header-row">Antrag überprüfen</div>
       <div class="row">
-        <div class="label conf-col-50">Mitgliedschaft für:</div>
-        <div class="conf-col-50 value">{{ membershipOwner }}</div>
-      </div>
-      <div class="row">
         <div class="label conf-col-50">Start der Mitgliedschaft:</div>
         <div class="conf-col-50 value">{{ membershipStart }}</div>
       </div>
@@ -22,9 +18,6 @@
       </div>
       <div class="row header-row">Mitgliederdaten</div>
       <div class="member-summary" v-for="(member, index) in application.members" :key="index">
-        <div class="row">
-          <div class="member-header">{{ getMemberTitle(index) }}</div>
-        </div>
         <div class="row">
           <div class="label conf-col-50">Name:</div>
           <div class="conf-col-50 value">
@@ -92,8 +85,6 @@ import {
   getMembershipStart,
   getCity,
   getStreet,
-  getMemberTitle,
-  getMembershipOwner,
   getMembershipType,
   getSections,
   getIsStudent,
@@ -141,14 +132,6 @@ export default class MembershipConfirmation extends Vue {
 
   get action(): string {
     return window.location.toString();
-  }
-
-  get membershipOwner(): string {
-    return getMembershipOwner(this.application)
-  }
-
-  getMemberTitle(index: number): string {
-    return getMemberTitle(index)
   }
 
   getName(member: Member): string {

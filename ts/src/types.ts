@@ -36,11 +36,6 @@ export enum MembershipTypes {
     SINGLE = 'single'
 };
 
-export enum MembershipOwnerTypes {
-    SELF = 'self',
-    OTHER = 'other'
-}
-
 export type Application = {
     membership_owner?: string,
     membership_start?: string,

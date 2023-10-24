@@ -1,5 +1,5 @@
 // THIS FILE MUST BE DELETED BEFORE RELEASING TO PRODUCTION!
-import { Checked, MembershipOwnerTypes, MembershipStartTypes, MembershipTypes } from './types'
+import { Checked, MembershipStartTypes, MembershipTypes } from './types'
 import type { Application } from './types'
 
 export function printIssues(issues: Set<string>): void {
@@ -14,7 +14,6 @@ export function printIssues(issues: Set<string>): void {
 
 export function createDefaultMembership(): Application {
     return {
-        membership_owner: MembershipOwnerTypes.SELF,
         membership_start: MembershipStartTypes.FROM,
         membership_type: MembershipTypes.SINGLE,
         sections: {
