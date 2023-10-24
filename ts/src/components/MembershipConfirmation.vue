@@ -111,6 +111,13 @@ export default class MembershipConfirmation extends Vue {
   plainValues = "";
 
   public mounted(): void {
+    // create state for browser history to enable navigation using the browser's back button
+    const title = document.title;
+    const url = window.location.href + "#confirm";
+    history.pushState({ }, title, url);
+    // handle browser back event
+    window.addEventListener('popstate', this.handleBrowserBack);
+
     this.formattedValues = btoa(toString(this.application));
     this.plainValues = btoa(JSON.stringify(this.application));
 
@@ -121,6 +128,16 @@ export default class MembershipConfirmation extends Vue {
       // Scroll to the target div
       targetDiv.scrollIntoView({ behavior: "smooth" });
     }
+  }
+
+  public beforeUnmount(): void {
+    // Remove the event listener when the component is about to be unmounted
+    console.log("removing popstate listener");
+    window.removeEventListener('popstate', this.handleBrowserBack);
+  }
+
+  private handleBrowserBack(): void {
+    this.appMode.isEditMode = true;
   }
 
   get action(): string {
@@ -164,6 +181,10 @@ export default class MembershipConfirmation extends Vue {
   }
 
   doEdit(): void {
+    const title = document.title;
+    const url = window.location.href.replace("#confirm", "");
+    history.pushState({ }, title, url);
+
     this.appMode.isEditMode = true
   }
 
