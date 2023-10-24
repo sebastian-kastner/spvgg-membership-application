@@ -74,6 +74,13 @@ export function getMembershipStart(application: Application): string {
     return 'Nächstmöglicher Zeitpunkt'
 }
 
+function checkedToString(checked: Checked | undefined): string {
+    if (checked) {
+        return checked.toString();
+    }
+    return " ";
+}
+
 export function toString(application: Application): string {
     const formattingOffset = 5;
     
@@ -89,7 +96,7 @@ export function toString(application: Application): string {
     contents.push([])
 
     // member data
-    application.members?.forEach((member, index) => {
+    application.members?.forEach((member) => {
         contents.push(["Name", getName(member)])
         contents.push(["Geburtsdatum", member.dateOfBirth])
         contents.push(["Adresse", `${getStreet(member)}, ${getCity(member)}`])
@@ -110,6 +117,10 @@ export function toString(application: Application): string {
     contents.push(["BIC", application.bic])
     contents.push(["Kreditinstitut", application.bankName])
     contents.push(["Kontoinhaber", application.bankAccountOwner])
+    contents.push([])
+    contents.push(["Zustimmung SEPA Verfahren", checkedToString(application.sepaAgreement)]);
+    contents.push(["Zustimming Datenschutzerklärung", checkedToString(application.dataProtectionAgreement)]);
+    contents.push(["Zustimming Veröffentlichungen", checkedToString(application.publicationAgreement)]);
 
     // find longest title
     let longestTitle = 0;

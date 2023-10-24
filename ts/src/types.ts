@@ -7,8 +7,8 @@ export type ValidationIssues = {
 }
 
 export enum Checked {
-    YES,
-    NO
+    YES = "Ja",
+    NO = "Nein"
 }
 
 export type Member = {
