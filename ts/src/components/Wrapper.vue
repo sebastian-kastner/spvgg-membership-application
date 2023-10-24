@@ -21,17 +21,17 @@ export default class Wrapper extends Vue {
     isEditMode: true
   }
 
-  application: Application = createDefaultMembership()
-  // application: Application = {
-  //   membership_start_date: new Date(),
-  //   members: [],
-  //   sections: {
-  //     football: Checked.NO,
-  //     bowling: Checked.NO,
-  //     fitness: Checked.NO,
-  //     theatre: Checked.NO
-  //   }
-  // }
+  // application: Application = createDefaultMembership()
+  application: Application = {
+    membership_start_date: new Date(),
+    members: [],
+    sections: {
+      football: Checked.NO,
+      bowling: Checked.NO,
+      fitness: Checked.NO,
+      theatre: Checked.NO
+    }
+  }
 
   get isEditMode(): boolean {
     return this.appMode.isEditMode
