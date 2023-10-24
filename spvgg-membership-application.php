@@ -44,15 +44,16 @@ function show_membership_application()
 	if (empty($_POST)) {
 		return '<div id="app"></div>';
 	} else {
-		$raw_data = json_decode(base64_decode($_POST['plain_values']));
+		// decode base64. convert to utf8. decode json as array
+		$raw_data = json_decode(mb_convert_encoding(base64_decode($_POST['plain_values']), 'UTF-8', 'ISO-8859-1'), true);
+		// decode base64. convert to utf8.
 		$formatted_data = mb_convert_encoding(base64_decode($_POST['formatted_values']), 'UTF-8', 'ISO-8859-1');
 
 		$first_member = get_first_member($raw_data);
 		$first_member_email = get_email($first_member);
 		$first_member_name = get_name($first_member);
-		$all_fields_set = all_fields_set($raw_data);
 
-		if ($first_member_email == null || $first_member_name == null || !$all_fields_set) {
+		if ($first_member_email == null || $first_member_name == null || !all_fields_set($raw_data)) {
 			return "Der Mitgliedschaftsantrag ist unvollständig. Gehen sie zurück und vervollständigen sie den Antrag.";
 		}
 
@@ -72,28 +73,34 @@ function show_membership_application()
 		if ($mailed) {
 			return "Dein Antrag und eine Bestätigung an " . $first_member_email . " wurde erfolgreich verschickt. Wir bearbeiten den Antrag so schnell wie möglich!";
 		} else {
-			return "Die eMail konnte nicht verschickt werden";
+			return "Fehler beim Versenden der eMail";
 		}
 	}
 }
 
 function all_fields_set($data): bool
-{
-	if (!isset($data->sepaAgreement) || $data->sepaAgreement != "Yes") {
+{	
+	$sepaAgreement = get_value($data, "sepaAgreement");
+	if (!isset($sepaAgreement) || $sepaAgreement != "Ja") {
 		return false;
 	}
-	if (!isset($data->dataProtectionAgreement) || $data->dataProtectionAgreement != "Yes") {
+	$dataProtectionAgreement = get_value($data, "dataProtectionAgreement");
+	if (!isset($dataProtectionAgreement) || $dataProtectionAgreement != "Ja") {
 		return false;
 	}
-	if (!isset($data->publicationAgreement) || $data->publicationAgreement != "Yes") {
+	$publicationAgreement = get_value($data, "publicationAgreement");
+	if (!isset($publicationAgreement) || $publicationAgreement != "Ja") {
 		return false;
 	}
 	return true;
 }
 
-function get_first_member($data): ?object
+function get_first_member($data)
 {
-	$members = $data->members;
+	if (!array_key_exists("members", $data)) {
+		return null;
+	}
+	$members = $data["members"];
 	if (isset($members) && is_array($members) && count($members) > 0) {
 		return $members[0];
 	}
@@ -105,7 +112,7 @@ function get_email($member): ?string
 	if ($member == null) {
 		return null;
 	}
-	$email = $member->email;
+	$email = get_value($member, "email");
 	if (isset($email)) {
 		return $email;
 	}
@@ -117,9 +124,9 @@ function get_name($member): ?string
 	if ($member == null) {
 		return null;
 	}
-	$title = $member->title;
-	$firstName = $member->firstName;
-	$lastName = $member->lastName;
+	$title = get_value($member, "title");
+	$firstName = get_value($member, "firstName");
+	$lastName = get_value($member, "lastName");
 	if (isset($firstName) && isset($lastName)) {
 		$name = "";
 		if (isset($title) && $title != "") {
@@ -131,7 +138,14 @@ function get_name($member): ?string
 	return null;
 }
 
-function get_dump($data): string
+function get_value($array, $key): ?string {
+	if (array_key_exists($key, $array)) {
+		return $array[$key];
+	}
+	return null;
+}
+
+function get_dump(...$data): string
 {
 	$out = "<pre>";
 	ob_start();

@@ -25,7 +25,6 @@ export function createDefaultMembership(): Application {
         members: [
             {
                 anrede: "Herr",
-                title: "Dr.",
                 firstName: "Doktor",
                 lastName: "Doktormann",
                 dateOfBirth: "28.08.2009",
