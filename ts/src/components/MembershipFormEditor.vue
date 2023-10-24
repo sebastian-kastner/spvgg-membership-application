@@ -240,15 +240,15 @@
           </label>
         </div>
       </div>
-      <div class="row">
-        <input type="button" class="primary-btn" value="Weiter" @click="doSubmit" />
-      </div>
       <div
         class="row invalid"
         id="issue-marker"
         :class="{ hidden: !hasValidationIssues, truffleShuffle: truffleShuffle }"
       >
         Rot hinterlegte Validierungsfehler müssen behoben werden um das Formular abzuschicken
+      </div>
+      <div class="row">
+        <input type="button" class="primary-btn" value="Weiter" @click="doSubmit" />
       </div>
     </div>
   </div>
@@ -391,6 +391,7 @@ export default class MembershipFormEditor extends Vue {
 }
 
 #issue-marker {
+  margin-top: 10px;
   padding: 5px;
   text-align: center;
 }
