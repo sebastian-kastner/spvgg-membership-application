@@ -8,10 +8,10 @@
     <div class="row no-border">
       <div
         class="text-input col-50"
-        :class="{ invalid: !isFieldSet(person.anrede, getFieldName('anrede')) }"
+        :class="{ invalid: !isFieldSet(member.anrede, getFieldName('anrede')) }"
       >
         <label :for="getFieldName('anrede')">Anrede: *</label>
-        <select v-model="person.anrede" :id="getFieldName('anrede')">
+        <select v-model="member.anrede" :id="getFieldName('anrede')">
           <option value="--">--</option>
           <option value="Herr">Herr</option>
           <option value="Frau">Frau</option>
@@ -19,25 +19,25 @@
       </div>
       <div class="text-input col-50">
         <label :for="getFieldName('title')" class="padded-float">Titel:</label>
-        <input type="text" :id="getFieldName('title')" v-model="person.title" />
+        <input type="text" :id="getFieldName('title')" v-model="member.title" />
       </div>
     </div>
-    <div class="row" :class="{ invalid: !isFieldSet(person.firstName, getFieldName('firstName')) }">
+    <div class="row" :class="{ invalid: !isFieldSet(member.firstName, getFieldName('firstName')) }">
       <div class="text-input">
         <label :for="getFieldName('firstName')">Vorname: *</label>
-        <input type="text" :id="getFieldName('firstName')" v-model="person.firstName" />
+        <input type="text" :id="getFieldName('firstName')" v-model="member.firstName" />
       </div>
     </div>
-    <div class="row" :class="{ invalid: !isFieldSet(person.lastName, getFieldName('lastName')) }">
+    <div class="row" :class="{ invalid: !isFieldSet(member.lastName, getFieldName('lastName')) }">
       <div class="text-input">
         <label :for="getFieldName('lastName')">Nachname: *</label>
-        <input type="text" :id="getFieldName('lastName')" v-model="person.lastName" />
+        <input type="text" :id="getFieldName('lastName')" v-model="member.lastName" />
       </div>
     </div>
     <div
       class="row"
       :class="{
-        invalid: !isFieldSet(person.dateOfBirth, getFieldName('dateOfBirth')) || invalidDateOfBirth
+        invalid: !isFieldSet(member.dateOfBirth, getFieldName('dateOfBirth')) || invalidDateOfBirth
       }"
     >
       <div class="field-error" v-if="invalidDateOfBirth">
@@ -48,7 +48,7 @@
         <input
           type="text"
           :id="getFieldName('dateOfBirth')"
-          v-model="person.dateOfBirth"
+          v-model="member.dateOfBirth"
           placeholder="dd.mm.yyyy"
         />
       </div>
@@ -56,56 +56,56 @@
     <div class="row no-border">
       <div
         class="text-input col-50"
-        :class="{ invalid: !isFieldSet(person.street, getFieldName('street')) }"
+        :class="{ invalid: !isFieldSet(member.street, getFieldName('street')) }"
       >
         <label :for="getFieldName('street')">Straße: *</label>
-        <input type="text" :id="getFieldName('street')" v-model="person.street" />
+        <input type="text" :id="getFieldName('street')" v-model="member.street" />
       </div>
       <div
         class="text-input col-50"
-        :class="{ invalid: !isFieldSet(person.streetNumber, getFieldName('streetNumber')) }"
+        :class="{ invalid: !isFieldSet(member.streetNumber, getFieldName('streetNumber')) }"
       >
         <label :for="getFieldName('streetNumber')" class="padded-float">Hausnr: *</label>
-        <input type="text" :id="getFieldName('streetNumber')" v-model="person.streetNumber" />
+        <input type="text" :id="getFieldName('streetNumber')" v-model="member.streetNumber" />
       </div>
     </div>
     <div class="row no-border">
       <div
         class="text-input col-50"
-        :class="{ invalid: !isFieldSet(person.zipCode, getFieldName('zipCode')) }"
+        :class="{ invalid: !isFieldSet(member.zipCode, getFieldName('zipCode')) }"
       >
         <label :for="getFieldName('street')">PLZ: *</label>
-        <input type="text" :id="getFieldName('zipCode')" v-model="person.zipCode" />
+        <input type="text" :id="getFieldName('zipCode')" v-model="member.zipCode" />
       </div>
       <div
         class="text-input col-50"
-        :class="{ invalid: !isFieldSet(person.city, getFieldName('city')) }"
+        :class="{ invalid: !isFieldSet(member.city, getFieldName('city')) }"
       >
         <label :for="getFieldName('city')" class="padded-float">Ort: *</label>
-        <input type="text" :id="getFieldName('city')" v-model="person.city" />
+        <input type="text" :id="getFieldName('city')" v-model="member.city" />
       </div>
     </div>
     <div
       class="row"
-      :class="{ invalid: !isFieldSet(person.phoneNumber, getFieldName('phoneNumber'), true) }"
+      :class="{ invalid: !isFieldSet(member.phoneNumber, getFieldName('phoneNumber'), true) }"
     >
       <div class="text-input">
         <label :for="getFieldName('phoneNumber')">{{
           getFieldWithConditionalRequiredMarker('Telefonnr:')
         }}</label>
-        <input type="text" :id="getFieldName('phoneNumber')" v-model="person.phoneNumber" />
+        <input type="text" :id="getFieldName('phoneNumber')" v-model="member.phoneNumber" />
       </div>
     </div>
     <div
       class="row"
-      :class="{ invalid: !isFieldSet(person.email, getFieldName('email'), true) || invalidEmail }"
+      :class="{ invalid: !isFieldSet(member.email, getFieldName('email'), true) || invalidEmail }"
     >
       <div class="field-error" v-if="invalidEmail">Die Adresse hat kein gültiges Format!</div>
       <div class="text-input">
         <label :for="getFieldName('email')">{{
           getFieldWithConditionalRequiredMarker('eMail:')
         }}</label>
-        <input type="text" :id="getFieldName('email')" v-model="person.email" />
+        <input type="text" :id="getFieldName('email')" v-model="member.email" />
       </div>
     </div>
     <div class="row">
@@ -113,10 +113,10 @@
         <label :for="getFieldName('isStudent')">Student/Schüler:</label>
         <div class="d-flex d-flex-wrap">
           <div>
-            <label> <input type="radio" v-model="person.isStudent" value="true" /> Ja </label>
+            <label> <input type="radio" v-model="member.isStudent" value="true" /> Ja </label>
           </div>
           <div>
-            <label> <input type="radio" v-model="person.isStudent" value="false" /> Nein </label>
+            <label> <input type="radio" v-model="member.isStudent" value="false" /> Nein </label>
           </div>
         </div>
       </div>
@@ -127,14 +127,14 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-facing-decorator'
 import { validateField } from '../fieldValidator'
-import type { Person, ValidationIssues } from '../types'
+import type { Member, ValidationIssues } from '../types'
 
 @Component({
   components: {},
   emits: ['removeMember']
 })
-export default class PersonEditor extends Vue {
-  @Prop({ required: true }) person!: Person
+export default class MemberEditor extends Vue {
+  @Prop({ required: true }) member!: Member
   @Prop({ required: true }) index!: number
   @Prop({ required: true }) validationActive!: boolean
   @Prop({ required: true }) validationIssues!: ValidationIssues
@@ -159,8 +159,8 @@ export default class PersonEditor extends Vue {
 
   get invalidEmail(): boolean {
     const issueKey = 'member.' + this.index + '.email'
-    if (this.validationActive && this.person.email && this.person.email.trim() !== '') {
-      if (!this.emailPattern.test(this.person.email.trim())) {
+    if (this.validationActive && this.member.email && this.member.email.trim() !== '') {
+      if (!this.emailPattern.test(this.member.email.trim())) {
         this.validationIssues.issues.add(issueKey)
         return true
       }
@@ -171,8 +171,8 @@ export default class PersonEditor extends Vue {
 
   get invalidDateOfBirth(): boolean {
     const issueKey = 'member.' + this.index + '.dateOfBirth'
-    if (this.validationActive && this.person.dateOfBirth && this.person.dateOfBirth.trim() !== '') {
-      if (!this.dateOfBirthPattern.test(this.person.dateOfBirth.trim())) {
+    if (this.validationActive && this.member.dateOfBirth && this.member.dateOfBirth.trim() !== '') {
+      if (!this.dateOfBirthPattern.test(this.member.dateOfBirth.trim())) {
         this.validationIssues.issues.add(issueKey)
         return true
       }

@@ -11,7 +11,7 @@ export enum Checked {
     NO
 }
 
-export type Person = {
+export type Member = {
     title?: string,
     anrede?: string,
     firstName?: string,
@@ -63,5 +63,5 @@ export type Application = {
     dataProtectionAgreement?: Checked;
     publicationAgreement?: Checked;
 
-    people?: Person[];
+    members?: Member[];
 }

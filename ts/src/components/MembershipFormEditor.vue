@@ -145,8 +145,8 @@
       </div>
       <!-- MEMBERSHIP PEOPLE -->
       <div class="row header-row">Hier kannst du Deine/Eure Mitgliederdaten eintragen</div>
-      <person-list-editor
-        :people="application.people"
+      <member-list-editor
+        :members="application.members"
         :isFamily="application.membership_type === MembershipTypes.FAMILY"
         :validationActive="validationActive"
         :validationIssues="validationIssues"
@@ -285,14 +285,14 @@
 import { Component, Vue, Prop } from 'vue-facing-decorator'
 import Datepicker from 'vue3-datepicker'
 import { de } from 'date-fns/locale'
-import PersonListEditor from './PersonListEditor.vue'
+import MemberListEditor from './MemberListEditor.vue'
 import { MembershipOwnerTypes, MembershipStartTypes, MembershipTypes, Checked } from '../types'
 import { validateField } from '../fieldValidator'
 import type { Application, ValidationIssues, AppMode } from '../types'
 import { printIssues } from '../devUtils'
 
 @Component({
-  components: { Datepicker, PersonListEditor }
+  components: { Datepicker, MemberListEditor }
 })
 export default class MembershipFormEditor extends Vue {
   @Prop({ required: true }) appMode!: AppMode

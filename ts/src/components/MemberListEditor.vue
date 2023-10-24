@@ -1,10 +1,10 @@
 <template>
-  <div class="person-list">
-    <person-editor
+  <div class="member-list">
+    <member-editor
       class="member"
-      v-for="(person, index) in people"
+      v-for="(member, index) in members"
       :key="index"
-      :person="person"
+      :member="member"
       :index="index"
       :validation-active="validationActive"
       :validation-issues="validationIssues"
@@ -20,49 +20,49 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-facing-decorator'
-import type { Person, ValidationIssues } from '../types'
-import PersonEditor from './PersonEditor.vue'
+import type { Member, ValidationIssues } from '../types'
+import MemberEditor from './MemberEditor.vue'
 
 @Component({
-  components: { PersonEditor }
+  components: { MemberEditor }
 })
-export default class PersonListEditor extends Vue {
-  @Prop({ required: true }) people!: Person[]
+export default class MemberListEditor extends Vue {
+  @Prop({ required: true }) members!: Member[]
   @Prop({ required: true }) isFamily!: false
   @Prop({ required: true }) validationActive!: boolean
   @Prop({ required: true }) validationIssues!: ValidationIssues
 
   public mounted(): void {
-    if (this.people.length === 0) {
+    if (this.members.length === 0) {
       this.addMember()
     }
   }
 
   public addMember(): void {
-    const newMember: Person = {
+    const newMember: Member = {
       isStudent: false
     }
-    if (this.people.length >= 1) {
-      const memberOne = this.people[0]
+    if (this.members.length >= 1) {
+      const memberOne = this.members[0]
       newMember.lastName = memberOne.lastName
       newMember.street = memberOne.street
       newMember.streetNumber = memberOne.streetNumber
       newMember.city = memberOne.city
       newMember.zipCode = memberOne.zipCode
     }
-    this.people.push(newMember)
+    this.members.push(newMember)
   }
 
   public removeMember(indexToRemove: number): void {
-    if (indexToRemove >= 0 && indexToRemove < this.people.length) {
-      this.people.splice(indexToRemove, 1);
+    if (indexToRemove >= 0 && indexToRemove < this.members.length) {
+      this.members.splice(indexToRemove, 1);
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.person-list > .member:not(:last-child) {
+.member-list > .member:not(:last-child) {
   border-bottom: 1px solid lightgray;
 }
 

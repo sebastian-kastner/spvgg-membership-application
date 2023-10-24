@@ -24,7 +24,7 @@ export default class Wrapper extends Vue {
   application: Application = createDefaultMembership()
   // application: Application = {
   //   membership_start_date: new Date(),
-  //   people: [],
+  //   members: [],
   //   sections: {
   //     football: Checked.NO,
   //     bowling: Checked.NO,

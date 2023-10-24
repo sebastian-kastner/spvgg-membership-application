@@ -21,38 +21,38 @@
         <div class="conf-col-50 value">{{ sections }}</div>
       </div>
       <div class="row header-row">Mitgliederdaten</div>
-      <div class="member-summary" v-for="(person, index) in application.people" :key="index">
+      <div class="member-summary" v-for="(member, index) in application.members" :key="index">
         <div class="row">
           <div class="member-header">{{ getMemberTitle(index) }}</div>
         </div>
         <div class="row">
           <div class="label conf-col-50">Name:</div>
           <div class="conf-col-50 value">
-            {{ getName(person) }}
+            {{ getName(member) }}
           </div>
         </div>
         <div class="row">
           <div class="label conf-col-50">Geburtsdatum:</div>
-          <div class="conf-col-50 value">{{ person.dateOfBirth }}</div>
+          <div class="conf-col-50 value">{{ member.dateOfBirth }}</div>
         </div>
         <div class="row">
           <div class="label conf-col-50">Addresse:</div>
           <div class="conf-col-50 value">
-            <div>{{ getStreet(person) }}</div>
-            <div>{{ getCity(person) }}</div>
+            <div>{{ getStreet(member) }}</div>
+            <div>{{ getCity(member) }}</div>
           </div>
         </div>
-        <div class="row" v-if="person.email">
+        <div class="row" v-if="member.email">
           <div class="label conf-col-50">Telefonnummer:</div>
-          <div class="conf-col-50 value">{{ person.phoneNumber }}</div>
+          <div class="conf-col-50 value">{{ member.phoneNumber }}</div>
         </div>
-        <div class="row" v-if="person.email">
+        <div class="row" v-if="member.email">
           <div class="label conf-col-50">eMail:</div>
-          <div class="conf-col-50 value">{{ person.email }}</div>
+          <div class="conf-col-50 value">{{ member.email }}</div>
         </div>
         <div class="row">
           <div class="label conf-col-50">Student:</div>
-          <div class="conf-col-50 value">{{ isStudent(person) }}</div>
+          <div class="conf-col-50 value">{{ isStudent(member) }}</div>
         </div>
       </div>
       <div class="row header-row">Bankdaten</div>
@@ -86,7 +86,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-facing-decorator'
-import type { Application, AppMode, Person } from '../types'
+import type { Application, AppMode, Member } from '../types'
 import {
   getName,
   getMembershipStart,
@@ -132,7 +132,6 @@ export default class MembershipConfirmation extends Vue {
 
   public beforeUnmount(): void {
     // Remove the event listener when the component is about to be unmounted
-    console.log("removing popstate listener");
     window.removeEventListener('popstate', this.handleBrowserBack);
   }
 
@@ -152,16 +151,16 @@ export default class MembershipConfirmation extends Vue {
     return getMemberTitle(index)
   }
 
-  getName(person: Person): string {
-    return getName(person)
+  getName(member: Member): string {
+    return getName(member)
   }
 
-  getStreet(person: Person): string {
-    return getStreet(person)
+  getStreet(member: Member): string {
+    return getStreet(member)
   }
 
-  getCity(person: Person): string {
-    return getCity(person)
+  getCity(member: Member): string {
+    return getCity(member)
   }
 
   get membershipStart(): string {
@@ -176,8 +175,8 @@ export default class MembershipConfirmation extends Vue {
     return getSections(this.application);
   }
 
-  isStudent(person: Person): string {
-    return getIsStudent(person);
+  isStudent(member: Member): string {
+    return getIsStudent(member);
   }
 
   doEdit(): void {

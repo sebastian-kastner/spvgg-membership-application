@@ -23,7 +23,7 @@ export function createDefaultMembership(): Application {
             fitness: Checked.NO,
             theatre: Checked.NO,
         },
-        people: [
+        members: [
             {
                 anrede: "Herr",
                 title: "Dr.",

@@ -1,29 +1,29 @@
-import type { Application, Person } from './types'
+import type { Application, Member } from './types'
 import { Checked, MembershipOwnerTypes, MembershipStartTypes, MembershipTypes } from './types';
 
-export function getName(person: Person): string {
+export function getName(member: Member): string {
     const parts: string[] = []
-    if (person.anrede && person.anrede !== '--') {
-        parts.push(person.anrede)
+    if (member.anrede && member.anrede !== '--') {
+        parts.push(member.anrede)
     }
-    if (person.title) {
-        parts.push(person.title)
+    if (member.title) {
+        parts.push(member.title)
     }
-    if (person.firstName) {
-        parts.push(person.firstName)
+    if (member.firstName) {
+        parts.push(member.firstName)
     }
-    if (person.lastName) {
-        parts.push(person.lastName)
+    if (member.lastName) {
+        parts.push(member.lastName)
     }
     return parts.join(' ')
 }
 
-export function getStreet(person: Person): string {
-    return person.street + ' ' + person.streetNumber
+export function getStreet(member: Member): string {
+    return member.street + ' ' + member.streetNumber
 }
 
-export function getCity(person: Person): string {
-    return person.zipCode + ' ' + person.city
+export function getCity(member: Member): string {
+    return member.zipCode + ' ' + member.city
 }
 
 export function getSections(application: Application): string {
@@ -43,8 +43,8 @@ export function getSections(application: Application): string {
     return sections.join(', ')
 }
 
-export function getIsStudent(person: Person): string {
-    if (person.isStudent) {
+export function getIsStudent(member: Member): string {
+    if (member.isStudent) {
         return 'Ja'
     }
     return 'Nein'
@@ -102,7 +102,7 @@ export function toString(application: Application): string {
     contents.push([])
 
     // member data
-    application.people?.forEach((member, index) => {
+    application.members?.forEach((member, index) => {
         contents.push([getMemberTitle(index)])
         contents.push(["Name", getName(member)])
         contents.push(["Geburtsdatum", member.dateOfBirth])
