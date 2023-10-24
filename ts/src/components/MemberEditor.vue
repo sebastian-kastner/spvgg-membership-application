@@ -111,7 +111,7 @@
     <div class="row">
       <div class="text-input">
         <label :for="getFieldName('isStudent')">Student/Schüler:</label>
-        <div class="d-flex d-flex-wrap">
+        <div class="is-student">
           <div>
             <label> <input type="radio" v-model="member.isStudent" value="true" /> Ja </label>
           </div>
@@ -192,3 +192,13 @@ export default class MemberEditor extends Vue {
 }
 </script>
 
+<style lang="scss" scoped>
+.is-student {
+  display: flex;
+  flex-wrap: wrap;
+
+  label {
+    padding-right: 20px;
+  }
+}
+</style>
