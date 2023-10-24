@@ -97,6 +97,8 @@ export function toString(application: Application): string {
     contents.push(["Start der Mitgliedschaft", getMembershipStart(application)])
     contents.push(["Mitgliedschaftstyp", getMembershipType(application)])
     contents.push(["Abteilungen", getSections(application)])
+    contents.push([])
+    contents.push([])
     contents.push(["Mitgliederdaten"])
 
     contents.push([])

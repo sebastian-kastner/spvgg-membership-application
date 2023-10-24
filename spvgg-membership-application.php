@@ -30,28 +30,121 @@ if (!defined('WPINC')) {
 	die;
 }
 
-/**
- * Currently plugin version.
- * Start at version 1.0.0 and use SemVer - https://semver.org
- * Rename this for your plugin and update it as you release new versions.
- */
 define('SPVGG_MEMBERSHIP_APPLICATION_VERSION', '1.0.0');
 
 global $spvgg_membership_application_validation_issues;
-// add_action('wp_enqueue_scripts', 'enque_js_files');
 
 $GLOBALS["spvgg_membership_application_validation_issues"] = array();
 
 function show_membership_application()
 {
 	enqueue_form_assets();
+
 	// handle post data if set
 	if (empty($_POST)) {
-		return get_vue_form();
+		return '<div id="app"></div>';
 	} else {
-		return base64_decode($_POST['formatted_values']);
+		$raw_data = json_decode(base64_decode($_POST['plain_values']));
+		$formatted_data = mb_convert_encoding(base64_decode($_POST['formatted_values']), 'UTF-8', 'ISO-8859-1');
+
+		$first_member = get_first_member($raw_data);
+		$first_member_email = get_email($first_member);
+		$first_member_name = get_name($first_member);
+		$all_fields_set = all_fields_set($raw_data);
+
+		if ($first_member_email == null || $first_member_name == null || !$all_fields_set) {
+			return "Der Mitgliedschaftsantrag ist unvollständig. Gehen sie zurück und vervollständigen sie den Antrag.";
+		}
+
+		// TODO: send mail to mitgliederverwaltung@spvggdeuringen.de
+
+		// send confirmation mail to applicant
+		$to = $first_member_email;
+		$subject = "Neuer SpVgg Mitgliedschaftsantrag";
+		$message = "Hallo " . $first_member_name . "\n\n";
+		$message .= "Vielen Dank für deinen Antrag auf Mitgliedschaft bei der SpVgg Deuringen. ";
+		$message .= "Wir kümmern uns so schnell wie möglich um die Bearbeitung des Antrags!\n\n";
+		$message .= "Hier die Zusammenfassung des Antrags:\n\n";
+		$message .= $formatted_data;
+		$headers = "From: mitgliederverwaltung@spvggdeuringen.de";
+
+		$mailed = mail($to, $subject, $message, $headers);
+		if ($mailed) {
+			return "Dein Antrag und eine Bestätigung an " . $first_member_email . " wurde erfolgreich verschickt. Wir bearbeiten den Antrag so schnell wie möglich!";
+		} else {
+			return "Die eMail konnte nicht verschickt werden";
+		}
 	}
 }
+
+function all_fields_set($data): bool
+{
+	if (!isset($data->sepaAgreement) || $data->sepaAgreement != "Yes") {
+		return false;
+	}
+	if (!isset($data->dataProtectionAgreement) || $data->dataProtectionAgreement != "Yes") {
+		return false;
+	}
+	if (!isset($data->publicationAgreement) || $data->publicationAgreement != "Yes") {
+		return false;
+	}
+	return true;
+}
+
+function get_first_member($data): ?object
+{
+	$members = $data->members;
+	if (isset($members) && is_array($members) && count($members) > 0) {
+		return $members[0];
+	}
+	return null;
+}
+
+function get_email($member): ?string
+{
+	if ($member == null) {
+		return null;
+	}
+	$email = $member->email;
+	if (isset($email)) {
+		return $email;
+	}
+	return null;
+}
+
+function get_name($member): ?string
+{
+	if ($member == null) {
+		return null;
+	}
+	$title = $member->title;
+	$firstName = $member->firstName;
+	$lastName = $member->lastName;
+	if (isset($firstName) && isset($lastName)) {
+		$name = "";
+		if (isset($title) && $title != "") {
+			$name .= $title . " ";
+		}
+		$name .= $firstName . " " . $lastName;
+		return $name;
+	}
+	return null;
+}
+
+function get_dump($data): string
+{
+	$out = "<pre>";
+	ob_start();
+	var_dump($data);
+	$dumpedData = ob_get_clean();
+	$out = $out . $dumpedData;
+	$out = $out . "</pre>";
+	return $out;
+}
+
+/**
+ * Wordpress integration
+ */
 
 function enqueue_form_assets()
 {
@@ -69,11 +162,6 @@ function enqueue_form_assets()
 			wp_enqueue_style($style_name, $style_path);
 		}
 	}
-}
-
-function get_vue_form()
-{
-	return '<div id="app"></div>';
 }
 
 function get_partial_contents($partial_name)
