@@ -103,9 +103,12 @@ export default class MembershipConfirmation extends Vue {
 
   public mounted(): void {
     // create state for browser history to enable navigation using the browser's back button
-    const title = document.title;
-    const url = window.location.href + "#confirm";
-    history.pushState({ }, title, url);
+    if (window.location.href.indexOf('#confirm') != -1) {
+      const title = document.title;
+      const url = window.location.href + "#confirm";
+      history.pushState({ }, title, url);
+    }
+
     // handle browser back event
     window.addEventListener('popstate', this.handleBrowserBack);
 
