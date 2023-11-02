@@ -67,7 +67,7 @@
       </div>
       <div class="row">
         <div class="conf-col-50">
-          <input type="submit" class="primary-btn" value="Bestätigen" @click="doSubmit" />
+          <input type="submit" class="primary-btn" value="Bestätigen" />
         </div>
         <div class="conf-col-50">
           <input type="button" class="secondary-btn" value="Überarbeiten" @click="doEdit" />
@@ -171,14 +171,6 @@ export default class MembershipConfirmation extends Vue {
     history.pushState({ }, title, url);
 
     this.appMode.isEditMode = true
-  }
-
-  doSubmit(): void {
-    const summary = toString(this.application);
-    console.log(summary);
-    const base64 = btoa(summary);
-    console.log(base64);
-    console.log(base64.length);
   }
 }
 </script>
