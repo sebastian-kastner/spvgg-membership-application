@@ -1,7 +1,17 @@
 <template>
   <div class="membership-container">
     <div class="membership-wrapper">
+      <div class="download-application">
+        <span>Formular Herunterladen und Ausdrucken statt online Ausfüllen?</span>
+        <div class="row">
+          <a href="https://www.spvggdeuringen.de/mitgliedwerden/Aufnahmeantrag_SpVggDeuringen.pdf" target="_blank">
+            <input type="button" class="primary-btn" value="Antrag herunterladen" />
+          </a>
+        </div>
+      </div>
+
       <div class="required-fields-hint">Mit * markierte Felder müssen ausgefüllt werden</div>
+
       <!-- MEMBERSHIP START DATE -->
       <div class="row header-row">Ab wann möchtest Du als Mitglied aufgenommen werden? *</div>
       <div
@@ -388,6 +398,30 @@ export default class MembershipFormEditor extends Vue {
   width: 100%;
   text-align: right;
   font-size: 0.8rem;
+}
+
+.download-application {
+  width: 100%;
+  text-align: right;
+  border-bottom: 1px solid darkgray;
+  padding-bottom: 20px;
+  margin-bottom: 10px;
+
+  input {
+    margin-top: 10px;
+    margin-right: 0;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .download-application {
+    text-align: center;
+  }
+
+  .row {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 #issue-marker {
