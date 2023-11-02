@@ -416,12 +416,13 @@ export default class MembershipFormEditor extends Vue {
 @media screen and (max-width: 650px) {
   .download-application {
     text-align: center;
+    
+    .row {
+      display: flex;
+      justify-content: center;
+    }
   }
 
-  .row {
-    display: flex;
-    justify-content: center;
-  }
 }
 
 #issue-marker {
