@@ -91,7 +91,7 @@
     >
       <div class="text-input">
         <label :for="getFieldName('phoneNumber')">{{
-          getFieldWithConditionalRequiredMarker('Telefonnr:')
+          getFieldWithConditionalRequiredMarker('Telefonnr.:')
         }}</label>
         <input type="text" :id="getFieldName('phoneNumber')" v-model="member.phoneNumber" />
       </div>
