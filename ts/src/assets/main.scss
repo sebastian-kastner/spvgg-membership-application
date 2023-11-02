@@ -133,13 +133,13 @@ $font-size-headers: 20px;
     margin-top: 20px;
   }
 
-  .primary-btn {
-    background-color: lighten(rgb(16, 59, 94), 30%);
-    color: white;
+  .primary-btn, .primary-btn:active {
+    background-color: lighten(rgb(16, 59, 94), 30%) !important;
+    color: white !important;
   }
 
   .primary-btn:hover {
-    background-color: lighten(rgb(16, 59, 94), 15%);
+    background-color: lighten(rgb(16, 59, 94), 15%) !important;
   }
 
   .secondary-btn {

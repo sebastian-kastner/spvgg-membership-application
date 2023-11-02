@@ -13,7 +13,7 @@
   </div>
   <div class="inline-button-container" :class="{ hidden: !isFamily }">
     <div>
-      <input type="button" value="+ Mitglied hinzufügen" @click="addMember" />
+      <input type="button" class="primary-btn" value="+ Mitglied hinzufügen" @click="addMember" />
     </div>
   </div>
 </template>
