@@ -65,13 +65,17 @@ function show_membership_application()
 		$message = "Hallo " . $first_member_name . "\n\n";
 		$message .= "Vielen Dank für deinen Antrag auf Mitgliedschaft bei der SpVgg Deuringen. ";
 		$message .= "Wir kümmern uns so schnell wie möglich um die Bearbeitung des Antrags!\n\n";
-		$message .= "Hier die Zusammenfassung des Antrags:\n\n";
+		$message .= "Hier die Zusammenfassung Deines Antrags:\n\n";
 		$message .= $formatted_data;
 		$headers = "From: mitgliederverwaltung@spvggdeuringen.de";
 
-		$mailed = mail($to, $subject, $message, $headers);
+		$headers = array('Content-Type: text/plain; charset=UTF-8');
+		// array_push($headers, 'Bcc: vorstand@spvggdeuringen.de');
+
+		$mailed = wp_mail($to, $subject, $message, $headers);
+
 		if ($mailed) {
-			return "Dein Antrag und eine Bestätigung an " . $first_member_email . " wurde erfolgreich verschickt. Wir bearbeiten den Antrag so schnell wie möglich!";
+			return "Dein Antrag und eine Bestätigung an " . $first_member_email . " wurde erfolgreich verschickt. Prüfe gegebenenfalls den Spam Ordner falls die Bestätigung nicht ankommt. Wir bearbeiten den Antrag so schnell wie möglich!";
 		} else {
 			return "Fehler beim Versenden der eMail";
 		}
@@ -186,5 +190,20 @@ function get_partial_contents($partial_name)
 	return ob_get_clean();
 }
 
+function custom_wp_mail_from() {
+    return 'mitgliederverwaltung@spvggdeuringen.de';
+}
+
+function custom_wp_mail_from_name() {
+    return 'Mitgliederverwaltung SpVgg Deuringen e.V.';
+}
+
+function custom_wp_mail_content_type() {
+    return "text/plain; charset=UTF-8";
+}
+
 // register shortcode
 add_shortcode('show_membership_application', 'show_membership_application');
+add_filter('wp_mail_from', 'custom_wp_mail_from');
+add_filter('wp_mail_from_name', 'custom_wp_mail_from_name');
+add_filter('wp_mail_content_type', 'custom_wp_mail_content_type');
