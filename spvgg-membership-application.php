@@ -61,7 +61,7 @@ function show_membership_application()
 
 		// send confirmation mail to applicant
 		$to = $first_member_email;
-		$subject = "Neuer SpVgg Mitgliedschaftsantrag";
+		$subject = "Mitgliedschaftsantrag bei SpVgg Deuringen e.V.";
 		$message = "Hallo " . $first_member_name . "\n\n";
 		$message .= "Vielen Dank für deinen Antrag auf Mitgliedschaft bei der SpVgg Deuringen. ";
 		$message .= "Wir kümmern uns so schnell wie möglich um die Bearbeitung des Antrags!\n\n";
