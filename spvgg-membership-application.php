@@ -72,10 +72,20 @@ function show_membership_application()
 		$headers = array('Content-Type: text/plain; charset=UTF-8');
 		// array_push($headers, 'Bcc: vorstand@spvggdeuringen.de');
 
+		// add filters for wp mail delivery
+		// this is not done on a global scope to make sure the settings are only applied to this form
+		add_filter('wp_mail_from', 'custom_wp_mail_from');
+		add_filter('wp_mail_from_name', 'custom_wp_mail_from_name');
+		add_filter('wp_mail_content_type', 'custom_wp_mail_content_type');
+
 		$mailed = wp_mail($to, $subject, $message, $headers);
 
 		if ($mailed) {
-			return "Dein Antrag und eine Bestätigung an " . $first_member_email . " wurde erfolgreich verschickt. Prüfe gegebenenfalls den Spam Ordner falls die Bestätigung nicht ankommt. Wir bearbeiten den Antrag so schnell wie möglich!";
+			$form_of_address = get_form_of_address($raw_data);
+			$html = "<h3>Mitgliedschaft beantragt</h3>";
+			$html .= "<p>Dein Antrag und eine Bestätigung an " . $first_member_email . " wurde erfolgreich verschickt. Prüfe gegebenenfalls den Spam Ordner falls die Bestätigung nicht ankommt. Wir bearbeiten den Antrag so schnell wie möglich!</p>";
+			$html .= "<p>Vielen Dank! Wir freuen uns Dich bei der SpVgg begrüßen zu dürfen. Wir wünschen " . $form_of_address . " viel Freude in unserem Verein!</p>";
+			return $html;
 		} else {
 			return "Fehler beim Versenden der eMail";
 		}
@@ -109,6 +119,18 @@ function get_first_member($data)
 		return $members[0];
 	}
 	return null;
+}
+
+function get_form_of_address($data): string {
+	if (!array_key_exists("membership_type", $data)) {
+		$membership_type = $data["membership_type"];
+		if ($membership_type == "family") {
+			return "Euch";
+		} else {
+			return "Dir";
+		}
+	}
+	return "Dir";
 }
 
 function get_email($member): ?string
@@ -204,6 +226,3 @@ function custom_wp_mail_content_type() {
 
 // register shortcode
 add_shortcode('show_membership_application', 'show_membership_application');
-add_filter('wp_mail_from', 'custom_wp_mail_from');
-add_filter('wp_mail_from_name', 'custom_wp_mail_from_name');
-add_filter('wp_mail_content_type', 'custom_wp_mail_content_type');
