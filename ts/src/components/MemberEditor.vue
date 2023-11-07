@@ -2,7 +2,12 @@
   <div>
     <div class="row" v-if="index > 0">
       <div class="inline-button-container">
-        <input class="secondary-btn" type="button" value="- Mitglied entfernen" @click="removeMember(index)" />
+        <input
+          class="secondary-btn"
+          type="button"
+          value="- Mitglied entfernen"
+          @click="removeMember(index)"
+        />
       </div>
     </div>
     <div class="row no-border">
@@ -37,11 +42,11 @@
     <div
       class="row"
       :class="{
-        invalid: !isFieldSet(member.dateOfBirth, getFieldName('dateOfBirth')) || invalidDateOfBirth
+        invalid: !isFieldSet(member.dateOfBirth, getFieldName('dateOfBirth')) || dateInvalidMessage
       }"
     >
-      <div class="field-error" v-if="invalidDateOfBirth">
-        Das Gebursdatum muss im Format dd.mm.yyyy angegeben werden (z.B. 27.03.2009)
+      <div class="field-error" v-if="dateInvalidMessage">
+        {{ dateInvalidMessage }}
       </div>
       <div class="text-input">
         <label :for="getFieldName('dateOfBirth')">Geburtsdatum: *</label>
@@ -49,6 +54,7 @@
           type="text"
           :id="getFieldName('dateOfBirth')"
           v-model="member.dateOfBirth"
+          @input="validateDateOfBirth"
           placeholder="dd.mm.yyyy"
         />
       </div>
@@ -125,7 +131,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-facing-decorator'
+import { Component, Vue, Prop, Watch } from 'vue-facing-decorator'
 import { validateField } from '../fieldValidator'
 import type { Member, ValidationIssues } from '../types'
 
@@ -140,7 +146,8 @@ export default class MemberEditor extends Vue {
   @Prop({ required: true }) validationIssues!: ValidationIssues
 
   emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
-  dateOfBirthPattern = /^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$/
+
+  dateInvalidMessage: string | null = null
 
   public getFieldName(name: string) {
     return name + '_' + this.index
@@ -169,16 +176,59 @@ export default class MemberEditor extends Vue {
     return false
   }
 
-  get invalidDateOfBirth(): boolean {
+  @Watch('validationActive')
+  validateDateOfBirth(): void {
     const issueKey = 'member.' + this.index + '.dateOfBirth'
-    if (this.validationActive && this.member.dateOfBirth && this.member.dateOfBirth.trim() !== '') {
-      if (!this.dateOfBirthPattern.test(this.member.dateOfBirth.trim())) {
+    if (this.validationActive) {
+      // unset ==> INVALID
+      if (!this.member.dateOfBirth || this.member.dateOfBirth.trim() === '') {
         this.validationIssues.issues.add(issueKey)
-        return true
+        this.dateInvalidMessage = ''
+        return
+      }
+
+      const dateParts = this.member.dateOfBirth.split('.')
+      const invalidFormatMessage =
+        'Das Gebursdatum muss im Format Tag.Monat.Jahr angegeben werden (z.B. 27.03.2009)'
+      if (dateParts.length !== 3) {
+        this.validationIssues.issues.add(issueKey)
+        this.dateInvalidMessage = invalidFormatMessage
+        return
+      }
+
+      const dayStr = dateParts[0].trim()
+      const monthStr = dateParts[1].trim()
+      const yearStr = dateParts[2].trim()
+      if (
+        (dayStr.length != 1 && dayStr.length != 2) ||
+        (monthStr.length != 1 && monthStr.length != 2) ||
+        yearStr.length !== 4
+      ) {
+        this.validationIssues.issues.add(issueKey)
+        this.dateInvalidMessage = invalidFormatMessage
+        return
+      }
+
+      const day = parseInt(dayStr, 10)
+      const month = parseInt(monthStr, 10) - 1 // Months are 0-based (0-11)
+      const year = parseInt(yearStr, 10)
+
+      const date = new Date(year + '-' + month + '-' + day)
+      // invalid date (i.e. invalid month, day, ...)
+      if (isNaN(date.getTime())) {
+        this.validationIssues.issues.add(issueKey)
+        this.dateInvalidMessage = invalidFormatMessage + ' Überprüfe den Monat und den Tag.'
+        return
+      }
+
+      if (date > new Date()) {
+        this.validationIssues.issues.add(issueKey)
+        this.dateInvalidMessage = 'Das Geburtsdatum muss in der Vergangenheit liegen.'
+        return
       }
     }
     this.validationIssues.issues.delete(issueKey)
-    return false
+    this.dateInvalidMessage = null
   }
 
   public isFieldSet(value: any, key: string, onlyRequiredForFirst = false): boolean {
