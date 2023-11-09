@@ -119,10 +119,10 @@
         <label :for="getFieldName('isStudent')">Student/Schüler:</label>
         <div class="is-student">
           <div>
-            <label> <input type="radio" v-model="member.isStudent" value="true" /> Ja </label>
+            <label> <input type="radio" v-model="member.isStudent" :value="true" /> Ja </label>
           </div>
           <div>
-            <label> <input type="radio" v-model="member.isStudent" value="false" /> Nein </label>
+            <label> <input type="radio" v-model="member.isStudent" :value="false" /> Nein </label>
           </div>
         </div>
       </div>
@@ -132,7 +132,8 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from 'vue-facing-decorator'
-import { validateField, getDateOfBirthValidationMessage } from '../utils/fieldValidator'
+import { validateField } from '../utils/fieldValidator'
+import { getDateOfBirthValidationMessage } from '../utils/dateUtils'
 import type { Member, ValidationIssues } from '../types'
 
 @Component({
