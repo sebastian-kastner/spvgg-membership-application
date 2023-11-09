@@ -128,4 +128,10 @@ export default class FeesStatute extends Vue {
   text-decoration: none;
   cursor: pointer;
 }
+
+.button-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
 </style>
