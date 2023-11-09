@@ -11,7 +11,7 @@ import MembershipFormEditor from './MembershipFormEditor.vue'
 import MembershipConfirmation from './MembershipConfirmation.vue'
 import type { Application, AppMode } from '../types'
 import { Checked } from '../types'
-import { createDefaultMembership } from '../devUtils'
+import { createDefaultMembership } from '../utils/devUtils'
 
 @Component({
   components: { MembershipFormEditor, MembershipConfirmation }

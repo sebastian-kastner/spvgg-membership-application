@@ -89,7 +89,7 @@ import {
   getSections,
   getIsStudent,
   toString
-} from '../utils/membership_formatter'
+} from '../utils/membershipFormatter'
 
 @Component({
   components: {}
@@ -231,3 +231,4 @@ export default class MembershipConfirmation extends Vue {
   }
 }
 </style>
+../utils/membershipFormatter

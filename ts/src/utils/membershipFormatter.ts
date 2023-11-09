@@ -1,5 +1,5 @@
-import type { Application, Member } from './types'
-import { Checked, MembershipStartTypes, MembershipTypes } from './types';
+import type { Application, Member } from '../types'
+import { Checked, MembershipStartTypes, MembershipTypes } from '../types';
 
 export function getName(member: Member): string {
     const parts: string[] = []
