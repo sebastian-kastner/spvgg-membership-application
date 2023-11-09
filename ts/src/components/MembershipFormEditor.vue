@@ -2,13 +2,16 @@
   <div class="modal" v-if="showFeesStatute" @click.self="toggleFeesStatue">
     <fees-statute class="modal-content" @close="toggleFeesStatue" />
   </div>
-  
+
   <div class="membership-container">
     <div class="membership-wrapper">
       <div class="download-application">
         <span>Formular Herunterladen und Ausdrucken statt online Ausfüllen?</span>
         <div class="row">
-          <a href="https://www.spvggdeuringen.de/mitgliedwerden/Aufnahmeantrag_SpVggDeuringen.pdf" target="_blank">
+          <a
+            href="https://www.spvggdeuringen.de/mitgliedwerden/Aufnahmeantrag_SpVggDeuringen.pdf"
+            target="_blank"
+          >
             <input type="button" class="primary-btn" value="Antrag herunterladen" />
           </a>
         </div>
@@ -80,7 +83,12 @@
       </div>
       <div class="inline-button-container">
         <div>
-          <input type="button" class="primary-btn" value="Beitragssatzung anzeigen" @click="toggleFeesStatue" />
+          <input
+            type="button"
+            class="primary-btn"
+            value="Beitragssatzung anzeigen"
+            @click="toggleFeesStatue"
+          />
         </div>
       </div>
       <!-- MEMBERSHIP SECTIONS -->
@@ -309,10 +317,10 @@ export default class MembershipFormEditor extends Vue {
   }
   validationActive = false
 
-  @Watch("application", { deep: true })
+  @Watch('application', { deep: true })
   async onApplicationChanged(): Promise<void> {
     await this.$nextTick()
-    console.log("MEMBERSHIP FEE:", calculateMembershipFee(this.application));
+    console.log('MEMBERSHIP FEE:', calculateMembershipFee(this.application))
   }
 
   async doSubmit(): Promise<void> {
@@ -436,23 +444,6 @@ export default class MembershipFormEditor extends Vue {
   }
 }
 
-@media screen and (max-width: 650px) {
-  .download-application {
-    text-align: center;
-    
-    .row {
-      display: flex;
-      justify-content: center;
-    }
-  }
-}
-
-#issue-marker {
-  margin-top: 10px;
-  padding: 5px;
-  text-align: center;
-}
-
 .modal {
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
@@ -462,8 +453,8 @@ export default class MembershipFormEditor extends Vue {
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
 /* Modal Content */
@@ -473,6 +464,33 @@ export default class MembershipFormEditor extends Vue {
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
+}
+
+@media screen and (max-width: 650px) {
+  .download-application {
+    text-align: center;
+
+    .row {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .modal-content {
+    width: 95%;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .modal-content {
+    min-width: 90%;
+  }
+}
+
+#issue-marker {
+  margin-top: 10px;
+  padding: 5px;
+  text-align: center;
 }
 
 .truffleShuffle {
