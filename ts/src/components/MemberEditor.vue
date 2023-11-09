@@ -132,7 +132,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from 'vue-facing-decorator'
-import { validateField } from '../fieldValidator'
+import { validateField, getDateOfBirthValidationMessage } from '../fieldValidator'
 import type { Member, ValidationIssues } from '../types'
 
 @Component({
@@ -164,6 +164,12 @@ export default class MemberEditor extends Vue {
     return fieldName
   }
 
+  /**
+   * Validate member's email in member.email. If validation is active, the following checks are performed:
+   * - email is set
+   * - email has valid format
+   * - if email format is invalid, the issue is added to the validationIssues
+   */
   get invalidEmail(): boolean {
     const issueKey = 'member.' + this.index + '.email'
     if (this.validationActive && this.member.email && this.member.email.trim() !== '') {
@@ -176,59 +182,31 @@ export default class MemberEditor extends Vue {
     return false
   }
 
+  /**
+   * Validate member's date of birth in member.dateOfBirth. If the date is invalid, the validationIssues
+   * are updated accordingly. Otherwise, the issue is removed from the validationIssues.
+   * 
+   * Watches for changes in validationActive and calls this method accordingly.
+   */
   @Watch('validationActive')
   validateDateOfBirth(): void {
     const issueKey = 'member.' + this.index + '.dateOfBirth'
-    if (this.validationActive) {
-      // unset ==> INVALID
-      if (!this.member.dateOfBirth || this.member.dateOfBirth.trim() === '') {
-        this.validationIssues.issues.add(issueKey)
-        this.dateInvalidMessage = ''
-        return
-      }
-
-      const dateParts = this.member.dateOfBirth.split('.')
-      const invalidFormatMessage =
-        'Das Gebursdatum muss im Format Tag.Monat.Jahr angegeben werden (z.B. 27.03.2009)'
-      if (dateParts.length !== 3) {
-        this.validationIssues.issues.add(issueKey)
-        this.dateInvalidMessage = invalidFormatMessage
-        return
-      }
-
-      const dayStr = dateParts[0].trim()
-      const monthStr = dateParts[1].trim()
-      const yearStr = dateParts[2].trim()
-      if (
-        (dayStr.length != 1 && dayStr.length != 2) ||
-        (monthStr.length != 1 && monthStr.length != 2) ||
-        yearStr.length !== 4
-      ) {
-        this.validationIssues.issues.add(issueKey)
-        this.dateInvalidMessage = invalidFormatMessage
-        return
-      }
-
-      const day = parseInt(dayStr, 10)
-      const month = parseInt(monthStr, 10) - 1 // Months are 0-based (0-11)
-      const year = parseInt(yearStr, 10)
-
-      const date = new Date(year + '-' + month + '-' + day)
-      // invalid date (i.e. invalid month, day, ...)
-      if (isNaN(date.getTime())) {
-        this.validationIssues.issues.add(issueKey)
-        this.dateInvalidMessage = invalidFormatMessage + ' Überprüfe den Monat und den Tag.'
-        return
-      }
-
-      if (date > new Date()) {
-        this.validationIssues.issues.add(issueKey)
-        this.dateInvalidMessage = 'Das Geburtsdatum muss in der Vergangenheit liegen.'
-        return
-      }
+    // remove all issues if validation is not active
+    if (!this.validationActive) {
+      this.validationIssues.issues.delete(issueKey)
+      this.dateInvalidMessage = null
+      return
     }
-    this.validationIssues.issues.delete(issueKey)
-    this.dateInvalidMessage = null
+
+    // validate dateOfBirth and update validationIssues accordingly
+    const validationMsg = getDateOfBirthValidationMessage(this.member.dateOfBirth)
+    if (validationMsg) {
+      this.validationIssues.issues.add(issueKey)
+      this.dateInvalidMessage = validationMsg
+    } else {
+      this.validationIssues.issues.delete(issueKey)
+      this.dateInvalidMessage = null
+    }
   }
 
   public isFieldSet(value: any, key: string, onlyRequiredForFirst = false): boolean {
