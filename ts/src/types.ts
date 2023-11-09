@@ -36,23 +36,25 @@ export enum MembershipTypes {
     SINGLE = 'single'
 };
 
+export type Sections = {
+    football: Checked,
+    bowling: Checked,
+    theatre: Checked,
+    fitness: Checked
+}
+
 export type Application = {
     membership_owner?: string,
     membership_start?: string,
     membership_start_date?: Date,
     membership_type?: string,
 
-    sections: {
-        football: Checked,
-        bowling: Checked,
-        theatre: Checked,
-        fitness: Checked
-    }
+    sections: Sections,
 
-    bic?: string;
-    iban?: string;
-    bankName?: string;
-    bankAccountOwner?: string;
+    bic?: string,
+    iban?: string,
+    bankName?: string,
+    bankAccountOwner?: string,
 
     sepaAgreement?: Checked;
     dataProtectionAgreement?: Checked;

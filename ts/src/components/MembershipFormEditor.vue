@@ -274,13 +274,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-facing-decorator'
+import { Component, Vue, Prop, Watch } from 'vue-facing-decorator'
 import Datepicker from 'vue3-datepicker'
 import { de } from 'date-fns/locale'
 import MemberListEditor from './MemberListEditor.vue'
 import FeesStatute from './FeesStatute.vue'
 import { MembershipStartTypes, MembershipTypes, Checked } from '../types'
 import { validateField } from '../utils/fieldValidator'
+import { calculateMembershipFee } from '../utils/feeUtils'
 import type { Application, ValidationIssues, AppMode } from '../types'
 import { printIssues } from '../utils/devUtils'
 
@@ -307,6 +308,12 @@ export default class MembershipFormEditor extends Vue {
     issues: new Set()
   }
   validationActive = false
+
+  @Watch("application", { deep: true })
+  async onApplicationChanged(): Promise<void> {
+    await this.$nextTick()
+    console.log("MEMBERSHIP FEE:", calculateMembershipFee(this.application));
+  }
 
   async doSubmit(): Promise<void> {
     const issuesBefore = this.hasValidationIssues
