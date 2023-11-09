@@ -270,9 +270,9 @@ import Datepicker from 'vue3-datepicker'
 import { de } from 'date-fns/locale'
 import MemberListEditor from './MemberListEditor.vue'
 import { MembershipStartTypes, MembershipTypes, Checked } from '../types'
-import { validateField } from '../fieldValidator'
+import { validateField } from '../utils/fieldValidator'
 import type { Application, ValidationIssues, AppMode } from '../types'
-import { printIssues } from '../devUtils'
+import { printIssues } from '../utils/devUtils'
 
 @Component({
   components: { Datepicker, MemberListEditor }
@@ -453,3 +453,4 @@ export default class MembershipFormEditor extends Vue {
   }
 }
 </style>
+../utils/devUtils

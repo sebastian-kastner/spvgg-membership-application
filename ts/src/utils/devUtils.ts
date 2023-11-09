@@ -1,6 +1,6 @@
 // THIS FILE MUST BE DELETED BEFORE RELEASING TO PRODUCTION!
-import { Checked, MembershipStartTypes, MembershipTypes } from './types'
-import type { Application } from './types'
+import { Checked, MembershipStartTypes, MembershipTypes } from '../types'
+import type { Application } from '../types'
 
 export function printIssues(issues: Set<string>): void {
     if (issues.size > 0) {

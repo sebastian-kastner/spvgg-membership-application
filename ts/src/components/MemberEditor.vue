@@ -132,7 +132,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from 'vue-facing-decorator'
-import { validateField, getDateOfBirthValidationMessage } from '../fieldValidator'
+import { validateField, getDateOfBirthValidationMessage } from '../utils/fieldValidator'
 import type { Member, ValidationIssues } from '../types'
 
 @Component({

@@ -89,7 +89,7 @@ import {
   getSections,
   getIsStudent,
   toString
-} from '../membership_formatter'
+} from '../utils/membership_formatter'
 
 @Component({
   components: {}
