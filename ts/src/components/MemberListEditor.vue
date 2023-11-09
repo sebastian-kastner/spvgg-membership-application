@@ -2,7 +2,7 @@
   <div class="member-list">
     <member-editor
       class="member"
-      v-for="(member, index) in members"
+      v-for="(member, index) in visibleMembers"
       :key="index"
       :member="member"
       :index="index"
@@ -36,6 +36,16 @@ export default class MemberListEditor extends Vue {
     if (this.members.length === 0) {
       this.addMember()
     }
+  }
+
+  /**
+   * Hide members with index >= 1 if family membership is selected
+   */
+  get visibleMembers(): Member[] {
+    if (!this.isFamily) {
+      return [ this.members[0]]
+    }
+    return this.members;
   }
 
   public addMember(): void {
