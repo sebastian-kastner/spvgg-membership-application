@@ -1,4 +1,8 @@
 <template>
+  <div class="modal" v-if="showFeesStatute" @click.self="toggleFeesStatue">
+    <fees-statute class="modal-content" @close="toggleFeesStatue" />
+  </div>
+  
   <div class="membership-container">
     <div class="membership-wrapper">
       <div class="download-application">
@@ -72,6 +76,11 @@
             v-model="application.membership_type"
           />
           <label for="membership_type_single">Einzelmitgliedschaft</label>
+        </div>
+      </div>
+      <div class="inline-button-container">
+        <div>
+          <input type="button" class="primary-btn" value="Beitragssatzung anzeigen" @click="toggleFeesStatue" />
         </div>
       </div>
       <!-- MEMBERSHIP SECTIONS -->
@@ -269,13 +278,14 @@ import { Component, Vue, Prop } from 'vue-facing-decorator'
 import Datepicker from 'vue3-datepicker'
 import { de } from 'date-fns/locale'
 import MemberListEditor from './MemberListEditor.vue'
+import FeesStatute from './FeesStatute.vue'
 import { MembershipStartTypes, MembershipTypes, Checked } from '../types'
 import { validateField } from '../utils/fieldValidator'
 import type { Application, ValidationIssues, AppMode } from '../types'
 import { printIssues } from '../utils/devUtils'
 
 @Component({
-  components: { Datepicker, MemberListEditor }
+  components: { Datepicker, MemberListEditor, FeesStatute }
 })
 export default class MembershipFormEditor extends Vue {
   @Prop({ required: true }) appMode!: AppMode
@@ -286,6 +296,8 @@ export default class MembershipFormEditor extends Vue {
   Checked = Checked
 
   missingRequiredFields = false
+
+  showFeesStatute = false
 
   locale = de
 
@@ -343,6 +355,10 @@ export default class MembershipFormEditor extends Vue {
     }
     this.validationIssues.issues.delete(fieldKey)
     return true
+  }
+
+  toggleFeesStatue(): void {
+    this.showFeesStatute = !this.showFeesStatute
   }
 
   isChecked(key: string, value?: Checked): boolean {
@@ -422,13 +438,34 @@ export default class MembershipFormEditor extends Vue {
       justify-content: center;
     }
   }
-
 }
 
 #issue-marker {
   margin-top: 10px;
   padding: 5px;
   text-align: center;
+}
+
+.modal {
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
 }
 
 .truffleShuffle {
