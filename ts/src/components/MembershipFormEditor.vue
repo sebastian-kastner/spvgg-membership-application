@@ -464,6 +464,7 @@ export default class MembershipFormEditor extends Vue {
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
+  margin-bottom: 40px;
 }
 
 @media screen and (max-width: 650px) {

@@ -6,8 +6,6 @@ export const FAMILIY_MEMBERSHIP_WITHOUT_CHILDREN_FEE = 80;
 export const INDIVIDUAL_STUDENT_FEE = 40;
 export const INDIVIDUAL_ADULT_FEE = 80;
 
-export const STUDENT_SECTION_FEE = 0;
-
 export const SECTION_FEES = {
     football: 55,
     bowling: 55,
