@@ -1,43 +1,18 @@
-$min-label-width: 140px;
-$validation-color: rgba(230, 161, 156, 0.3);
-$font-size: 18px;
-$font-size-headers: 20px;
+@import "./variables.scss";
 
-.membership-container {
+#app {
   line-height: 1;
   font-size: $font-size;
-  border-radius: 5px;
-  background-color: #f2f2f2;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
-  button, input, select {
-    font-size: $font-size;
-    line-height: 1;
+  .row,
+  .col-50 {
+    border: 1px solid transparent;
   }
 
-  .membership-wrapper {
-    max-width: 750px;
-  }
-
-  input[type="text"],
-  select,
-  textarea {
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    resize: vertical;
-  }
-
-  select {
-    padding: 5px 0 5px 0;
-  }
-
-  label {
-    padding-right: 4px;
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
   }
 
   .d-flex {
@@ -54,6 +29,27 @@ $font-size-headers: 20px;
     width: 50% !important;
   }
 
+  button,
+  input,
+  select {
+    font-size: $font-size;
+    line-height: 1;
+  }
+
+  input[type="text"],
+  select,
+  textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    resize: vertical;
+  }
+
+  select {
+    padding: 5px 0 5px 0;
+  }
+
   .form-input,
   .text-input {
     padding: 3px 3px 3px 0;
@@ -68,46 +64,8 @@ $font-size-headers: 20px;
     }
   }
 
-  .header-row {
-    padding-top: 20px;
-    padding-bottom: 5px;
-    font-weight: bold;
-    font-size: $font-size-headers;
-  }
-
-  .row,
-  .col-50 {
-    border: 1px solid transparent;
-  }
-
-  .no-border {
-    border: none;
-  }
-
-  .row:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-
-  .padded-float {
-    padding-left: 10px;
-    min-width: 90px !important;
-  }
-
-  input[type="radio"],
-  input[type="checkbox"] {
-    margin-right: 5px;
-  }
-
-  .hidden {
-    visibility: hidden;
-  }
-
-  .invalid {
-    border: 1px solid darken($validation-color, 30%);
-    background-color: $validation-color;
-    border-radius: 4px;
+  .smaller {
+    font-size: 0.85em;
   }
 
   @media screen and (max-width: 650px) {
@@ -121,7 +79,8 @@ $font-size-headers: 20px;
     }
   }
 
-  .primary-btn, .secondary-btn {
+  .primary-btn,
+  .secondary-btn {
     padding: 12px 20px;
     border: none;
     border-radius: 4px;
@@ -130,10 +89,10 @@ $font-size-headers: 20px;
     float: right;
     text-transform: none;
     min-width: 170px;
-    margin-top: 20px;
   }
 
-  .primary-btn, .primary-btn:active {
+  .primary-btn,
+  .primary-btn:active {
     background-color: lighten(rgb(16, 59, 94), 30%) !important;
     color: white !important;
   }
@@ -157,9 +116,58 @@ $font-size-headers: 20px;
     justify-content: flex-end;
   }
 
-  .field-error {
-    width: 100%;
-    text-align: center;
-    font-style: italic;
+  input[type="radio"],
+  input[type="checkbox"] {
+    margin-right: 5px;
+  }
+
+  .membership-container {
+    margin-bottom: $footer-height;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .membership-wrapper {
+      max-width: 750px;
+    }
+
+    label {
+      padding-right: 4px;
+    }
+
+    .header-row {
+      padding-top: 20px;
+      padding-bottom: 5px;
+      font-weight: bold;
+      font-size: $font-size-headers;
+    }
+
+    .no-border {
+      border: none;
+    }
+
+    .padded-float {
+      padding-left: 10px;
+      min-width: 90px !important;
+    }
+
+    .hidden {
+      visibility: hidden;
+    }
+
+    .invalid {
+      border: 1px solid darken($validation-color, 30%);
+      background-color: $validation-color;
+      border-radius: 4px;
+    }
+
+    .field-error {
+      width: 100%;
+      text-align: center;
+      font-style: italic;
+    }
   }
 }

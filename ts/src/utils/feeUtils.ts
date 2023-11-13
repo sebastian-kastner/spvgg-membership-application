@@ -14,6 +14,9 @@ export const SECTION_FEES = {
 }
 
 export function calculateMembershipFee(application: Application): number | null {
+    if (!application) {
+        return null;
+    }
     if (application.membership_type === MembershipTypes.FAMILY) {
         return calculateFamilyFees(application);
     } else if (application.membership_type === MembershipTypes.SINGLE) {
@@ -23,11 +26,12 @@ export function calculateMembershipFee(application: Application): number | null 
 }
 
 function calculateSingleFees(application: Application): number | null {
+    // single membership must have exactly one member
     if (!application.members || application.members.length === 0) {
         console.log('Invalid application: Single membership applications must have exactly one member');
         return null;
     }
-
+    
     const member = application.members[0];
     const adult = isAdult(member);
     if (adult === null) {

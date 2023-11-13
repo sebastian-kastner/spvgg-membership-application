@@ -17,7 +17,9 @@
         </div>
       </div>
 
-      <div class="required-fields-hint">Mit * markierte Felder müssen ausgefüllt werden</div>
+      <div class="required-fields-hint smaller">
+        Mit * markierte Felder müssen ausgefüllt werden
+      </div>
 
       <!-- MEMBERSHIP START DATE -->
       <div class="row header-row">Ab wann möchtest Du als Mitglied aufgenommen werden? *</div>
@@ -79,16 +81,6 @@
             v-model="application.membership_type"
           />
           <label for="membership_type_single">Einzelmitgliedschaft</label>
-        </div>
-      </div>
-      <div class="inline-button-container">
-        <div>
-          <input
-            type="button"
-            class="primary-btn"
-            value="Beitragssatzung anzeigen"
-            @click="toggleFeesStatue"
-          />
         </div>
       </div>
       <!-- MEMBERSHIP SECTIONS -->
@@ -197,12 +189,14 @@
           />
           <label for="sepaAgreement">
             * SEPA-Lastschriftenmandat <br />
-            Hiermit ermächtige/n ich/wir Sie, die Beitragsgebühren von meinem /unserem Konto mittels
-            Lastschrift einzuziehen. Zugleich weise/n ich/wir mein/unser Kreditinstitut an, die
-            SpVgg Deuringen e.V. auf mein/unser Konto gezogene Lastschriften einzulösen. Hinweis:
-            ich kann/wir können innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die
-            Erstattung des belasteten Betrags verlangen. Es gelten dabei die mit meinem/unserem
-            Kreditinstitut vereinbarten Bedingungen.
+            <span class="smaller">
+              Hiermit ermächtige/n ich/wir Sie, die Beitragsgebühren von meinem /unserem Konto
+              mittels Lastschrift einzuziehen. Zugleich weise/n ich/wir mein/unser Kreditinstitut
+              an, die SpVgg Deuringen e.V. auf mein/unser Konto gezogene Lastschriften einzulösen.
+              Hinweis: ich kann/wir können innerhalb von acht Wochen, beginnend mit dem
+              Belastungsdatum, die Erstattung des belasteten Betrags verlangen. Es gelten dabei die
+              mit meinem/unserem Kreditinstitut vereinbarten Bedingungen.
+            </span>
           </label>
         </div>
       </div>
@@ -223,25 +217,28 @@
           />
           <label for="dataProtectionAgreement">
             * Datenschutzerklärung <br />
-            Ich willige ein, dass die SpVgg Deuringen, als verantwortliche Stelle, die in der
-            Beitrittserklärung erhobenen personenbezogenen Daten, wie Namen, Vorname, Geburtsdatum,
-            Adresse, E-Mail-Adresse, Telefonnummer und Bankverbindung ausschließlich zum Zwecke der
-            Mitgliederverwaltung, des Beitragseinzuges und der Übermittlung von Vereinsinformationen
-            durch den Verein verarbeitet und genutzt werden. Eine Übermittlung von Teilen dieser
-            Daten an die jeweiligen Sportfachverbände und den Bayerischen Landes Sportverband e.V.
-            (BLSV) findet nur im Rahmen der in den Satzungen der Fachverbände bzw. des BLSV
-            festgelegten Zwecke statt. Diese Datenübermittlungen sind notwendig zum Zweck der
-            Mitgliederverwaltung, zum Zwecke der Organisation eines Spiel- bzw. Wettkampfbetriebes
-            und zum Zwecke der Einwerbung von öffentlichen Fördermitteln. Eine Datenübermittlung an
-            Dritte, außerhalb der Fachverbände und des BLSV, findet nicht statt. Eine Datennutzung
-            für Werbezwecke findet ebenfalls nicht statt. Bei Beendigung der Mitgliedschaft werden
-            die personenbezogenen Daten gelöscht, soweit sie nicht entsprechend der
-            steuerrechtlichen Vorgaben aufbewahrt werden müssen. Neben dem Recht auf Auskunft
-            bezüglich der zu seiner Person bei der verantwortlichen SpVgg Deuringen gespeicherten
-            Daten hat jedes Mitglied, im Rahmen der Vorgaben der DSGVO, das Recht, der Speicherung
-            der Daten, die nicht im Rahmen der gesetzlichen Vorgaben für bestimmte Zeiträume
-            vorgehalten werden müssen, für die Zukunft zu widersprechen. Ferner hat das Mitglied, im
-            Falle von fehlerhaften Daten, ein Korrekturrecht
+            <span class="smaller">
+              Ich willige ein, dass die SpVgg Deuringen, als verantwortliche Stelle, die in der
+              Beitrittserklärung erhobenen personenbezogenen Daten, wie Namen, Vorname,
+              Geburtsdatum, Adresse, E-Mail-Adresse, Telefonnummer und Bankverbindung ausschließlich
+              zum Zwecke der Mitgliederverwaltung, des Beitragseinzuges und der Übermittlung von
+              Vereinsinformationen durch den Verein verarbeitet und genutzt werden. Eine
+              Übermittlung von Teilen dieser Daten an die jeweiligen Sportfachverbände und den
+              Bayerischen Landes Sportverband e.V. (BLSV) findet nur im Rahmen der in den Satzungen
+              der Fachverbände bzw. des BLSV festgelegten Zwecke statt. Diese Datenübermittlungen
+              sind notwendig zum Zweck der Mitgliederverwaltung, zum Zwecke der Organisation eines
+              Spiel- bzw. Wettkampfbetriebes und zum Zwecke der Einwerbung von öffentlichen
+              Fördermitteln. Eine Datenübermittlung an Dritte, außerhalb der Fachverbände und des
+              BLSV, findet nicht statt. Eine Datennutzung für Werbezwecke findet ebenfalls nicht
+              statt. Bei Beendigung der Mitgliedschaft werden die personenbezogenen Daten gelöscht,
+              soweit sie nicht entsprechend der steuerrechtlichen Vorgaben aufbewahrt werden müssen.
+              Neben dem Recht auf Auskunft bezüglich der zu seiner Person bei der verantwortlichen
+              SpVgg Deuringen gespeicherten Daten hat jedes Mitglied, im Rahmen der Vorgaben der
+              DSGVO, das Recht, der Speicherung der Daten, die nicht im Rahmen der gesetzlichen
+              Vorgaben für bestimmte Zeiträume vorgehalten werden müssen, für die Zukunft zu
+              widersprechen. Ferner hat das Mitglied, im Falle von fehlerhaften Daten, ein
+              Korrekturrecht
+            </span>
           </label>
         </div>
       </div>
@@ -259,11 +256,13 @@
             :false-value="Checked.NO"
           />
           <label for="publicationAgreement">
-            * Weiter willige ich ein, dass die SpVgg Deuringen von sportbezogenen oder
-            gesellschaftlichen Veranstaltungen auf der Website des Vereines oder sonstigen
-            Vereinspublikationen veröffentlicht und an die Presse zum Zwecke der Veröffentlichung
-            ohne spezielle Einwilligung weitergibt. Abbildungen von genannten Einzelpersonen oder
-            Klein-Gruppen hingegen bedürfen einer Einwilligung der abgebildeten Personen.
+            <span class="smaller">
+              * Weiter willige ich ein, dass die SpVgg Deuringen von sportbezogenen oder
+              gesellschaftlichen Veranstaltungen auf der Website des Vereines oder sonstigen
+              Vereinspublikationen veröffentlicht und an die Presse zum Zwecke der Veröffentlichung
+              ohne spezielle Einwilligung weitergibt. Abbildungen von genannten Einzelpersonen oder
+              Klein-Gruppen hingegen bedürfen einer Einwilligung der abgebildeten Personen.
+            </span>
           </label>
         </div>
       </div>
@@ -276,6 +275,25 @@
       </div>
       <div class="row">
         <input type="button" class="primary-btn" value="Weiter" @click="doSubmit" />
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer-wrapper">
+      <div>
+        <input
+          type="button"
+          class="primary-btn"
+          value="Beitragssatzung anzeigen"
+          @click="toggleFeesStatue"
+        />
+      </div>
+      <div>
+        <div>
+          <b>Jahresbeitrag*:</b>
+          <span class="membership-fee">{{ membershipFee }}€</span>
+        </div>
+        <div class="smaller">* vorraussichtlicher Betrag</div>
       </div>
     </div>
   </div>
@@ -318,9 +336,12 @@ export default class MembershipFormEditor extends Vue {
   validationActive = false
 
   @Watch('application', { deep: true })
-  async onApplicationChanged(): Promise<void> {
-    await this.$nextTick()
-    console.log('MEMBERSHIP FEE:', calculateMembershipFee(this.application))
+  get membershipFee(): string {
+    const fee = calculateMembershipFee(this.application)
+    if (fee) {
+      return fee.toString()
+    }
+    return '-'
   }
 
   async doSubmit(): Promise<void> {
@@ -401,6 +422,7 @@ export default class MembershipFormEditor extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import '../assets/variables.scss';
 .section-container {
   min-width: 35%;
 }
@@ -428,7 +450,6 @@ export default class MembershipFormEditor extends Vue {
 .required-fields-hint {
   width: 100%;
   text-align: right;
-  font-size: 0.8rem;
 }
 
 .download-application {
@@ -498,6 +519,28 @@ export default class MembershipFormEditor extends Vue {
   animation: shake 0.7s ease-in-out infinite;
 }
 
+.footer {
+  position: fixed;
+  height: $footer-height;
+  bottom: 0;
+  width: 100%;
+  background-color: darken(#f2f2f2, 3%);
+  padding: 20px 0;
+}
+
+.footer-wrapper {
+  width: 80%;
+  max-width: 750px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+
+  @media screen and (max-width: 650px) {
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
 @keyframes shake {
   0% {
     transform: translateX(0);
@@ -516,4 +559,3 @@ export default class MembershipFormEditor extends Vue {
   }
 }
 </style>
-../utils/devUtils

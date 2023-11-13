@@ -115,6 +115,10 @@ export default class FeesStatute extends Vue {
 </script>
 
 <style lang="scss" scoped>
+
+.fees-statute {
+  line-height: 1.5;
+}
 .close {
   color: #aaaaaa;
   float: right;
