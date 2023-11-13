@@ -91,7 +91,7 @@
       </ol>
     </div>
     <div class="button-container">
-      <input type="button" class="primary-btn" value="Schließen" @click="close" />
+      <input type="button" class="secondary-btn" value="Schließen" @click="close" />
     </div>
   </div>
 </template>
