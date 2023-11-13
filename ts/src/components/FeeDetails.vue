@@ -23,7 +23,6 @@ export default class FeeDetails extends Vue {
 .membership-fee-container {
   display: flex;
   justify-content: space-between;
-  max-width: 900px;
 
   .membership-fee-label {
     margin-right: 15px;
