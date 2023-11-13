@@ -68,7 +68,7 @@
       </div>
       <div class="confirmation-button-container">
         <div>
-          <input type="button" class="primary-btn" value="Bestätigen" />
+          <input type="submit" class="primary-btn" value="Bestätigen" />
         </div>
         <div>
           <input type="button" class="secondary-btn" value="Überarbeiten" @click="doEdit" />
