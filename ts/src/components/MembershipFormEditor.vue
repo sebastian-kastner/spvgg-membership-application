@@ -284,11 +284,11 @@
         <input
           type="button"
           class="primary-btn"
-          value="Beitragssatzung anzeigen"
+          value="Beitragssatzung"
           @click="toggleFeesStatue"
         />
       </div>
-      <div>
+      <div class="membership-fee-summary">
         <div>
           <b>Jahresbeitrag*:</b>
           <span class="membership-fee">{{ membershipFee }}€</span>
@@ -321,27 +321,29 @@ export default class MembershipFormEditor extends Vue {
   MembershipStartTypes = MembershipStartTypes
   MembershipTypes = MembershipTypes
   Checked = Checked
-
   missingRequiredFields = false
-
   showFeesStatute = false
-
   locale = de
-
   truffleShuffle = false
-
+  membershipFee = '0'
+  validationActive = false
   validationIssues: ValidationIssues = {
     issues: new Set()
   }
-  validationActive = false
+
+  mounted(): void {
+    this.setMembershipFee();
+  }
 
   @Watch('application', { deep: true })
-  get membershipFee(): string {
+  public setMembershipFee(): void {
     const fee = calculateMembershipFee(this.application)
-    if (fee) {
-      return fee.toString()
+    if (!fee) {
+      this.membershipFee = '-'
+      return
     }
-    return '-'
+
+    this.membershipFee = fee.toString()
   }
 
   async doSubmit(): Promise<void> {
@@ -488,7 +490,7 @@ export default class MembershipFormEditor extends Vue {
   margin-bottom: 40px;
 }
 
-@media screen and (max-width: 650px) {
+@media screen and (max-width: $medium-screen) {
   .download-application {
     text-align: center;
 
@@ -526,6 +528,10 @@ export default class MembershipFormEditor extends Vue {
   width: 100%;
   background-color: darken(#f2f2f2, 3%);
   padding: 20px 0;
+
+  @media screen and (max-width: $small-screen) {
+    padding: 10px 0;
+  }
 }
 
 .footer-wrapper {
@@ -535,9 +541,33 @@ export default class MembershipFormEditor extends Vue {
   display: flex;
   justify-content: space-between;
 
-  @media screen and (max-width: 650px) {
-    flex-direction: column;
+  .primary-btn {
+    float: none !important;
+  }
+
+  .membership-fee-summary {
+    height: 44px;
+    display: grid;
+  }
+
+  .membership-fee {
+    margin-left: 10px;
+    background-color: lightblue;
+    padding: 1px;
+  }
+
+  @media screen and (max-width: $small-screen) {
+    flex-direction: column-reverse;
     justify-content: center;
+    align-items: center;
+
+    .primary-btn {
+      padding: 6px 10px !important;
+    }
+
+    .membership-fee-summary {
+      height: 36px;
+    }
   }
 }
 

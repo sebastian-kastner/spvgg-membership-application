@@ -231,4 +231,3 @@ export default class MembershipConfirmation extends Vue {
   }
 }
 </style>
-../utils/membershipFormatter
