@@ -18,6 +18,13 @@ export function getName(member: Member): string {
     return parts.join(' ')
 }
 
+export function getMemberTitle(index: number): string {
+    if (index === 0) {
+        return 'Antragsteller'
+      }
+      return 'Mitglied ' + (index + 1)
+}
+
 export function getStreet(member: Member): string {
     return member.street + ' ' + member.streetNumber
 }

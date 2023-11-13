@@ -6,6 +6,8 @@ export const FAMILIY_MEMBERSHIP_WITHOUT_CHILDREN_FEE = 80;
 export const INDIVIDUAL_STUDENT_FEE = 40;
 export const INDIVIDUAL_ADULT_FEE = 80;
 
+const DEBUG = false;
+
 export const SECTION_FEES = {
     football: 55,
     bowling: 55,
@@ -25,32 +27,38 @@ export function calculateMembershipFee(application: Application): number | null 
     return null;
 }
 
+function log(...args: any[]) {
+    if (DEBUG) {
+        console.log(...args);
+    }
+}
+
 function calculateSingleFees(application: Application): number | null {
     // single membership must have exactly one member
     if (!application.members || application.members.length === 0) {
-        console.log('Invalid application: Single membership applications must have exactly one member');
+        log('Invalid application: Single membership applications must have exactly one member');
         return null;
     }
     
     const member = application.members[0];
     const adult = isAdult(member);
     if (adult === null) {
-        console.log("Invalid date of birth for member", member.firstName);
+        log("Invalid date of birth for member", member.firstName);
         return null;
     }
     // students and minors only pay the student fee and no section fee
     if (isStudent(member) || !adult) {
-        console.log("Individual student fee")
+        log("Individual student fee")
         return INDIVIDUAL_STUDENT_FEE
     }
 
-    console.log("Individual adult fee + section fee");
+    log("Individual adult fee + section fee");
     return INDIVIDUAL_ADULT_FEE + getSectionFee(member.sections);
 }
 
 function calculateFamilyFees(application: Application): number | null {
     if (!application.members || application.members.length === 0) {
-        console.log('Invalid application: Family membership applications must have one or more members');
+        log('Invalid application: Family membership applications must have one or more members');
         return null;
     }
 
@@ -63,7 +71,7 @@ function calculateFamilyFees(application: Application): number | null {
         const member = application.members[i];
         const adult = isAdult(member);
         if (adult === null) {
-            console.log("Invalid date of birth for member", member.firstName);
+            log("Invalid date of birth for member", member.firstName);
             return null;
         }
 
@@ -73,36 +81,36 @@ function calculateFamilyFees(application: Application): number | null {
         else {
             adultCount++;
             if (!isStudent(member)) {
-                console.log("Adult:", member.firstName)
+                log("Adult:", member.firstName)
                 const sectionFee = getSectionFee(member.sections);
                 if (sectionFee) {
-                    console.log("Adding section fee for adult", member.firstName)
+                    log("Adding section fee for adult", member.firstName)
                     sectionFees += sectionFee;
                 }
             } else {
-                console.log("Adult student found, no section fee for", member.firstName)
+                log("Adult student found, no section fee for", member.firstName)
             }
         }
     }
 
     // make sure there are no more than two adults
     if (adultCount > 2) {
-        console.log('There must not be more than two adults in a family membership');
+        log('There must not be more than two adults in a family membership');
         return null;
     }
 
     if (adultCount === 0) {
         //TODO: clarify if family membership without adults is legal
-        console.log("No adult found in family membership. Is this legal?")
+        log("No adult found in family membership. Is this legal?")
     }
 
     // set the base fee based on the number of children
     let baseFee = 0;
     if (minorCount > 0) {
-        console.log("Family membership with children")
+        log("Family membership with children")
         baseFee = FAMILY_MEMBERSHIP_WITH_CHILDREN_FEE;
     } else {
-        console.log("Family membership without children")
+        log("Family membership without children")
         baseFee = FAMILIY_MEMBERSHIP_WITHOUT_CHILDREN_FEE;
     }
 
@@ -113,7 +121,7 @@ function calculateFamilyFees(application: Application): number | null {
 function isAdult(member: Member): boolean | null {
     const parsedDate = parseDate(member.dateOfBirth);
     if (!parsedDate) {
-        console.log("Parsed date invalid and all")
+        log("Parsed date invalid and all")
         return null;
     }
     // Get the current date

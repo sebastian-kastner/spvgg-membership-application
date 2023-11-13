@@ -14,6 +14,7 @@
       </div>
       <div class="row header-row">Mitgliederdaten</div>
       <div class="member-summary" v-for="(member, index) in application.members" :key="index">
+        <div class="row header-row">{{ getMemberTitle(index) }}</div>
         <div class="row">
           <div class="label conf-col-50">Name:</div>
           <div class="conf-col-50 value">
@@ -88,6 +89,7 @@ import {
   getMembershipType,
   getSections,
   getIsStudent,
+  getMemberTitle,
   toString
 } from '../utils/membershipFormatter'
 
@@ -163,6 +165,10 @@ export default class MembershipConfirmation extends Vue {
 
   isStudent(member: Member): string {
     return getIsStudent(member)
+  }
+
+  getMemberTitle(index: number): string {
+    return getMemberTitle(index);
   }
 
   doEdit(): void {

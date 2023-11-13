@@ -10,6 +10,9 @@
         />
       </div>
     </div>
+    <div class="row header-row">
+      {{  getMemberTitle() }}
+    </div>
     <div class="row no-border">
       <div
         class="text-input col-50"
@@ -186,6 +189,7 @@
 import { Component, Vue, Prop, Watch } from 'vue-facing-decorator'
 import { validateField } from '../utils/fieldValidator'
 import { getDateOfBirthValidationMessage } from '../utils/dateUtils'
+import { getMemberTitle } from '../utils/membershipFormatter'
 import type { Member, ValidationIssues } from '../types'
 import { Checked } from '../types'
 
@@ -262,6 +266,10 @@ export default class MemberEditor extends Vue {
       this.validationIssues.issues.delete(issueKey)
       this.dateInvalidMessage = null
     }
+  }
+
+  public getMemberTitle(): string {
+    return getMemberTitle(this.index);
   }
 
   public isFieldSet(value: any, key: string, onlyRequiredForFirst = false): boolean {
