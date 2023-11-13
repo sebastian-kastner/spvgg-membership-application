@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-facing-decorator'
-import type { Member, ValidationIssues } from '../types'
+import { Checked, type Member, type ValidationIssues } from '../types'
 import MemberEditor from './MemberEditor.vue'
 
 @Component({
@@ -50,7 +50,13 @@ export default class MemberListEditor extends Vue {
 
   public addMember(): void {
     const newMember: Member = {
-      isStudent: false
+      isStudent: false,
+      sections: {
+        football: Checked.NO,
+        bowling: Checked.NO,
+        theatre: Checked.NO,
+        fitness: Checked.NO
+      }
     }
     if (this.members.length >= 1) {
       const memberOne = this.members[0]

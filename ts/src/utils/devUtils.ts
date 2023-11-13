@@ -16,12 +16,6 @@ export function createDefaultMembership(): Application {
     return {
         membership_start: MembershipStartTypes.FROM,
         membership_type: MembershipTypes.FAMILY,
-        sections: {
-            football: Checked.YES,
-            bowling: Checked.YES,
-            fitness: Checked.NO,
-            theatre: Checked.NO,
-        },
         members: [
             {
                 anrede: "Herr",
@@ -35,6 +29,12 @@ export function createDefaultMembership(): Application {
                 phoneNumber: "08210815",
                 email: "dr@doktor.dr",
                 isStudent: false,
+                sections: {
+                    football: Checked.YES,
+                    bowling: Checked.YES,
+                    fitness: Checked.NO,
+                    theatre: Checked.NO,
+                },
             },
             {
                 anrede: "--",
@@ -47,6 +47,12 @@ export function createDefaultMembership(): Application {
                 zipCode: "86391",
                 city: "Augsburg",
                 isStudent: true,
+                sections: {
+                    football: Checked.NO,
+                    bowling: Checked.NO,
+                    fitness: Checked.NO,
+                    theatre: Checked.YES,
+                },
             },
         ],
         iban: "doktor-ban",

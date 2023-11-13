@@ -127,6 +127,58 @@
         </div>
       </div>
     </div>
+    <!-- MEMBERSHIP SECTIONS -->
+    <div class="row header-row">
+        Abteilungen (Mehrfachauswahl möglich)
+      </div>
+      <div class="row">
+        <div class="d-flex d-flex-wrap">
+          <div class="section-container">
+            <div class="form-input">
+              <input
+                :id="getFieldName('section_football')"
+                type="checkbox"
+                v-model="member.sections.football"
+                :true-value="Checked.YES"
+                :false-value="Checked.NO"
+              />
+              <label :for="getFieldName('section_football')">Fußball</label>
+            </div>
+            <div class="form-input">
+              <input
+                :id="getFieldName('section_bowling')"
+                type="checkbox"
+                v-model="member.sections.bowling"
+                :true-value="Checked.YES"
+                :false-value="Checked.NO"
+              />
+              <label :for="getFieldName('section_bowling')">Kegeln</label>
+            </div>
+          </div>
+          <div class="section-container">
+            <div class="form-input">
+              <input
+                :id="getFieldName('section_theatre')"
+                type="checkbox"
+                v-model="member.sections.theatre"
+                :true-value="Checked.YES"
+                :false-value="Checked.NO"
+              />
+              <label :for="getFieldName('section_theatre')">Theater</label>
+            </div>
+            <div class="form-input">
+              <input
+                :id="getFieldName('section_fitness')"
+                type="checkbox"
+                v-model="member.sections.fitness"
+                :true-value="Checked.YES"
+                :false-value="Checked.NO"
+              />
+              <label :for="getFieldName('section_fitness')">Fitness &amp; Freizeit</label>
+            </div>
+          </div>
+        </div>
+      </div>
   </div>
 </template>
 
@@ -135,6 +187,7 @@ import { Component, Vue, Prop, Watch } from 'vue-facing-decorator'
 import { validateField } from '../utils/fieldValidator'
 import { getDateOfBirthValidationMessage } from '../utils/dateUtils'
 import type { Member, ValidationIssues } from '../types'
+import { Checked } from '../types'
 
 @Component({
   components: {},
@@ -147,6 +200,7 @@ export default class MemberEditor extends Vue {
   @Prop({ required: true }) validationIssues!: ValidationIssues
 
   emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+  Checked = Checked
 
   dateInvalidMessage: string | null = null
 
@@ -229,5 +283,9 @@ export default class MemberEditor extends Vue {
   label {
     padding-right: 20px;
   }
+}
+
+.section-container {
+  min-width: 35%;
 }
 </style>

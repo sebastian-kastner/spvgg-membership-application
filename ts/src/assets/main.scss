@@ -69,8 +69,7 @@
   }
 
   @media screen and (max-width: $medium-screen) {
-    .col-50,
-    input[type="submit"] {
+    .col-50 {
       width: 100% !important;
     }
     .padded-float {

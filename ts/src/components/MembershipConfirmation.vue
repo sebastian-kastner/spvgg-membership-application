@@ -12,10 +12,6 @@
         <div class="label conf-col-50">Mitgliedschaftstyp:</div>
         <div class="conf-col-50 value">{{ membershipType }}</div>
       </div>
-      <div class="row">
-        <div class="label conf-col-50">Abteilungen:</div>
-        <div class="conf-col-50 value">{{ sections }}</div>
-      </div>
       <div class="row header-row">Mitgliederdaten</div>
       <div class="member-summary" v-for="(member, index) in application.members" :key="index">
         <div class="row">
@@ -47,6 +43,10 @@
           <div class="label conf-col-50">Student:</div>
           <div class="conf-col-50 value">{{ isStudent(member) }}</div>
         </div>
+        <div class="row">
+          <div class="label conf-col-50">Abteilungen:</div>
+          <div class="conf-col-50 value">{{ getSections(member.sections) }}</div>
+        </div>
       </div>
       <div class="row header-row">Bankdaten</div>
       <div class="row">
@@ -65,11 +65,11 @@
         <div class="label conf-col-50">Kontoinhaber:</div>
         <div class="conf-col-50 value">{{ application.bankAccountOwner }}</div>
       </div>
-      <div class="row">
-        <div class="conf-col-50">
-          <input type="submit" class="primary-btn" value="Bestätigen" />
+      <div class="confirmation-button-container">
+        <div>
+          <input type="button" class="primary-btn" value="Bestätigen" />
         </div>
-        <div class="conf-col-50">
+        <div>
           <input type="button" class="secondary-btn" value="Überarbeiten" @click="doEdit" />
         </div>
       </div>
@@ -79,7 +79,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-facing-decorator'
-import type { Application, AppMode, Member } from '../types'
+import type { Application, AppMode, Member, Sections } from '../types'
 import {
   getName,
   getMembershipStart,
@@ -98,43 +98,43 @@ export default class MembershipConfirmation extends Vue {
   @Prop({ required: true }) appMode!: AppMode
   @Prop({ required: true }) application!: Application
 
-  formattedValues = "";
-  plainValues = "";
+  formattedValues = ''
+  plainValues = ''
 
   public mounted(): void {
     // create state for browser history to enable navigation using the browser's back button
     if (window.location.href.indexOf('#confirm') != -1) {
-      const title = document.title;
-      const url = window.location.href + "#confirm";
-      history.pushState({ }, title, url);
+      const title = document.title
+      const url = window.location.href + '#confirm'
+      history.pushState({}, title, url)
     }
 
     // handle browser back event
-    window.addEventListener('popstate', this.handleBrowserBack);
+    window.addEventListener('popstate', this.handleBrowserBack)
 
-    this.formattedValues = btoa(toString(this.application));
-    this.plainValues = btoa(JSON.stringify(this.application));
+    this.formattedValues = btoa(toString(this.application))
+    this.plainValues = btoa(JSON.stringify(this.application))
 
     // Use $refs to access the element with the specified ref
-    const targetDiv = this.$refs.scrollToDiv as any;
+    const targetDiv = this.$refs.scrollToDiv as any
 
     if (targetDiv) {
       // Scroll to the target div
-      targetDiv.scrollIntoView({ behavior: "smooth" });
+      targetDiv.scrollIntoView({ behavior: 'smooth' })
     }
   }
 
   public beforeUnmount(): void {
     // Remove the event listener when the component is about to be unmounted
-    window.removeEventListener('popstate', this.handleBrowserBack);
+    window.removeEventListener('popstate', this.handleBrowserBack)
   }
 
   private handleBrowserBack(): void {
-    this.appMode.isEditMode = true;
+    this.appMode.isEditMode = true
   }
 
   get action(): string {
-    return window.location.toString();
+    return window.location.toString()
   }
 
   getName(member: Member): string {
@@ -154,21 +154,21 @@ export default class MembershipConfirmation extends Vue {
   }
 
   get membershipType(): string {
-    return getMembershipType(this.application);
+    return getMembershipType(this.application)
   }
 
-  get sections(): string {
-    return getSections(this.application);
+  getSections(sections: Sections): string {
+    return getSections(sections);
   }
 
   isStudent(member: Member): string {
-    return getIsStudent(member);
+    return getIsStudent(member)
   }
 
   doEdit(): void {
-    const title = document.title;
-    const url = window.location.href.replace("#confirm", "");
-    history.pushState({ }, title, url);
+    const title = document.title
+    const url = window.location.href.replace('#confirm', '')
+    history.pushState({}, title, url)
 
     this.appMode.isEditMode = true
   }

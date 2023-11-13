@@ -45,7 +45,7 @@ function calculateSingleFees(application: Application): number | null {
     }
 
     console.log("Individual adult fee + section fee");
-    return INDIVIDUAL_ADULT_FEE + getSectionFee(application.sections);
+    return INDIVIDUAL_ADULT_FEE + getSectionFee(member.sections);
 }
 
 function calculateFamilyFees(application: Application): number | null {
@@ -74,7 +74,7 @@ function calculateFamilyFees(application: Application): number | null {
             adultCount++;
             if (!isStudent(member)) {
                 console.log("Adult:", member.firstName)
-                const sectionFee = getSectionFee(application.sections);
+                const sectionFee = getSectionFee(member.sections);
                 if (sectionFee) {
                     console.log("Adding section fee for adult", member.firstName)
                     sectionFees += sectionFee;

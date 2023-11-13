@@ -1,4 +1,4 @@
-import type { Application, Member } from '../types'
+import type { Application, Member, Sections } from '../types'
 import { Checked, MembershipStartTypes, MembershipTypes } from '../types';
 
 export function getName(member: Member): string {
@@ -26,21 +26,21 @@ export function getCity(member: Member): string {
     return member.zipCode + ' ' + member.city
 }
 
-export function getSections(application: Application): string {
-    const sections: string[] = []
-    if (application.sections.football === Checked.YES) {
-        sections.push('Fußball')
+export function getSections(sections: Sections): string {
+    const sectionsOut: string[] = []
+    if (sections.football === Checked.YES) {
+        sectionsOut.push('Fußball')
     }
-    if (application.sections.bowling === Checked.YES) {
-        sections.push('Kegeln')
+    if (sections.bowling === Checked.YES) {
+        sectionsOut.push('Kegeln')
     }
-    if (application.sections.fitness === Checked.YES) {
-        sections.push('Fitness & Freizeit')
+    if (sections.fitness === Checked.YES) {
+        sectionsOut.push('Fitness & Freizeit')
     }
-    if (application.sections.theatre === Checked.YES) {
-        sections.push('Theater')
+    if (sections.theatre === Checked.YES) {
+        sectionsOut.push('Theater')
     }
-    return sections.join(', ')
+    return sectionsOut.join(', ')
 }
 
 export function getIsStudent(member: Member): string {
@@ -88,7 +88,6 @@ export function toString(application: Application): string {
     // general data
     contents.push(["Start der Mitgliedschaft", getMembershipStart(application)])
     contents.push(["Mitgliedschaftstyp", getMembershipType(application)])
-    contents.push(["Abteilungen", getSections(application)])
     contents.push([])
     contents.push([])
     contents.push(["Mitgliederdaten"])
@@ -108,6 +107,7 @@ export function toString(application: Application): string {
             contents.push(["eMail", member.email])
         }
         contents.push(["Schüler/Student", getIsStudent(member)])
+        contents.push(["Abteilungen", getSections(member.sections)])
         contents.push([])
     })
 

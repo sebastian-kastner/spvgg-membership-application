@@ -83,58 +83,6 @@
           <label for="membership_type_single">Einzelmitgliedschaft</label>
         </div>
       </div>
-      <!-- MEMBERSHIP SECTIONS -->
-      <div class="row header-row">
-        In welcher Abteilung möchtest Du/Ihr Mitglied sein? (Mehrfachauswahl möglich) *
-      </div>
-      <div class="row" :class="{ invalid: !isSectionSet() }">
-        <div class="d-flex d-flex-wrap">
-          <div class="section-container">
-            <div class="form-input">
-              <input
-                id="section_football"
-                type="checkbox"
-                v-model="application.sections.football"
-                :true-value="Checked.YES"
-                :false-value="Checked.NO"
-              />
-              <label for="section_football">Fußball</label>
-            </div>
-            <div class="form-input">
-              <input
-                id="section_bowling"
-                type="checkbox"
-                v-model="application.sections.bowling"
-                :true-value="Checked.YES"
-                :false-value="Checked.NO"
-              />
-              <label for="section_bowling">Kegeln</label>
-            </div>
-          </div>
-          <div class="section-container">
-            <div class="form-input">
-              <input
-                id="section_theatre"
-                type="checkbox"
-                v-model="application.sections.theatre"
-                :true-value="Checked.YES"
-                :false-value="Checked.NO"
-              />
-              <label for="section_theatre">Theater</label>
-            </div>
-            <div class="form-input">
-              <input
-                id="section_fitness"
-                type="checkbox"
-                v-model="application.sections.fitness"
-                :true-value="Checked.YES"
-                :false-value="Checked.NO"
-              />
-              <label for="section_fitness">Fitness &amp; Freizeit</label>
-            </div>
-          </div>
-        </div>
-      </div>
       <!-- MEMBERSHIP PEOPLE -->
       <div class="row header-row">Hier kannst du Deine/Eure Mitgliederdaten eintragen</div>
       <member-list-editor
@@ -291,7 +239,8 @@
       <div class="membership-fee-summary">
         <div>
           <b>Jahresbeitrag*:</b>
-          <span class="membership-fee">{{ membershipFee }}€</span>
+          <span class="membership-fee" v-if="membershipFee">{{ membershipFee }}€</span>
+          <span class="membership-fee" v-else>--</span>
         </div>
         <div class="smaller">* vorraussichtlicher Betrag</div>
       </div>
@@ -325,7 +274,7 @@ export default class MembershipFormEditor extends Vue {
   showFeesStatute = false
   locale = de
   truffleShuffle = false
-  membershipFee = '0'
+  membershipFee: number | null = null
   validationActive = false
   validationIssues: ValidationIssues = {
     issues: new Set()
@@ -333,17 +282,21 @@ export default class MembershipFormEditor extends Vue {
 
   mounted(): void {
     this.setMembershipFee();
+    // DIRTY, DIRTY, DIRTY!!!!
+    if (this.membershipFee) {
+      this.validationActive = true;
+    }
   }
 
   @Watch('application', { deep: true })
   public setMembershipFee(): void {
     const fee = calculateMembershipFee(this.application)
     if (!fee) {
-      this.membershipFee = '-'
+      this.membershipFee = null
       return
     }
 
-    this.membershipFee = fee.toString()
+    this.membershipFee = fee
   }
 
   async doSubmit(): Promise<void> {
@@ -372,27 +325,6 @@ export default class MembershipFormEditor extends Vue {
 
   isFieldSet(value: any, key: string): boolean {
     return validateField(this.validationActive, value, key, this.validationIssues.issues)
-  }
-
-  isSectionSet(): boolean {
-    const sections = this.application.sections
-    // always validate to true if validation is not yet active
-    if (!this.validationActive) {
-      return true
-    }
-    const fieldKey = 'sections'
-    // this is me failing with js types..
-    if (
-      sections.football !== Checked.YES &&
-      sections.bowling !== Checked.YES &&
-      sections.fitness !== Checked.YES &&
-      sections.theatre !== Checked.YES
-    ) {
-      this.validationIssues.issues.add(fieldKey)
-      return false
-    }
-    this.validationIssues.issues.delete(fieldKey)
-    return true
   }
 
   toggleFeesStatue(): void {
@@ -425,9 +357,6 @@ export default class MembershipFormEditor extends Vue {
 
 <style lang="scss" scoped>
 @import '../assets/variables.scss';
-.section-container {
-  min-width: 35%;
-}
 
 .labeled-checkbox {
   display: flex;
@@ -554,6 +483,9 @@ export default class MembershipFormEditor extends Vue {
     margin-left: 10px;
     background-color: lightblue;
     padding: 1px;
+    min-width: 40px;
+    display: inline-block;
+    text-align: center;
   }
 
   @media screen and (max-width: $small-screen) {

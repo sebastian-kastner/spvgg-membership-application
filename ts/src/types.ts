@@ -16,6 +16,7 @@ export type Member = {
     anrede?: string,
     firstName?: string,
     lastName?: string,
+    sections: Sections,
     dateOfBirth?: string,
     city?: string,
     zipCode?: string,
@@ -48,8 +49,6 @@ export type Application = {
     membership_start?: string,
     membership_start_date?: Date,
     membership_type?: string,
-
-    sections: Sections,
 
     bic?: string,
     iban?: string,
