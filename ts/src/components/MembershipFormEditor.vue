@@ -258,7 +258,6 @@ import { MembershipStartTypes, MembershipTypes, Checked } from '../types'
 import { validateField } from '../utils/fieldValidator'
 import { calculateMembershipFee } from '../utils/feeUtils'
 import type { Application, ValidationIssues, AppMode } from '../types'
-import { printIssues } from '../utils/devUtils'
 
 @Component({
   components: { Datepicker, MemberListEditor, FeesStatute }
@@ -312,7 +311,6 @@ export default class MembershipFormEditor extends Vue {
       }, 1000)
     }
 
-    printIssues(this.validationIssues.issues)
     if (!issuesAfter) {
       this.appMode.isEditMode = false
     }
