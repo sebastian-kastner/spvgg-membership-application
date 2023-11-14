@@ -85,6 +85,9 @@
       </div>
       <!-- MEMBERSHIP PEOPLE -->
       <div class="row header-row">Hier kannst du Deine/Eure Mitgliederdaten eintragen</div>
+      <div v-if="tooManyAdults" class="row invalid">
+        Bei einer Familienmitgliedschaft sind maximal zwei Erwachsene Personen möglich.
+      </div>
       <member-list-editor
         :members="application.members"
         :isFamily="application.membership_type === MembershipTypes.FAMILY"
@@ -274,13 +277,14 @@ export default class MembershipFormEditor extends Vue {
   locale = de
   truffleShuffle = false
   membershipFee: number | null = null
+  numberOfAdults: number = 0;
   validationActive = false
   validationIssues: ValidationIssues = {
     issues: new Set()
   }
 
   mounted(): void {
-    this.setMembershipFee();
+    this.applicationWatcher();
     // DIRTY, DIRTY, DIRTY!!!!
     if (this.membershipFee) {
       this.validationActive = true;
@@ -288,15 +292,12 @@ export default class MembershipFormEditor extends Vue {
   }
 
   @Watch('application', { deep: true })
-  public setMembershipFee(): void {
+  public applicationWatcher(): void {
     const summary = new MembershipSummarizer(this.application).summarize();
     
     const fee = summary.membershipFee
-    if (!fee) {
-      this.membershipFee = null
-      return
-    }
 
+    this.numberOfAdults = summary.numberOfAdults
     this.membershipFee = fee
   }
 
@@ -341,6 +342,16 @@ export default class MembershipFormEditor extends Vue {
     }
     this.validationIssues.issues.delete(key)
     return true
+  }
+
+  get tooManyAdults(): boolean {
+    const validationKey = "tooManyAdults";
+    if (this.application.membership_type && this.application.membership_type === MembershipTypes.FAMILY) {
+      this.validationIssues.issues.add(validationKey)
+      return this.numberOfAdults > 2;
+    }
+    this.validationIssues.issues.delete(validationKey)
+    return false;
   }
 
   get hasValidationIssues(): boolean {

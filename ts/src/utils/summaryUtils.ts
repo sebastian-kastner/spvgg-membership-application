@@ -94,6 +94,7 @@ export class MembershipSummarizer {
         if (this.numberOfAdults > 2) {
             this.log('There must not be more than two adults in a family membership');
             this.membershipFee = null;
+            return;
         }
 
         if (this.numberOfAdults === 0) {
