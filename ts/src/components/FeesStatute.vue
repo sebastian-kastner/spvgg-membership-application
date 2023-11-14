@@ -98,7 +98,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-facing-decorator'
-import * as fees from '../utils/feeUtils'
+import * as fees from '../utils/summaryUtils'
 import FeeDetails from './FeeDetails.vue'
 
 @Component({
@@ -145,3 +145,4 @@ li {
     justify-content: flex-end;
   }
 </style>
+../utils/summaryUtils

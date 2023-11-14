@@ -4,3 +4,4 @@ public/assets/*.css
 public/assets/*.js
 public/*.html
 deploy.env
+*.py

@@ -256,7 +256,7 @@ import MemberListEditor from './MemberListEditor.vue'
 import FeesStatute from './FeesStatute.vue'
 import { MembershipStartTypes, MembershipTypes, Checked } from '../types'
 import { validateField } from '../utils/fieldValidator'
-import { calculateMembershipFee } from '../utils/feeUtils'
+import { MembershipSummarizer } from '../utils/summaryUtils'
 import type { Application, ValidationIssues, AppMode } from '../types'
 
 @Component({
@@ -289,7 +289,9 @@ export default class MembershipFormEditor extends Vue {
 
   @Watch('application', { deep: true })
   public setMembershipFee(): void {
-    const fee = calculateMembershipFee(this.application)
+    const summary = new MembershipSummarizer(this.application).summarize();
+    
+    const fee = summary.membershipFee
     if (!fee) {
       this.membershipFee = null
       return
@@ -519,3 +521,4 @@ export default class MembershipFormEditor extends Vue {
   }
 }
 </style>
+../utils/summaryUtils
