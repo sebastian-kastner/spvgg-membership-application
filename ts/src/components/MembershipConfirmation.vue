@@ -92,6 +92,7 @@ import {
   getSections,
   getIsStudent,
   getMemberTitle,
+  base64Encode,
   formatApplication,
   formatSummary
 } from '../utils/formattingUtils'
@@ -118,9 +119,9 @@ export default class MembershipConfirmation extends Vue {
     // handle browser back event
     window.addEventListener('popstate', this.handleBrowserBack)
 
-    this.summaryText = btoa(formatSummary(new MembershipSummarizer(this.application).summarize()))
-    this.formattedValues = btoa(formatApplication(this.application))
-    this.plainValues = btoa(JSON.stringify(this.application))
+    this.summaryText = base64Encode(formatSummary(new MembershipSummarizer(this.application).summarize()))
+    this.formattedValues = base64Encode(formatApplication(this.application))
+    this.plainValues = base64Encode(JSON.stringify(this.application))
 
     // Use $refs to access the element with the specified ref
     const targetDiv = this.$refs.scrollToDiv as any

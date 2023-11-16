@@ -1,6 +1,7 @@
 import type { Application, Member, Sections } from '../types'
 import { Checked, MembershipStartTypes, MembershipTypes } from '../types';
 import type { ApplicationSummary } from './summaryUtils';
+import { Buffer } from 'buffer'
 
 export function getName(member: Member): string {
     const parts: string[] = []
@@ -166,11 +167,21 @@ export function formatApplication(application: Application): string {
 
 export function formatSummary(summary: ApplicationSummary): string {
     const contents: [string?, string?][] = [];
-    contents.push(["Vsl. Beitrag", summary.membershipFee ? summary.membershipFee + " Euro" : "--"]);
+    contents.push(["Vsl. Beitrag", summary.membershipFee ? summary.membershipFee + "€" : "--"]);
     contents.push(["Anzahl Erwachsene", summary.numberOfAdults.toString()]);
     contents.push(["Anzahl Kinder", summary.numberOfMinors.toString()]);
     contents.push(["Anzahl Studenten", summary.numberOfStudents.toString()]);
     contents.push(["Mitgliedschaftstyp", summary.membershipType ? summary.membershipType : "--"]);
 
     return formatTuples(contents);
+}
+
+export function base64Encode(str: string): string {
+    const charset = document.characterSet;
+    return Buffer.from(str, charset).toString('base64');
+}
+
+export function base64Decode(str: string): string {
+    const charset = document.characterSet;
+    return Buffer.from(str, 'base64').toString(charset);
 }
