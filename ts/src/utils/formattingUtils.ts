@@ -22,8 +22,8 @@ export function getName(member: Member): string {
 export function getMemberTitle(index: number): string {
     if (index === 0) {
         return 'Antragsteller'
-      }
-      return 'Mitglied ' + (index + 1)
+    }
+    return 'Mitglied ' + (index + 1)
 }
 
 export function getStreet(member: Member): string {
@@ -166,7 +166,7 @@ export function formatApplication(application: Application): string {
 
 export function formatSummary(summary: ApplicationSummary): string {
     const contents: [string?, string?][] = [];
-    contents.push(["Vsl. Beitrag", summary.membershipFee ? summary.membershipFee + "€" : "--"]);
+    contents.push(["Vsl. Beitrag", summary.membershipFee ? summary.membershipFee + " Euro" : "--"]);
     contents.push(["Anzahl Erwachsene", summary.numberOfAdults.toString()]);
     contents.push(["Anzahl Kinder", summary.numberOfMinors.toString()]);
     contents.push(["Anzahl Studenten", summary.numberOfStudents.toString()]);
@@ -174,4 +174,3 @@ export function formatSummary(summary: ApplicationSummary): string {
 
     return formatTuples(contents);
 }
-

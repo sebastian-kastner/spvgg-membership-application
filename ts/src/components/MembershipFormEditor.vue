@@ -277,24 +277,24 @@ export default class MembershipFormEditor extends Vue {
   locale = de
   truffleShuffle = false
   membershipFee: number | null = null
-  numberOfAdults: number = 0;
+  numberOfAdults: number = 0
   validationActive = false
   validationIssues: ValidationIssues = {
     issues: new Set()
   }
 
   mounted(): void {
-    this.applicationWatcher();
+    this.applicationWatcher()
     // DIRTY, DIRTY, DIRTY!!!!
     if (this.membershipFee) {
-      this.validationActive = true;
+      this.validationActive = true
     }
   }
 
   @Watch('application', { deep: true })
   public applicationWatcher(): void {
-    const summary = new MembershipSummarizer(this.application).summarize();
-    
+    const summary = new MembershipSummarizer(this.application).summarize()
+
     const fee = summary.membershipFee
 
     this.numberOfAdults = summary.numberOfAdults
@@ -345,13 +345,18 @@ export default class MembershipFormEditor extends Vue {
   }
 
   get tooManyAdults(): boolean {
-    const validationKey = "tooManyAdults";
-    if (this.application.membership_type && this.application.membership_type === MembershipTypes.FAMILY) {
-      this.validationIssues.issues.add(validationKey)
-      return this.numberOfAdults > 2;
+    const validationKey = 'tooManyAdults'
+    if (
+      this.application.membership_type &&
+      this.application.membership_type === MembershipTypes.FAMILY
+    ) {
+      if (this.numberOfAdults > 2) {
+        this.validationIssues.issues.add(validationKey)
+        return true
+      }
     }
     this.validationIssues.issues.delete(validationKey)
-    return false;
+    return false
   }
 
   get hasValidationIssues(): boolean {
@@ -474,42 +479,45 @@ export default class MembershipFormEditor extends Vue {
   }
 }
 
-.footer-wrapper {
-  width: 80%;
-  max-width: 750px;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
-
-  .primary-btn {
-    float: none !important;
-  }
-
-  .membership-fee-summary {
-    height: 44px;
-    display: grid;
-  }
-
-  .membership-fee {
-    margin-left: 10px;
-    background-color: lightblue;
-    padding: 1px;
-    min-width: 40px;
-    display: inline-block;
-    text-align: center;
-  }
-
-  @media screen and (max-width: $small-screen) {
-    flex-direction: column-reverse;
-    justify-content: center;
-    align-items: center;
+.footer {
+  position: sticky;
+  .footer-wrapper {
+    width: 80%;
+    max-width: 750px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
 
     .primary-btn {
-      padding: 6px 10px !important;
+      float: none !important;
     }
 
     .membership-fee-summary {
-      height: 36px;
+      height: 44px;
+      display: grid;
+    }
+
+    .membership-fee {
+      margin-left: 10px;
+      background-color: lightblue;
+      padding: 1px;
+      min-width: 40px;
+      display: inline-block;
+      text-align: center;
+    }
+
+    @media screen and (max-width: $small-screen) {
+      flex-direction: column-reverse;
+      justify-content: center;
+      align-items: center;
+
+      .primary-btn {
+        padding: 6px 10px !important;
+      }
+
+      .membership-fee-summary {
+        height: 36px;
+      }
     }
   }
 }

@@ -32,12 +32,12 @@ if (!defined('WPINC')) {
 
 define('SPVGG_MEMBERSHIP_APPLICATION_VERSION', '1.0.0');
 
-global $spvgg_membership_application_validation_issues;
-
-$GLOBALS["spvgg_membership_application_validation_issues"] = array();
-
 function show_membership_application()
 {
+	$mgmtMailAddresse = "sebastian_kastner@gmx.net";
+	// $mgmtMailAddresse = "mitgliederverwaltung@spvggdeuringen.de";
+	$mgmtMailCc = "vorstand@spvggdeuringen.de";
+
 	enqueue_form_assets();
 
 	// handle post data if set
@@ -48,6 +48,7 @@ function show_membership_application()
 		$raw_data = json_decode(mb_convert_encoding(base64_decode($_POST['plain_values']), 'UTF-8', 'ISO-8859-1'), true);
 		// decode base64. convert to utf8.
 		$formatted_data = mb_convert_encoding(base64_decode($_POST['formatted_values']), 'UTF-8', 'ISO-8859-1');
+		$formatted_summary = mb_convert_encoding(base64_decode($_POST['summary_text']), 'UTF-8', 'ISO-8859-1');
 
 		$first_member = get_first_member($raw_data);
 		$first_member_email = get_email($first_member);
@@ -57,20 +58,23 @@ function show_membership_application()
 			return "Der Mitgliedschaftsantrag ist unvollständig. Gehen sie zurück und vervollständigen sie den Antrag.";
 		}
 
-		// TODO: send mail to mitgliederverwaltung@spvggdeuringen.de
-
 		// send confirmation mail to applicant
-		$to = $first_member_email;
+		$toMember = $first_member_email;
 		$subject = "Mitgliedschaftsantrag bei SpVgg Deuringen e.V.";
-		$message = "Hallo " . $first_member_name . "\n\n";
-		$message .= "Vielen Dank für Deinen Antrag auf Mitgliedschaft bei der SpVgg Deuringen. ";
-		$message .= "Wir kümmern uns so schnell wie möglich um die Bearbeitung des Antrags!\n\n";
-		$message .= "Hier die Zusammenfassung Deines Antrags:\n\n";
-		$message .= $formatted_data;
-		$headers = "From: mitgliederverwaltung@spvggdeuringen.de";
 
+		$memberMail = "Hallo " . $first_member_name . "\n\n";
+		$memberMail .= "Vielen Dank für Deinen Antrag auf Mitgliedschaft bei der SpVgg Deuringen.\n\n";
+		$memberMail .= "Wir kümmern uns so schnell wie möglich um die Bearbeitung des Antrags!\n\n";
+		$memberMail .= "Hier die Zusammenfassung Deines Antrags:\n\n";
+		$memberMail .= $formatted_data;
+		$headers = "From: " . $mgmtMailAddresse;
 		$headers = array('Content-Type: text/plain; charset=UTF-8');
-		// array_push($headers, 'Bcc: vorstand@spvggdeuringen.de');
+
+		$mgmtMail = "Zusammenfassung des Mitgliedschaftsantrags:\n\n";
+		$mgmtMail .= $formatted_summary;
+		$mgmtMail .= "\n\n";
+		$mgmtMail .= "Details: \n\n";
+		$mgmtMail .= $formatted_data;
 
 		// add filters for wp mail delivery
 		// this is not done on a global scope to make sure the settings are only applied to this form
@@ -78,17 +82,23 @@ function show_membership_application()
 		add_filter('wp_mail_from_name', 'custom_wp_mail_from_name');
 		add_filter('wp_mail_content_type', 'custom_wp_mail_content_type');
 
-		$mailed = wp_mail($to, $subject, $message, $headers);
+		// send mail to member
+		$memberMailStatus = wp_mail($toMember, $subject, $memberMail, $headers);
 
-		if ($mailed) {
-			$form_of_address = get_form_of_address($raw_data);
-			$html = "<h3>Mitgliedschaft beantragt</h3>";
-			$html .= "<p>Dein Antrag und eine Bestätigung an " . $first_member_email . " wurde erfolgreich verschickt. Prüfe gegebenenfalls den Spam Ordner falls die Bestätigung nicht ankommt. Wir bearbeiten den Antrag so schnell wie möglich!</p>";
-			$html .= "<p>Vielen Dank! Wir freuen uns Dich bei der SpVgg begrüßen zu dürfen. Wir wünschen " . $form_of_address . " viel Freude in unserem Verein!</p>";
-			return $html;
-		} else {
-			return "Fehler beim Versenden der eMail";
+		if ($memberMailStatus) {
+			// send mail to membership management
+			// TODO: activate cc
+			array_push($headers, "Bcc: " . $mgmtMailCc);
+			$mgmtMailStatus = wp_mail($mgmtMailAddresse, $subject, $mgmtMail, $headers);
+			if ($mgmtMailStatus) {
+				$form_of_address = get_form_of_address($raw_data);
+				$html = "<h3>Mitgliedschaft beantragt</h3>";
+				$html .= "<p>Dein Antrag und eine Bestätigung an " . $first_member_email . " wurde erfolgreich verschickt. Prüfe gegebenenfalls den Spam Ordner falls die Bestätigung nicht ankommt. Wir bearbeiten den Antrag so schnell wie möglich!</p>";
+				$html .= "<p>Vielen Dank! Wir freuen uns Dich bei der SpVgg begrüßen zu dürfen. Wir wünschen " . $form_of_address . " viel Freude in unserem Verein!</p>";
+				return $html;
+			}
 		}
+		return "Fehler beim Versenden der eMail. Bitte nutze den analogen Mitgliedschaftsantrag zum Ausdrucken oder melden dich bei " . $mgmtMailAddresse . ".";
 	}
 }
 
@@ -171,21 +181,10 @@ function get_value($array, $key): ?string {
 	return null;
 }
 
-function get_dump(...$data): string
-{
-	$out = "<pre>";
-	ob_start();
-	var_dump($data);
-	$dumpedData = ob_get_clean();
-	$out = $out . $dumpedData;
-	$out = $out . "</pre>";
-	return $out;
-}
 
 /**
  * Wordpress integration
  */
-
 function enqueue_form_assets()
 {
 	$dir = __DIR__ . '/public/assets/';

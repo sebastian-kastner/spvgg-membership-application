@@ -118,9 +118,10 @@ export default class MembershipConfirmation extends Vue {
     // handle browser back event
     window.addEventListener('popstate', this.handleBrowserBack)
 
+    this.summaryText = btoa(formatSummary(new MembershipSummarizer(this.application).summarize()))
     this.formattedValues = btoa(formatApplication(this.application))
     this.plainValues = btoa(JSON.stringify(this.application))
-    this.summaryText = btoa(formatSummary(new MembershipSummarizer(this.application).summarize()));
+
     // Use $refs to access the element with the specified ref
     const targetDiv = this.$refs.scrollToDiv as any
 
