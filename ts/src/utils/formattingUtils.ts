@@ -1,5 +1,6 @@
 import type { Application, Member, Sections } from '../types'
 import { Checked, MembershipStartTypes, MembershipTypes } from '../types';
+import type { ApplicationSummary } from './summaryUtils';
 
 export function getName(member: Member): string {
     const parts: string[] = []
@@ -88,9 +89,40 @@ function checkedToString(checked: Checked | undefined): string {
     return " ";
 }
 
-export function toString(application: Application): string {
-    const formattingOffset = 5;
-    
+function formatTuples(contents: [string?, string?][], formattingOffset = 5): string {
+    // find longest title
+    let longestTitle = 0;
+    contents.forEach((content) => {
+        const key = content[0];
+        if (key) {
+            const keyLength = key.length;
+            if (keyLength > longestTitle) {
+                longestTitle = keyLength;
+            }
+        }
+    })
+
+    const lines: string[] = [];
+    contents.forEach((content) => {
+        const key = content[0];
+        const value = content[1];
+        if (key) {
+            if (value) {
+                const spacesToAppend = (longestTitle + formattingOffset) - key.length;
+                const paddedKey = (key + ":").padEnd(key.length + spacesToAppend, " ");
+                lines.push(paddedKey + value);
+            } else {
+                lines.push(key);
+            }
+        } else {
+            lines.push("");
+        }
+    });
+
+    return lines.join("\n");
+}
+
+export function formatApplication(application: Application): string {
     const contents: [string?, string?][] = [];
     // general data
     contents.push(["Start der Mitgliedschaft", getMembershipStart(application)])
@@ -129,34 +161,17 @@ export function toString(application: Application): string {
     contents.push(["Zustimming Datenschutzerklärung", checkedToString(application.dataProtectionAgreement)]);
     contents.push(["Zustimming Veröffentlichungen", checkedToString(application.publicationAgreement)]);
 
-    // find longest title
-    let longestTitle = 0;
-    contents.forEach((content) => {
-        const key = content[0];
-        if (key) {
-            const keyLength = key.length;
-            if (keyLength > longestTitle) {
-                longestTitle = keyLength;
-            }
-        }
-    })
-
-    const lines: string[] = [];
-    contents.forEach((content) => {
-        const key = content[0];
-        const value = content[1];
-        if (key) {
-            if (value) {
-                const spacesToAppend = (longestTitle + formattingOffset) - key.length;
-                const paddedKey = (key + ":").padEnd(key.length + spacesToAppend, " ");
-                lines.push(paddedKey + value);
-            } else {
-                lines.push(key);
-            }
-        } else {
-            lines.push("");
-        }
-    });
-
-    return lines.join("\n");
+    return formatTuples(contents);
 }
+
+export function formatSummary(summary: ApplicationSummary): string {
+    const contents: [string?, string?][] = [];
+    contents.push(["Vsl. Beitrag", summary.membershipFee ? summary.membershipFee + "€" : "--"]);
+    contents.push(["Anzahl Erwachsene", summary.numberOfAdults.toString()]);
+    contents.push(["Anzahl Kinder", summary.numberOfMinors.toString()]);
+    contents.push(["Anzahl Studenten", summary.numberOfStudents.toString()]);
+    contents.push(["Mitgliedschaftstyp", summary.membershipType ? summary.membershipType : "--"]);
+
+    return formatTuples(contents);
+}
+

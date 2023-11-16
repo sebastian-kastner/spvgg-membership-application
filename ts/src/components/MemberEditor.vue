@@ -189,7 +189,7 @@
 import { Component, Vue, Prop, Watch } from 'vue-facing-decorator'
 import { validateField } from '../utils/fieldValidator'
 import { getDateOfBirthValidationMessage } from '../utils/dateUtils'
-import { getMemberTitle } from '../utils/membershipFormatter'
+import { getMemberTitle } from '../utils/formattingUtils'
 import type { Member, ValidationIssues } from '../types'
 import { Checked } from '../types'
 

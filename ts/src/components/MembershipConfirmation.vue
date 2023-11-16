@@ -3,6 +3,7 @@
     <form :action="action" class="membership-wrapper" method="post">
       <input type="hidden" name="formatted_values" :value="formattedValues" />
       <input type="hidden" name="plain_values" :value="plainValues" />
+      <input type="hidden" name="summary_text" :value="summaryText" />
       <div class="row header-row">Antrag überprüfen</div>
       <div class="row">
         <div class="label conf-col-50">Start der Mitgliedschaft:</div>
@@ -81,6 +82,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-facing-decorator'
 import type { Application, AppMode, Member, Sections } from '../types'
+import { MembershipSummarizer } from '../utils/summaryUtils'
 import {
   getName,
   getMembershipStart,
@@ -90,8 +92,9 @@ import {
   getSections,
   getIsStudent,
   getMemberTitle,
-  toString
-} from '../utils/membershipFormatter'
+  formatApplication,
+  formatSummary
+} from '../utils/formattingUtils'
 
 @Component({
   components: {}
@@ -102,6 +105,7 @@ export default class MembershipConfirmation extends Vue {
 
   formattedValues = ''
   plainValues = ''
+  summaryText = ''
 
   public mounted(): void {
     // create state for browser history to enable navigation using the browser's back button
@@ -114,9 +118,9 @@ export default class MembershipConfirmation extends Vue {
     // handle browser back event
     window.addEventListener('popstate', this.handleBrowserBack)
 
-    this.formattedValues = btoa(toString(this.application))
+    this.formattedValues = btoa(formatApplication(this.application))
     this.plainValues = btoa(JSON.stringify(this.application))
-
+    this.summaryText = btoa(formatSummary(new MembershipSummarizer(this.application).summarize()));
     // Use $refs to access the element with the specified ref
     const targetDiv = this.$refs.scrollToDiv as any
 
