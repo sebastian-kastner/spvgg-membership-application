@@ -162,7 +162,7 @@ export default class MembershipConfirmation extends Vue {
   }
 
   get membershipType(): string {
-    return getMembershipType(this.application)
+    return getMembershipType(this.application.membership_type)
   }
 
   getSections(sections: Sections): string {

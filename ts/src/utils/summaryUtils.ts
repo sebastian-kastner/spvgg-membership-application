@@ -39,8 +39,10 @@ export class MembershipSummarizer {
     public summarize(): ApplicationSummary {
         if (this.application) {
             if (this.application.membership_type === MembershipTypes.FAMILY) {
+                this.membershipType = MembershipTypes.FAMILY;
                 this.calculateFamilyFees();
             } else if (this.application.membership_type === MembershipTypes.SINGLE) {
+                this.membershipType = MembershipTypes.SINGLE;
                 this.calculateSingleFees();
             }
         }

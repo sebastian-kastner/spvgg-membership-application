@@ -34,6 +34,7 @@ define('SPVGG_MEMBERSHIP_APPLICATION_VERSION', '1.0.0');
 
 function show_membership_application()
 {
+	// TODO: change mail address
 	$mgmtMailAddresse = "sebastian_kastner@gmx.net";
 	// $mgmtMailAddresse = "mitgliederverwaltung@spvggdeuringen.de";
 	$mgmtMailCc = "vorstand@spvggdeuringen.de";
@@ -45,10 +46,11 @@ function show_membership_application()
 		return '<div id="app"></div>';
 	} else {
 		// decode base64. convert to utf8. decode json as array
-		$raw_data = json_decode(mb_convert_encoding(base64_decode($_POST['plain_values']), 'UTF-8', 'ISO-8859-1'), true);
+		$raw_data = json_decode(base64_decode($_POST['plain_values']), true);
 		// decode base64. convert to utf8.
-		$formatted_data = mb_convert_encoding(base64_decode($_POST['formatted_values']), 'UTF-8', 'ISO-8859-1');
-		$formatted_summary = mb_convert_encoding(base64_decode($_POST['summary_text']), 'UTF-8', 'ISO-8859-1');
+		$formatted_data = base64_decode($_POST['formatted_values']);
+		$formatted_summary = base64_decode($_POST['summary_text']);
+
 
 		$first_member = get_first_member($raw_data);
 		$first_member_email = get_email($first_member);
@@ -83,13 +85,13 @@ function show_membership_application()
 		add_filter('wp_mail_content_type', 'custom_wp_mail_content_type');
 
 		// send mail to member
-		$memberMailStatus = wp_mail($toMember, $subject, $memberMail, $headers);
+		$memberMailStatus = send_mail($toMember, $subject, $memberMail, $headers);
 
 		if ($memberMailStatus) {
 			// send mail to membership management
 			// TODO: activate cc
 			array_push($headers, "Bcc: " . $mgmtMailCc);
-			$mgmtMailStatus = wp_mail($mgmtMailAddresse, $subject, $mgmtMail, $headers);
+			$mgmtMailStatus = send_mail($mgmtMailAddresse, $subject, $mgmtMail, $headers);
 			if ($mgmtMailStatus) {
 				$form_of_address = get_form_of_address($raw_data);
 				$html = "<h3>Mitgliedschaft beantragt</h3>";
@@ -179,6 +181,19 @@ function get_value($array, $key): ?string {
 		return $array[$key];
 	}
 	return null;
+}
+
+function send_mail( string $to, string $subject, string $message, array $headers): bool {
+	// print("Mail to: " . $to . "\n");
+	// print("<br>");
+	// print("Subject: " . $subject . "\n");
+	// print("<br>");
+	// print("<pre>" . $message . "</pre>");
+	// print("<br>");
+	// print("---------");
+	// print("<br><br>");
+	// return true;
+	return wp_mail( $to, $subject, $message, $headers );
 }
 
 

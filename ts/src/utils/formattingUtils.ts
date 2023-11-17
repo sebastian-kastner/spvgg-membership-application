@@ -59,8 +59,8 @@ export function getIsStudent(member: Member): string {
     return 'Nein'
 }
 
-export function getMembershipType(application: Application): string {
-    if (application.membership_type === MembershipTypes.FAMILY) {
+export function getMembershipType(membershipType?: string): string {
+    if (membershipType === MembershipTypes.FAMILY) {
         return 'Familienmitgliedschaft'
     }
     return 'Einzelmitgliedschaft'
@@ -127,7 +127,7 @@ export function formatApplication(application: Application): string {
     const contents: [string?, string?][] = [];
     // general data
     contents.push(["Start der Mitgliedschaft", getMembershipStart(application)])
-    contents.push(["Mitgliedschaftstyp", getMembershipType(application)])
+    contents.push(["Mitgliedschaftstyp", getMembershipType(application.membership_type)])
     contents.push([])
     contents.push([])
     contents.push(["Mitgliederdaten"])
@@ -167,11 +167,11 @@ export function formatApplication(application: Application): string {
 
 export function formatSummary(summary: ApplicationSummary): string {
     const contents: [string?, string?][] = [];
-    contents.push(["Vsl. Beitrag", summary.membershipFee ? summary.membershipFee + "€" : "--"]);
+    contents.push(["Voraussichtlicher Jahresbeitrag", summary.membershipFee ? summary.membershipFee + "€" : "--"]);
     contents.push(["Anzahl Erwachsene", summary.numberOfAdults.toString()]);
     contents.push(["Anzahl Kinder", summary.numberOfMinors.toString()]);
     contents.push(["Anzahl Studenten", summary.numberOfStudents.toString()]);
-    contents.push(["Mitgliedschaftstyp", summary.membershipType ? summary.membershipType : "--"]);
+    contents.push(["Mitgliedschaftstyp", getMembershipType(summary.membershipType?.valueOf())]);
 
     return formatTuples(contents);
 }
@@ -179,9 +179,4 @@ export function formatSummary(summary: ApplicationSummary): string {
 export function base64Encode(str: string): string {
     const charset = document.characterSet;
     return Buffer.from(str, charset).toString('base64');
-}
-
-export function base64Decode(str: string): string {
-    const charset = document.characterSet;
-    return Buffer.from(str, 'base64').toString(charset);
 }
