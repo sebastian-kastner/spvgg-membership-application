@@ -45,6 +45,7 @@ export type Sections = {
 }
 
 export type Application = {
+    uuid?: string,
     membership_owner?: string,
     membership_start?: string,
     membership_start_date?: Date,

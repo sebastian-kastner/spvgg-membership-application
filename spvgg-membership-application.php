@@ -30,6 +30,10 @@ if (!defined('WPINC')) {
 	die;
 }
 
+if (!session_id()) {
+	session_start();
+}
+
 define('SPVGG_MEMBERSHIP_APPLICATION_VERSION', '1.0.0');
 
 function show_membership_application()
@@ -51,13 +55,22 @@ function show_membership_application()
 		$formatted_data = base64_decode($_POST['formatted_values']);
 		$formatted_summary = base64_decode($_POST['summary_text']);
 
-
 		$first_member = get_first_member($raw_data);
 		$first_member_email = get_email($first_member);
 		$first_member_name = get_name($first_member);
+		$uuid = get_application_uuid($raw_data);
 
-		if ($first_member_email == null || $first_member_name == null || !all_fields_set($raw_data)) {
+		if ($uuid == null || $first_member_email == null || $first_member_name == null || !all_fields_set($raw_data)) {
 			return "Der Mitgliedschaftsantrag ist unvollständig. Gehen sie zurück und vervollständigen sie den Antrag.";
+		}
+
+		$application_sent = (array_key_exists($uuid, $_SESSION) && $_SESSION[$uuid] == true);
+		if ($application_sent) {
+			session_write_close();
+			$html = "<h3>Mitgliedschaft beantragt</h3>";
+			$html .= "<p>Dein Mitgliedschaftsantrag und eine Bestätigungs an " . $first_member_email . " wurde bereits abgeschickt. Es kann bis zu 15 Minuten dauern bis die Bestätigungsmail ankommt.</p>";
+			$html .= "<p>Bitte wende Dich an " . $mgmtMailAddresse . " falls Du keine Bestätigung erhalten hast.</p>";
+			return $html;
 		}
 
 		// send confirmation mail to applicant
@@ -93,6 +106,9 @@ function show_membership_application()
 			array_push($headers, "Bcc: " . $mgmtMailCc);
 			$mgmtMailStatus = send_mail($mgmtMailAddresse, $subject, $mgmtMail, $headers);
 			if ($mgmtMailStatus) {
+				$_SESSION[$uuid] = true;
+				session_write_close();
+
 				$form_of_address = get_form_of_address($raw_data);
 				$html = "<h3>Mitgliedschaft beantragt</h3>";
 				$html .= "<p>Dein Antrag und eine Bestätigung an " . $first_member_email . " wurde erfolgreich verschickt. Prüfe gegebenenfalls den Spam Ordner falls die Bestätigung nicht ankommt. Wir bearbeiten den Antrag so schnell wie möglich!</p>";
@@ -105,7 +121,7 @@ function show_membership_application()
 }
 
 function all_fields_set($data): bool
-{	
+{
 	$sepaAgreement = get_value($data, "sepaAgreement");
 	if (!isset($sepaAgreement) || $sepaAgreement != "Ja") {
 		return false;
@@ -133,7 +149,8 @@ function get_first_member($data)
 	return null;
 }
 
-function get_form_of_address($data): string {
+function get_form_of_address($data): string
+{
 	if (!array_key_exists("membership_type", $data)) {
 		$membership_type = $data["membership_type"];
 		if ($membership_type == "family") {
@@ -157,6 +174,14 @@ function get_email($member): ?string
 	return null;
 }
 
+function get_application_uuid($data): ?string
+{
+	if (!array_key_exists("uuid", $data)) {
+		return null;
+	}
+	return $data["uuid"];
+}
+
 function get_name($member): ?string
 {
 	if ($member == null) {
@@ -176,14 +201,16 @@ function get_name($member): ?string
 	return null;
 }
 
-function get_value($array, $key): ?string {
+function get_value($array, $key): ?string
+{
 	if (array_key_exists($key, $array)) {
 		return $array[$key];
 	}
 	return null;
 }
 
-function send_mail( string $to, string $subject, string $message, array $headers): bool {
+function send_mail(string $to, string $subject, string $message, array $headers): bool
+{
 	// print("Mail to: " . $to . "\n");
 	// print("<br>");
 	// print("Subject: " . $subject . "\n");
@@ -193,7 +220,7 @@ function send_mail( string $to, string $subject, string $message, array $headers
 	// print("---------");
 	// print("<br><br>");
 	// return true;
-	return wp_mail( $to, $subject, $message, $headers );
+	return wp_mail($to, $subject, $message, $headers);
 }
 
 
@@ -226,16 +253,19 @@ function get_partial_contents($partial_name)
 	return ob_get_clean();
 }
 
-function custom_wp_mail_from() {
-    return 'mitgliederverwaltung@spvggdeuringen.de';
+function custom_wp_mail_from()
+{
+	return 'mitgliederverwaltung@spvggdeuringen.de';
 }
 
-function custom_wp_mail_from_name() {
-    return 'Mitgliederverwaltung SpVgg Deuringen e.V.';
+function custom_wp_mail_from_name()
+{
+	return 'Mitgliederverwaltung SpVgg Deuringen e.V.';
 }
 
-function custom_wp_mail_content_type() {
-    return "text/plain; charset=UTF-8";
+function custom_wp_mail_content_type()
+{
+	return "text/plain; charset=UTF-8";
 }
 
 // register shortcode

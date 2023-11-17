@@ -255,6 +255,7 @@
 import { Component, Vue, Prop, Watch } from 'vue-facing-decorator'
 import Datepicker from 'vue3-datepicker'
 import { de } from 'date-fns/locale'
+import { v4 as uuid } from 'uuid'
 import MemberListEditor from './MemberListEditor.vue'
 import FeesStatute from './FeesStatute.vue'
 import { MembershipStartTypes, MembershipTypes, Checked } from '../types'
@@ -285,6 +286,9 @@ export default class MembershipFormEditor extends Vue {
 
   mounted(): void {
     this.applicationWatcher()
+    // create uuid for application
+    // used to identify application in the backend to make sure mails are not sent multiple times
+    this.application.uuid = uuid();
     // DIRTY, DIRTY, DIRTY!!!!
     if (this.membershipFee) {
       this.validationActive = true
