@@ -35,11 +35,11 @@
         </div>
         <div class="row" v-if="member.email">
           <div class="label conf-col-50">Telefonnummer:</div>
-          <div class="conf-col-50 value">{{ member.phoneNumber }}</div>
+          <div class="conf-col-50 value">{{ getValueOrPlaceholder(member.phoneNumber) }}</div>
         </div>
         <div class="row" v-if="member.email">
           <div class="label conf-col-50">eMail:</div>
-          <div class="conf-col-50 value">{{ member.email }}</div>
+          <div class="conf-col-50 value">{{ getValueOrPlaceholder(member.email) }}</div>
         </div>
         <div class="row">
           <div class="label conf-col-50">Student:</div>
@@ -47,7 +47,7 @@
         </div>
         <div class="row">
           <div class="label conf-col-50">Abteilungen:</div>
-          <div class="conf-col-50 value">{{ getSections(member.sections) }}</div>
+          <div class="conf-col-50 value">{{ getValueOrPlaceholder(getSections(member.sections)) }}</div>
         </div>
       </div>
       <div class="row header-row">Bankdaten</div>
@@ -155,6 +155,13 @@ export default class MembershipConfirmation extends Vue {
 
   getCity(member: Member): string {
     return getCity(member)
+  }
+
+  getValueOrPlaceholder(value: any): string {
+    if (!value || value === '') {
+      return '-'
+    }
+    return value
   }
 
   get membershipStart(): string {
