@@ -4,7 +4,7 @@ import { parseDate } from "./dateUtils";
 export const FAMILY_MEMBERSHIP_WITH_CHILDREN_FEE = 105;
 export const FAMILIY_MEMBERSHIP_WITHOUT_CHILDREN_FEE = 80;
 export const INDIVIDUAL_STUDENT_FEE = 40;
-export const INDIVIDUAL_ADULT_FEE = 80;
+export const INDIVIDUAL_ADULT_FEE = 55;
 
 export type ApplicationSummary = {
     membershipFee: number | null,
