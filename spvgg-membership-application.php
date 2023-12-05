@@ -22,7 +22,6 @@
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       spvgg-membership-application
- * Domain Path:       /languages
  */
 
 // If this file is called directly, abort.
@@ -38,10 +37,8 @@ define('SPVGG_MEMBERSHIP_APPLICATION_VERSION', '1.0.0');
 
 function show_membership_application()
 {
-	// TODO: change mail address
-	$mgmtMailAddresse = "sebastian_kastner@gmx.net";
-	// $mgmtMailAddresse = "mitgliederverwaltung@spvggdeuringen.de";
-	$mgmtMailCc = "vorstand@spvggdeuringen.de";
+	$mgmtMailAddresse = "mitgliederverwaltung@spvggdeuringen.de";
+	$mediaMailAddresse = "medien@spvggdeuringen.de";
 
 	enqueue_form_assets();
 
@@ -102,12 +99,13 @@ function show_membership_application()
 
 		if ($memberMailStatus) {
 			// send mail to membership management
-			// TODO: activate cc
-			array_push($headers, "Bcc: " . $mgmtMailCc);
 			$mgmtMailStatus = send_mail($mgmtMailAddresse, $subject, $mgmtMail, $headers);
 			if ($mgmtMailStatus) {
 				$_SESSION[$uuid] = true;
 				session_write_close();
+
+				// send additional mail to media mail address; no confirmation required
+				send_mail($mediaMailAddresse, $subject, $mgmtMail, $headers);
 
 				$form_of_address = get_form_of_address($raw_data);
 				$html = "<h3>Mitgliedschaft beantragt</h3>";
