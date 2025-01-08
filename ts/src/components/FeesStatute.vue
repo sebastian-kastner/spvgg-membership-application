@@ -17,34 +17,39 @@
 
       <h4>Der jährliche Beitrag beträgt</h4>
       <div>
-        <ul>
-          <li>
-            <fee-details label="Erwachsene (ab dem vollendeten 18. Lebensjahr)" :fee="fees.INDIVIDUAL_ADULT_FEE" />
-          </li>
+        <ol class="alpha-list">
           <li>
             <fee-details
-              label="Kinder, Jugendliche, Schüler und Studenten (der Abteilungsbeitrag entfällt)"
-              :fee="fees.INDIVIDUAL_STUDENT_FEE"
+              label="Erwachsene (ab dem vollendeten 18. Lebensjahr) *"
+              :fee="fees.INDIVIDUAL_ADULT_FEE"
             />
           </li>
           <li>
             <fee-details
-              label="Familien und eingetragene Lebensgemeinschaften mit Kindern"
-              :fee="fees.FAMILY_MEMBERSHIP_WITH_CHILDREN_FEE"
-            />
-          </li>
-          <li>
-            <fee-details
-              label="Ehepaare, eingetragene Lebensgemeinschaften ohne Kinder"
+              label="Ehepaare, eingetragene Lebensgemeinschaften *"
               :fee="fees.FAMILIY_MEMBERSHIP_WITHOUT_CHILDREN_FEE"
             />
           </li>
-        </ul>
+          <li>
+            <fee-details
+              label="Kinder, Jugendliche, Schüler und Studenten **"
+              :fee="fees.INDIVIDUAL_STUDENT_FEE"
+            />
+          </li>
+          <li class="no-list" style="margin-top: 10px;">
+            <span class="bold">*</span> a und b können zu einem Familienbeitrag erweitert werden. Dabei sind für das erste und
+            zweite Kind jeweils 25,00 € zusätzlich zu entrichten. Weitere Kinder sind beitragsfrei.
+          </li>
+          <li class="no-list">
+            <span class="bold">**</span>
+            bei volljährigen Mitgliedern ist jährlich ein Ausbildungsnachweis vorzulegen.
+          </li>
+        </ol>
       </div>
 
       <h4>Abteilungsbeitrag:</h4>
       <div>
-        <ul>
+        <ul class="no-list">
           <li>
             <fee-details label="Fußball" :fee="fees.SECTION_FEES.football" />
           </li>
@@ -106,7 +111,7 @@ import FeeDetails from './FeeDetails.vue'
   emits: ['close']
 })
 export default class FeesStatute extends Vue {
-  fees = fees;
+  fees = fees
 
   close(): void {
     this.$emit('close')
@@ -115,14 +120,15 @@ export default class FeesStatute extends Vue {
 </script>
 
 <style lang="scss" scoped>
-
 .fees-statute {
   line-height: 1.3;
-  max-width: 900px;
+  max-width: 750px;
 }
 
 li {
-  padding-top: 2px;
+  padding-top: 5px;
+  margin-left: 7px;
+  padding-left: 7px;
 }
 
 .close {
@@ -130,6 +136,18 @@ li {
   float: right;
   font-size: 40px;
   font-weight: bold;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.alpha-list {
+  list-style-type: lower-alpha;
+}
+
+.no-list {
+  list-style: none;
 }
 
 .close:hover,
@@ -140,9 +158,9 @@ li {
 }
 
 .button-container {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-  }
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
 </style>
 ../utils/summaryUtils
