@@ -1,9 +1,9 @@
 import { MembershipTypes, type Application, type Member, type Sections, Checked } from "../types";
 import { parseDate } from "./dateUtils";
 
-export const FAMILY_MEMBERSHIP_WITH_CHILDREN_FEE = 105;
-export const FAMILIY_MEMBERSHIP_WITHOUT_CHILDREN_FEE = 80;
-export const INDIVIDUAL_STUDENT_FEE = 40;
+// export const FAMILY_MEMBERSHIP_WITH_CHILDREN_FEE = 105;
+export const FAMILIY_MEMBERSHIP_WITHOUT_CHILDREN_FEE = 85;
+export const INDIVIDUAL_STUDENT_FEE = 45;
 export const INDIVIDUAL_ADULT_FEE = 55;
 
 export type ApplicationSummary = {
@@ -17,8 +17,8 @@ export type ApplicationSummary = {
 const DEBUG = false;
 
 export const SECTION_FEES = {
-    football: 55,
-    bowling: 55,
+    football: 65,
+    bowling: 65,
     theatre: 25,
     fitness: 0
 }
