@@ -88,7 +88,6 @@ import {
   getMembershipStart,
   getCity,
   getStreet,
-  getMembershipType,
   getSections,
   getIsStudent,
   getMemberTitle,
@@ -166,10 +165,6 @@ export default class MembershipConfirmation extends Vue {
 
   get membershipStart(): string {
     return getMembershipStart(this.application)
-  }
-
-  get membershipType(): string {
-    return getMembershipType(this.application.membership_type)
   }
 
   getSections(sections: Sections): string {

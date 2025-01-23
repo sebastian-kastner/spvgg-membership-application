@@ -58,42 +58,16 @@
           </div>
         </div>
       </div>
-      <!-- MEMBERSHIP TYPE -->
-      <div class="row header-row">Welche Art von Mitgliedschaft möchtest du beantragen? *</div>
-      <div
-        class="row"
-        :class="{ invalid: !isFieldSet(application.membership_type, 'membershipType') }"
-      >
-        <div class="form-input labeled-radio">
-          <input
-            type="radio"
-            id="membership_type_family"
-            :value="MembershipTypes.FAMILY"
-            v-model="application.membership_type"
-          />
-          <label for="membership_type_family">Familienmitgliedschaft</label>
-        </div>
-        <div class="form-input labeled-radio">
-          <input
-            type="radio"
-            id="membership_type_single"
-            :value="MembershipTypes.SINGLE"
-            v-model="application.membership_type"
-          />
-          <label for="membership_type_single">Einzelmitgliedschaft</label>
-        </div>
-      </div>
       <!-- MEMBERSHIP PEOPLE -->
       <div class="row header-row">Hier kannst du Deine/Eure Mitgliederdaten eintragen</div>
-      <div v-if="tooManyAdults" class="row invalid">
-        Bei einer Familienmitgliedschaft sind maximal zwei Erwachsene Personen möglich.
-      </div>
+
       <member-list-editor
         :members="application.members"
-        :isFamily="application.membership_type === MembershipTypes.FAMILY"
+        :canAddSpouse="canAddSpouse"
         :validationActive="validationActive"
         :validationIssues="validationIssues"
       />
+
       <div class="row header-row">Kontodaten</div>
       <!-- IBAN -->
       <div class="row" :class="{ invalid: !isFieldSet(application.iban, 'iban') }">
@@ -258,7 +232,7 @@ import { de } from 'date-fns/locale'
 import { v4 as uuid } from 'uuid'
 import MemberListEditor from './MemberListEditor.vue'
 import FeesStatute from './FeesStatute.vue'
-import { MembershipStartTypes, MembershipTypes, Checked } from '../types'
+import { MembershipStartTypes, Checked, MemberType, type Member } from '../types'
 import { validateField } from '../utils/fieldValidator'
 import { MembershipSummarizer } from '../utils/summaryUtils'
 import type { Application, ValidationIssues, AppMode } from '../types'
@@ -271,24 +245,28 @@ export default class MembershipFormEditor extends Vue {
   @Prop({ required: true }) application!: Application
 
   MembershipStartTypes = MembershipStartTypes
-  MembershipTypes = MembershipTypes
   Checked = Checked
   missingRequiredFields = false
   showFeesStatute = false
   locale = de
   truffleShuffle = false
   membershipFee: number | null = null
-  numberOfAdults: number = 0
+  
+  isChildOnlyMembership = false
+  hasSpouse = false
+
+  cachedSpouse: Member | null = null
+
   validationActive = false
   validationIssues: ValidationIssues = {
     issues: new Set()
   }
 
   mounted(): void {
-    this.applicationWatcher()
+    this.updateMembershipSummary()
     // create uuid for application
     // used to identify application in the backend to make sure mails are not sent multiple times
-    this.application.uuid = uuid();
+    this.application.uuid = uuid()
     // DIRTY, DIRTY, DIRTY!!!!
     if (this.membershipFee) {
       this.validationActive = true
@@ -296,13 +274,30 @@ export default class MembershipFormEditor extends Vue {
   }
 
   @Watch('application', { deep: true })
-  public applicationWatcher(): void {
+  public updateMembershipSummary(): void {
     const summary = new MembershipSummarizer(this.application).summarize()
 
     const fee = summary.membershipFee
 
-    this.numberOfAdults = summary.numberOfAdults
     this.membershipFee = fee
+    this.isChildOnlyMembership = summary.isChildOnlyMembership
+    this.hasSpouse = summary.hasSpouse
+
+    // temporarily remove spouse from members if the membership type was changed
+    if (summary.hasSpouse && summary.isChildOnlyMembership) {
+      console.log("caching spouse");
+      const spouseIndex = this.application.members.findIndex(
+        (member) => member.memberType === MemberType.SPOUSE
+      )
+      if (spouseIndex !== -1) {
+        this.cachedSpouse = this.application.members[spouseIndex]
+        this.application.members.splice(spouseIndex, 1);
+      }
+    } else if (!this.isChildOnlyMembership && this.cachedSpouse) {
+        // re-add cached spouse if the membership type was changed back
+        this.application.members.splice(1, 0, this.cachedSpouse);
+        this.cachedSpouse = null;
+    }
   }
 
   async doSubmit(): Promise<void> {
@@ -328,6 +323,17 @@ export default class MembershipFormEditor extends Vue {
     await this.$nextTick()
   }
 
+  get canAddSpouse(): boolean {
+    // creator with membership was found and no spouse is in the list
+    if (this.isChildOnlyMembership) {
+      return false;
+    }
+    if (this.hasSpouse) {
+      return false
+    }
+    return true
+  }
+
   isFieldSet(value: any, key: string): boolean {
     return validateField(this.validationActive, value, key, this.validationIssues.issues)
   }
@@ -348,19 +354,12 @@ export default class MembershipFormEditor extends Vue {
     return true
   }
 
-  get tooManyAdults(): boolean {
-    const validationKey = 'tooManyAdults'
-    if (
-      this.application.membership_type &&
-      this.application.membership_type === MembershipTypes.FAMILY
-    ) {
-      if (this.numberOfAdults > 2) {
-        this.validationIssues.issues.add(validationKey)
-        return true
-      }
+  get spouseCount(): number {
+    if (this.application.members) {
+      return this.application.members.filter((member) => member.memberType === MemberType.SPOUSE)
+        .length
     }
-    this.validationIssues.issues.delete(validationKey)
-    return false
+    return 0
   }
 
   get hasValidationIssues(): boolean {
@@ -544,4 +543,3 @@ export default class MembershipFormEditor extends Vue {
   }
 }
 </style>
-../utils/summaryUtils

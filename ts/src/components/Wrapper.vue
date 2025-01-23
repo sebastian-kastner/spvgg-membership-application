@@ -9,7 +9,7 @@
 import { Component, Vue } from 'vue-facing-decorator'
 import MembershipFormEditor from './MembershipFormEditor.vue'
 import MembershipConfirmation from './MembershipConfirmation.vue'
-import type { Application, AppMode } from '../types'
+import { MemberType, type Application, type AppMode } from '../types'
 import { Checked } from '../types'
 import { createDefaultMembership } from '../utils/devUtils'
 
@@ -26,6 +26,7 @@ export default class Wrapper extends Vue {
     membership_start_date: new Date(),
     members: [{
       isStudent: false,
+      memberType: MemberType.CREATOR,
       sections: {
         football: Checked.NO,
         bowling: Checked.NO,

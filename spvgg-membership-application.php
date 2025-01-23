@@ -149,6 +149,7 @@ function get_first_member($data)
 
 function get_form_of_address($data): string
 {
+	// TODO: check if more than one member in application
 	if (!array_key_exists("membership_type", $data)) {
 		$membership_type = $data["membership_type"];
 		if ($membership_type == "family") {

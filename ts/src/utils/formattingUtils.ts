@@ -1,5 +1,5 @@
 import type { Application, Member, Sections } from '../types'
-import { Checked, MembershipStartTypes, MembershipTypes } from '../types';
+import { Checked, MemberType, MembershipStartTypes } from '../types';
 import type { ApplicationSummary } from './summaryUtils';
 import { Buffer } from 'buffer'
 
@@ -20,11 +20,13 @@ export function getName(member: Member): string {
     return parts.join(' ')
 }
 
-export function getMemberTitle(index: number): string {
-    if (index === 0) {
+export function getMemberTitle(member: Member): string {
+    if (member.memberType === MemberType.CREATOR || member.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP) {
         return 'Antragsteller'
+    } else if (member.memberType === MemberType.SPOUSE) {
+        return '(Ehe-)Partner'
     }
-    return 'Mitglied ' + (index + 1)
+    return 'Kind'
 }
 
 export function getStreet(member: Member): string {
@@ -57,13 +59,6 @@ export function getIsStudent(member: Member): string {
         return 'Ja'
     }
     return 'Nein'
-}
-
-export function getMembershipType(membershipType?: string): string {
-    if (membershipType === MembershipTypes.FAMILY) {
-        return 'Familienmitgliedschaft'
-    }
-    return 'Einzelmitgliedschaft'
 }
 
 export function getMembershipStart(application: Application): string {
@@ -127,7 +122,7 @@ export function formatApplication(application: Application): string {
     const contents: [string?, string?][] = [];
     // general data
     contents.push(["Start der Mitgliedschaft", getMembershipStart(application)])
-    contents.push(["Mitgliedschaftstyp", getMembershipType(application.membership_type)])
+    // contents.push(["Mitgliedschaftstyp", getMembershipType(application.membership_type)])
     contents.push([])
     contents.push([])
     contents.push(["Mitgliederdaten"])
@@ -135,7 +130,7 @@ export function formatApplication(application: Application): string {
     contents.push([])
 
     // member data
-    application.members?.forEach((member) => {
+    application.members.forEach((member) => {
         contents.push(["Name", getName(member)])
         contents.push(["Geburtsdatum", member.dateOfBirth])
         contents.push(["Adresse", `${getStreet(member)}, ${getCity(member)}`])

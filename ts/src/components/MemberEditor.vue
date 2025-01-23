@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row" v-if="index > 0">
+    <div class="row" v-if="!memberIsCreator()">
       <div class="inline-button-container">
         <input
           class="secondary-btn"
@@ -11,7 +11,14 @@
       </div>
     </div>
     <div class="row header-row">
-      {{  getMemberTitle() }}
+      {{ getMemberTitle() }}
+      <!-- TODO: distinguish between spouse and child here! -->
+    </div>
+    <div class="row" v-if="memberIsCreator()">
+      <div class="info-text">
+        Der Antragsteller muss volljährig sein, muss aber selbst keine Mitgliedschaft beantragen!
+        Für Minderjährige muss der Antrag von einem Erziehungsberechtigten gestellt werden.
+      </div>
     </div>
     <div class="row no-border">
       <div
@@ -51,6 +58,7 @@
       <div class="field-error" v-if="dateInvalidMessage">
         {{ dateInvalidMessage }}
       </div>
+      <!-- TODO: validate that children are minors! -->
       <div class="text-input">
         <label :for="getFieldName('dateOfBirth')">Geburtsdatum: *</label>
         <input
@@ -130,58 +138,77 @@
         </div>
       </div>
     </div>
-    <!-- MEMBERSHIP SECTIONS -->
-    <div class="row header-row">
-        Abteilungen (Mehrfachauswahl möglich)
+    <div class="row header-row" v-if="memberIsCreator()">Mitgliedschaft für Antragsteller</div>
+    <div class="row" v-if="memberIsCreator()">
+      <div class="form-input labeled-radio">
+        <input
+          type="radio"
+          id="creator_with_membership"
+          :value="creatorType"
+          v-model="member.memberType"
+        />
+        <label for="creator_with_membership">Ich möchte selbst Mitglied werden</label>
       </div>
-      <div class="row">
-        <div class="d-flex d-flex-wrap">
-          <div class="section-container">
-            <div class="form-input">
-              <input
-                :id="getFieldName('section_football')"
-                type="checkbox"
-                v-model="member.sections.football"
-                :true-value="Checked.YES"
-                :false-value="Checked.NO"
-              />
-              <label :for="getFieldName('section_football')">Fußball</label>
-            </div>
-            <div class="form-input">
-              <input
-                :id="getFieldName('section_bowling')"
-                type="checkbox"
-                v-model="member.sections.bowling"
-                :true-value="Checked.YES"
-                :false-value="Checked.NO"
-              />
-              <label :for="getFieldName('section_bowling')">Kegeln</label>
-            </div>
+      <div class="form-input labeled-radio">
+        <input
+          type="radio"
+          id="creator_without_membership"
+          :value="creatorWithoutMembershipType"
+          v-model="member.memberType"
+        />
+        <label for="creator_without_membership">Ich möchte den Antrag für meine Kinder stellen und nicht selbst Mitglied werden</label>
+      </div>
+    </div>
+    <!-- MEMBERSHIP SECTIONS -->
+    <div class="row header-row" v-if="member.memberType !== creatorWithoutMembershipType">Abteilungen (Mehrfachauswahl möglich)</div>
+    <div class="row" v-if="member.memberType !== creatorWithoutMembershipType">
+      <div class="d-flex d-flex-wrap">
+        <div class="section-container">
+          <div class="form-input">
+            <input
+              :id="getFieldName('section_football')"
+              type="checkbox"
+              v-model="member.sections.football"
+              :true-value="Checked.YES"
+              :false-value="Checked.NO"
+            />
+            <label :for="getFieldName('section_football')">Fußball</label>
           </div>
-          <div class="section-container">
-            <div class="form-input">
-              <input
-                :id="getFieldName('section_theatre')"
-                type="checkbox"
-                v-model="member.sections.theatre"
-                :true-value="Checked.YES"
-                :false-value="Checked.NO"
-              />
-              <label :for="getFieldName('section_theatre')">Theater</label>
-            </div>
-            <div class="form-input">
-              <input
-                :id="getFieldName('section_fitness')"
-                type="checkbox"
-                v-model="member.sections.fitness"
-                :true-value="Checked.YES"
-                :false-value="Checked.NO"
-              />
-              <label :for="getFieldName('section_fitness')">Fitness &amp; Freizeit</label>
-            </div>
+          <div class="form-input">
+            <input
+              :id="getFieldName('section_bowling')"
+              type="checkbox"
+              v-model="member.sections.bowling"
+              :true-value="Checked.YES"
+              :false-value="Checked.NO"
+            />
+            <label :for="getFieldName('section_bowling')">Kegeln</label>
+          </div>
+        </div>
+        <div class="section-container">
+          <div class="form-input">
+            <input
+              :id="getFieldName('section_theatre')"
+              type="checkbox"
+              v-model="member.sections.theatre"
+              :true-value="Checked.YES"
+              :false-value="Checked.NO"
+            />
+            <label :for="getFieldName('section_theatre')">Theater</label>
+          </div>
+          <div class="form-input">
+            <input
+              :id="getFieldName('section_fitness')"
+              type="checkbox"
+              v-model="member.sections.fitness"
+              :true-value="Checked.YES"
+              :false-value="Checked.NO"
+            />
+            <label :for="getFieldName('section_fitness')">Fitness &amp; Freizeit</label>
           </div>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -190,7 +217,7 @@ import { Component, Vue, Prop, Watch } from 'vue-facing-decorator'
 import { validateField } from '../utils/fieldValidator'
 import { getDateOfBirthValidationMessage } from '../utils/dateUtils'
 import { getMemberTitle } from '../utils/formattingUtils'
-import type { Member, ValidationIssues } from '../types'
+import { MemberType, type Member, type ValidationIssues } from '../types'
 import { Checked } from '../types'
 
 @Component({
@@ -208,12 +235,19 @@ export default class MemberEditor extends Vue {
 
   dateInvalidMessage: string | null = null
 
+  creatorType = MemberType.CREATOR
+  creatorWithoutMembershipType = MemberType.CREATOR_WITHOUT_MEMBERSHIP
+
   public getFieldName(name: string) {
     return name + '_' + this.index
   }
 
   public removeMember(index: number) {
     this.$emit('removeMember', index)
+  }
+
+  public memberIsCreator(): boolean {
+    return this.member.memberType === MemberType.CREATOR || this.member.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP
   }
 
   public getFieldWithConditionalRequiredMarker(fieldName: string): string {
@@ -244,7 +278,7 @@ export default class MemberEditor extends Vue {
   /**
    * Validate member's date of birth in member.dateOfBirth. If the date is invalid, the validationIssues
    * are updated accordingly. Otherwise, the issue is removed from the validationIssues.
-   * 
+   *
    * Watches for changes in validationActive and calls this method accordingly.
    */
   @Watch('validationActive')
@@ -269,9 +303,11 @@ export default class MemberEditor extends Vue {
   }
 
   public getMemberTitle(): string {
-    return getMemberTitle(this.index);
+    let index = this.index
+    return getMemberTitle(this.member)
   }
 
+  @Watch('validationActive')
   public isFieldSet(value: any, key: string, onlyRequiredForFirst = false): boolean {
     // always validate to true if validation is not yet active
     if (onlyRequiredForFirst && this.index > 0) {
@@ -279,6 +315,11 @@ export default class MemberEditor extends Vue {
       return true
     }
     return validateField(this.validationActive, value, key, this.validationIssues.issues)
+  }
+
+  @Watch('validationActive')
+  public validateAge(): void {
+
   }
 }
 </script>
@@ -291,6 +332,12 @@ export default class MemberEditor extends Vue {
   label {
     padding-right: 20px;
   }
+}
+
+.info-text {
+  padding: 10px;
+  border: 1px solid darkgray;
+  background-color: lighten(lightblue, 15);
 }
 
 .section-container {

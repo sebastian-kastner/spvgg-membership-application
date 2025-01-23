@@ -1,17 +1,16 @@
-import { MembershipTypes, type Application, type Member, type Sections, Checked } from "../types";
+import { type Application, type Member, type Sections, Checked, MemberType } from "../types";
 import { parseDate } from "./dateUtils";
 
-// export const FAMILY_MEMBERSHIP_WITH_CHILDREN_FEE = 105;
 export const FAMILIY_MEMBERSHIP_WITHOUT_CHILDREN_FEE = 85;
 export const INDIVIDUAL_STUDENT_FEE = 45;
 export const INDIVIDUAL_ADULT_FEE = 55;
 
+// TODO: fix summary
 export type ApplicationSummary = {
     membershipFee: number | null,
-    numberOfAdults: number,
-    numberOfMinors: number,
-    numberOfStudents: number,
-    membershipType: MembershipTypes | null
+    hasSpouse: boolean,
+    numberOfChildren: number,
+    isChildOnlyMembership: boolean,
 }
 
 const DEBUG = false;
@@ -27,36 +26,117 @@ export class MembershipSummarizer {
     private application: Application;
 
     private membershipFee: number | null = null;
-    private numberOfAdults: number = 0;
-    private numberOfMinors: number = 0;
-    private numberOfStudents: number = 0;
-    private membershipType: MembershipTypes | null = null;
+    private isChildOnlyMembership = false;
 
     constructor(application: Application) {
         this.application = application;
     }
 
     public summarize(): ApplicationSummary {
-        if (this.application) {
-            if (this.application.membership_type === MembershipTypes.FAMILY) {
-                this.membershipType = MembershipTypes.FAMILY;
-                this.calculateFamilyFees();
-            } else if (this.application.membership_type === MembershipTypes.SINGLE) {
-                this.membershipType = MembershipTypes.SINGLE;
-                this.calculateSingleFees();
+        const members = this.categorizeMembers();
+        const hasSpouse = members.spouse !== null;
+
+        if (members.creator === null) {
+            this.log('Invalid application: Membership applications must have exactly one creator');
+            this.membershipFee = null;
+            return {
+                membershipFee: this.membershipFee,
+                numberOfChildren: members.children.length,
+                hasSpouse: hasSpouse,
+                isChildOnlyMembership: this.isChildOnlyMembership,
             }
         }
+
+        this.isChildOnlyMembership = members.creator.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP;
+
+        // if (this.application) {
+        //     // if (this.application.membership_type === MembershipTypes.FAMILY) {
+        //     //     this.membershipType = MembershipTypes.FAMILY;
+        //     //     this.calculateFamilyFees();
+        //     // } else if (this.application.membership_type === MembershipTypes.SINGLE) {
+        //     //     this.membershipType = MembershipTypes.SINGLE;
+        //     //     this.calculateSingleFees();
+        //     // }
+        // }
         return {
             membershipFee: this.membershipFee,
-            numberOfAdults: this.numberOfAdults,
-            numberOfMinors: this.numberOfMinors,
-            numberOfStudents: this.numberOfStudents,
-            membershipType: this.membershipType
+            numberOfChildren: members.children.length,
+            hasSpouse: hasSpouse,
+            isChildOnlyMembership: this.isChildOnlyMembership,
         }
     }
 
+    private categorizeMembers(): { creator: Member | null, spouse: Member | null, children: Member[] } {
+        let spouse: Member | null = null;
+        let creator: Member | null = null;
+        const children: Member[] = [];
+
+        this.application.members.forEach(member => {
+            if (member.memberType === MemberType.SPOUSE) {
+                spouse = member;
+            } else if (member.memberType === MemberType.CREATOR) {
+                creator = member;
+            } else if (member.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP) {
+                creator = member;
+            } else if (member.memberType === MemberType.CHILD) {
+                children.push(member);
+            } else {
+                this.log("Invalid member type", member.memberType)
+            }
+        });
+
+        return {
+            creator: creator,
+            spouse: spouse,
+            children: children,
+        }
+    }
+
+    private calculateFees(): void {
+        if (this.application.members.length === 0) {
+            this.log('Invalid application: Membership applications must have at least one member');
+            this.membershipFee = null;
+            return;
+        }
+
+        const creator = this.application.members.find(member => member.memberType === MemberType.CREATOR);
+        if (!creator) {
+            this.log('Invalid application: Membership applications must have exactly one creator');
+            this.membershipFee = null;
+            return;
+        }
+
+        let spouse: Member | undefined;
+        const children: Member[] = [];
+        const adults: Member[] = [];
+
+        this.application.members.forEach(member => {
+            if (member.memberType === MemberType.SPOUSE) {
+                spouse = member;
+                adults.push(member);
+            } else if (member.memberType === MemberType.CHILD) {
+                children.push(member);
+            }
+        });
+
+        const creatorIsAdult = this.isAdult(creator);
+
+        if (this.isAdult(creator)) {
+            adults.push(creator);
+        } else if (spouse) {
+            // application is invalid if the creator is not an adult but there is a spouse
+            this.log('Invalid application: Creator must be an adult if there is a spouse');
+            this.membershipFee = null;
+            return;
+        }
+
+        // if the creator is an adult and there are children: family membership fee (optionally with fee for spouse)
+
+        // if the creator is not an adult 
+    }
+
     private calculateFamilyFees(): void {
-        if (!this.application.members || this.application.members.length === 0) {
+        if (this.application.members.length === 0) {
             this.log('Invalid application: Family membership applications must have one or more members');
             this.membershipFee = null;
             return;
@@ -106,13 +186,13 @@ export class MembershipSummarizer {
 
         // set the base fee based on the number of children
         let baseFee = 0;
-        if (this.numberOfMinors > 0) {
-            this.log("Family membership with children")
-            baseFee = FAMILY_MEMBERSHIP_WITH_CHILDREN_FEE;
-        } else {
-            this.log("Family membership without children")
-            baseFee = FAMILIY_MEMBERSHIP_WITHOUT_CHILDREN_FEE;
-        }
+        // if (this.numberOfMinors > 0) {
+        //     this.log("Family membership with children")
+        //     baseFee = FAMILY_MEMBERSHIP_WITH_CHILDREN_FEE;
+        // } else {
+        //     this.log("Family membership without children")
+        //     baseFee = FAMILIY_MEMBERSHIP_WITHOUT_CHILDREN_FEE;
+        // }
 
         // sum up the section fees + the base fee
         this.membershipFee = baseFee + sectionFees;
@@ -120,7 +200,7 @@ export class MembershipSummarizer {
 
     private calculateSingleFees(): void {
         // single membership must have exactly one member
-        if (!this.application.members || this.application.members.length === 0) {
+        if (this.application.members.length === 0) {
             this.log('Invalid application: Single membership applications must have exactly one member');
             this.membershipFee = null;
             return;

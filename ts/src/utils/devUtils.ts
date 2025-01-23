@@ -15,7 +15,6 @@ export function printIssues(issues: Set<string>): void {
 export function createDefaultMembership(): Application {
     return {
         membership_start: MembershipStartTypes.FROM,
-        membership_type: MembershipTypes.FAMILY,
         members: [
             {
                 anrede: "Herr",

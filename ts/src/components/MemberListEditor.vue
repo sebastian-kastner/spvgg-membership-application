@@ -2,7 +2,7 @@
   <div class="member-list">
     <member-editor
       class="member"
-      v-for="(member, index) in visibleMembers"
+      v-for="(member, index) in members"
       :key="index"
       :member="member"
       :index="index"
@@ -11,16 +11,18 @@
       @removeMember="removeMember"
     />
   </div>
-  <div class="inline-button-container" :class="{ hidden: !isFamily }">
+  <div class="inline-button-container">
     <div>
-      <input type="button" class="primary-btn" value="+ Mitglied hinzufügen" @click="addMember" />
+      <!-- TODO: only show if there is < 1 spouse in the list of members -->
+      <input type="button" class="primary-btn" value="+ Kind hinzufügen" @click="addChild" />
+      <input type="button" class="primary-btn" value="+ (Ehe-)Partner hinzufügen" @click="addSpouse" v-if="canAddSpouse" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-facing-decorator'
-import { Checked, type Member, type ValidationIssues } from '../types'
+import { Checked, type Member, MemberType, type ValidationIssues } from '../types'
 import MemberEditor from './MemberEditor.vue'
 
 @Component({
@@ -28,28 +30,25 @@ import MemberEditor from './MemberEditor.vue'
 })
 export default class MemberListEditor extends Vue {
   @Prop({ required: true }) members!: Member[]
-  @Prop({ required: true }) isFamily!: false
   @Prop({ required: true }) validationActive!: boolean
   @Prop({ required: true }) validationIssues!: ValidationIssues
+  @Prop({ required: true }) canAddSpouse!: boolean
 
-  public mounted(): void {
-    if (this.members.length === 0) {
-      this.addMember()
-    }
+  public addChild(): void {
+    this.addMember(MemberType.CHILD)
   }
 
-  /**
-   * Hide members with index >= 1 if family membership is selected
-   */
-  get visibleMembers(): Member[] {
-    if (!this.isFamily) {
-      return [ this.members[0]]
+  public addSpouse(): void {
+    if (!this.canAddSpouse) {
+      console.error("Cannot add spouse, because there is already a spouse in the list of members")
+      return
     }
-    return this.members;
+    this.addMember(MemberType.SPOUSE)
   }
 
-  public addMember(): void {
+  private addMember(memberType: MemberType): void {
     const newMember: Member = {
+      memberType: memberType,
       isStudent: false,
       sections: {
         football: Checked.NO,

@@ -11,9 +11,17 @@ export enum Checked {
     NO = "Nein"
 }
 
+export enum MemberType {
+    CREATOR,
+    CREATOR_WITHOUT_MEMBERSHIP,
+    SPOUSE,
+    CHILD,
+}
+
 export type Member = {
     title?: string,
     anrede?: string,
+    memberType: MemberType,
     firstName?: string,
     lastName?: string,
     sections: Sections,
@@ -32,11 +40,6 @@ export enum MembershipStartTypes {
     FROM = 'from',
 }
 
-export enum MembershipTypes {
-    FAMILY = 'family',
-    SINGLE = 'single'
-};
-
 export type Sections = {
     football: Checked,
     bowling: Checked,
@@ -49,7 +52,6 @@ export type Application = {
     membership_owner?: string,
     membership_start?: string,
     membership_start_date?: Date,
-    membership_type?: string,
 
     bic?: string,
     iban?: string,
@@ -60,5 +62,5 @@ export type Application = {
     dataProtectionAgreement?: Checked;
     publicationAgreement?: Checked;
 
-    members?: Member[];
+    members: Member[];
 }
