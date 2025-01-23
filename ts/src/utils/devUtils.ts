@@ -1,5 +1,5 @@
 // THIS FILE MUST BE DELETED BEFORE RELEASING TO PRODUCTION!
-import { Checked, MembershipStartTypes, MembershipTypes } from '../types'
+import { Checked, MemberType, MembershipStartTypes } from '../types'
 import type { Application } from '../types'
 
 export function printIssues(issues: Set<string>): void {
@@ -17,6 +17,7 @@ export function createDefaultMembership(): Application {
         membership_start: MembershipStartTypes.FROM,
         members: [
             {
+                memberType: MemberType.CREATOR,
                 anrede: "Herr",
                 firstName: "Doktor",
                 lastName: "Doktormann",
@@ -36,6 +37,7 @@ export function createDefaultMembership(): Application {
                 },
             },
             {
+                memberType: MemberType.CHILD,
                 anrede: "--",
                 title: "Dr.",
                 firstName: "Klein",
