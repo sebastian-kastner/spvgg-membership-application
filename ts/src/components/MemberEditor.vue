@@ -10,7 +10,6 @@
           @click="removeMember(member)"
         />
       </div>
-      <!-- TODO: distinguish between spouse and child here! -->
     </div>
     <div class="row" v-if="memberIsCreator()">
       <div class="info-text">
@@ -241,7 +240,6 @@ export default class MemberEditor extends Vue {
   }
 
   public removeMember(member: Member) {
-    // FIXME: this does not trigger the remove function on MemberListEditor
     this.$emit('removeMember', member)
   }
 

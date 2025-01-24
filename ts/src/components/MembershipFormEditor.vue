@@ -348,14 +348,6 @@ export default class MembershipFormEditor extends Vue {
     return true
   }
 
-  // TODO: optimize
-  get spouseCount(): number {
-    if (this.application.members.spouse) {
-      return 1;
-    }
-    return 0;
-  }
-
   get hasValidationIssues(): boolean {
     if (!this.validationActive) {
       return false
