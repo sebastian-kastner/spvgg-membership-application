@@ -1,8 +1,38 @@
 <template>
   <div class="member-list">
+    <!-- creator -->
     <member-editor
       class="member"
-      v-for="(member, index) in members"
+      :member="members.creator"
+      :index="-1"
+      :validation-active="validationActive"
+      :validation-issues="validationIssues"
+      @removeMember="removeMember"
+    />
+  </div>
+  <div class="inline-button-container" :class="{ hidden: !canAddSpouse }">
+    <div>
+      <input
+        type="button"
+        class="primary-btn"
+        value="+ (Ehe-)Partner hinzufügen"
+        @click="addSpouse"
+      />
+    </div>
+  </div>
+  <div class="member-list">
+    <member-editor
+      v-if="members.spouse"
+      class="member"
+      :member="members.spouse"
+      :index="-1"
+      :validation-active="validationActive"
+      :validation-issues="validationIssues"
+      @removeMember="removeMember"
+    />
+    <member-editor
+      class="member"
+      v-for="(member, index) in members.children"
       :key="index"
       :member="member"
       :index="index"
@@ -13,23 +43,27 @@
   </div>
   <div class="inline-button-container">
     <div>
-      <!-- TODO: only show if there is < 1 spouse in the list of members -->
       <input type="button" class="primary-btn" value="+ Kind hinzufügen" @click="addChild" />
-      <input type="button" class="primary-btn" value="+ (Ehe-)Partner hinzufügen" @click="addSpouse" v-if="canAddSpouse" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-facing-decorator'
-import { Checked, type Member, MemberType, type ValidationIssues } from '../types'
+import {
+  Checked,
+  type ApplicationMembers,
+  type Member,
+  MemberType,
+  type ValidationIssues
+} from '../types'
 import MemberEditor from './MemberEditor.vue'
 
 @Component({
   components: { MemberEditor }
 })
 export default class MemberListEditor extends Vue {
-  @Prop({ required: true }) members!: Member[]
+  @Prop({ required: true }) members!: ApplicationMembers
   @Prop({ required: true }) validationActive!: boolean
   @Prop({ required: true }) validationIssues!: ValidationIssues
   @Prop({ required: true }) canAddSpouse!: boolean
@@ -40,7 +74,7 @@ export default class MemberListEditor extends Vue {
 
   public addSpouse(): void {
     if (!this.canAddSpouse) {
-      console.error("Cannot add spouse, because there is already a spouse in the list of members")
+      console.error('Cannot add spouse! There cannot be more than one spouse!')
       return
     }
     this.addMember(MemberType.SPOUSE)
@@ -57,20 +91,29 @@ export default class MemberListEditor extends Vue {
         fitness: Checked.NO
       }
     }
-    if (this.members.length >= 1) {
-      const memberOne = this.members[0]
-      newMember.lastName = memberOne.lastName
-      newMember.street = memberOne.street
-      newMember.streetNumber = memberOne.streetNumber
-      newMember.city = memberOne.city
-      newMember.zipCode = memberOne.zipCode
+
+    const creator = this.members.creator
+    newMember.lastName = creator.lastName
+    newMember.street = creator.street
+    newMember.streetNumber = creator.streetNumber
+    newMember.city = creator.city
+    newMember.zipCode = creator.zipCode
+
+    if (memberType === MemberType.SPOUSE) {
+      this.members.spouse = newMember
+    } else if (memberType === MemberType.CHILD) {
+      this.members.children.push(newMember)
     }
-    this.members.push(newMember)
   }
 
-  public removeMember(indexToRemove: number): void {
-    if (indexToRemove >= 0 && indexToRemove < this.members.length) {
-      this.members.splice(indexToRemove, 1);
+  public removeMember(memberToDelete: Member): void {
+    if (memberToDelete.memberType === MemberType.SPOUSE) {
+      this.members.spouse = null
+    } else if (memberToDelete.memberType === MemberType.CHILD) {
+      const childIndex = this.members.children.findIndex((member) => member == memberToDelete)
+      if (childIndex !== -1) {
+        this.members.children.splice(childIndex, 1)
+      }
     }
   }
 }
@@ -79,6 +122,10 @@ export default class MemberListEditor extends Vue {
 <style lang="scss" scoped>
 .member-list > .member:not(:last-child) {
   border-bottom: 1px solid lightgray;
+}
+
+.inline-button-container input {
+  width: 260px;
 }
 
 .member {

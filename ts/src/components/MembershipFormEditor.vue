@@ -284,18 +284,12 @@ export default class MembershipFormEditor extends Vue {
     this.hasSpouse = summary.hasSpouse
 
     // temporarily remove spouse from members if the membership type was changed
-    if (summary.hasSpouse && summary.isChildOnlyMembership) {
-      console.log("caching spouse");
-      const spouseIndex = this.application.members.findIndex(
-        (member) => member.memberType === MemberType.SPOUSE
-      )
-      if (spouseIndex !== -1) {
-        this.cachedSpouse = this.application.members[spouseIndex]
-        this.application.members.splice(spouseIndex, 1);
-      }
+    if (this.application.members.spouse && summary.isChildOnlyMembership) {
+        this.cachedSpouse = this.application.members.spouse;
+        this.application.members.spouse = null;
     } else if (!this.isChildOnlyMembership && this.cachedSpouse) {
         // re-add cached spouse if the membership type was changed back
-        this.application.members.splice(1, 0, this.cachedSpouse);
+        this.application.members.spouse = this.cachedSpouse;
         this.cachedSpouse = null;
     }
   }
@@ -354,12 +348,12 @@ export default class MembershipFormEditor extends Vue {
     return true
   }
 
+  // TODO: optimize
   get spouseCount(): number {
-    if (this.application.members) {
-      return this.application.members.filter((member) => member.memberType === MemberType.SPOUSE)
-        .length
+    if (this.application.members.spouse) {
+      return 1;
     }
-    return 0
+    return 0;
   }
 
   get hasValidationIssues(): boolean {

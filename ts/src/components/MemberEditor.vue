@@ -1,17 +1,15 @@
 <template>
   <div>
-    <div class="row" v-if="!memberIsCreator()">
-      <div class="inline-button-container">
+    <div class="row header-row member-title">
+      <div class="member-title-text">{{ getMemberTitle() }}</div>
+      <div class="inline-button-container" v-if="!memberIsCreator()">
         <input
           class="secondary-btn"
           type="button"
           value="- Mitglied entfernen"
-          @click="removeMember(index)"
+          @click="removeMember(member)"
         />
       </div>
-    </div>
-    <div class="row header-row">
-      {{ getMemberTitle() }}
       <!-- TODO: distinguish between spouse and child here! -->
     </div>
     <div class="row" v-if="memberIsCreator()">
@@ -160,8 +158,8 @@
       </div>
     </div>
     <!-- MEMBERSHIP SECTIONS -->
-    <div class="row header-row" v-if="member.memberType !== creatorWithoutMembershipType">Abteilungen (Mehrfachauswahl möglich)</div>
-    <div class="row" v-if="member.memberType !== creatorWithoutMembershipType">
+    <div class="row header-row" :class="{ hidden: member.memberType === creatorWithoutMembershipType }">Abteilungen (Mehrfachauswahl möglich)</div>
+    <div class="row" :class="{ hidden: member.memberType === creatorWithoutMembershipType }">
       <div class="d-flex d-flex-wrap">
         <div class="section-container">
           <div class="form-input">
@@ -242,8 +240,9 @@ export default class MemberEditor extends Vue {
     return name + '_' + this.index
   }
 
-  public removeMember(index: number) {
-    this.$emit('removeMember', index)
+  public removeMember(member: Member) {
+    // FIXME: this does not trigger the remove function on MemberListEditor
+    this.$emit('removeMember', member)
   }
 
   public memberIsCreator(): boolean {
@@ -292,7 +291,7 @@ export default class MemberEditor extends Vue {
     }
 
     // validate dateOfBirth and update validationIssues accordingly
-    const validationMsg = getDateOfBirthValidationMessage(this.member.dateOfBirth)
+    const validationMsg = getDateOfBirthValidationMessage(this.member)
     if (validationMsg) {
       this.validationIssues.issues.add(issueKey)
       this.dateInvalidMessage = validationMsg
@@ -303,8 +302,7 @@ export default class MemberEditor extends Vue {
   }
 
   public getMemberTitle(): string {
-    let index = this.index
-    return getMemberTitle(this.member)
+    return getMemberTitle(this.member, this.index);
   }
 
   @Watch('validationActive')
@@ -332,6 +330,15 @@ export default class MemberEditor extends Vue {
   label {
     padding-right: 20px;
   }
+}
+
+.member-title {
+  display: flex;
+}
+
+.member-title-text {
+  width: 100%;
+  margin-top: auto;
 }
 
 .info-text {

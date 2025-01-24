@@ -5,7 +5,7 @@ export const FAMILIY_MEMBERSHIP_WITHOUT_CHILDREN_FEE = 85;
 export const INDIVIDUAL_STUDENT_FEE = 45;
 export const INDIVIDUAL_ADULT_FEE = 55;
 
-// TODO: fix summary
+// TODO: fix summarizer
 export type ApplicationSummary = {
     membershipFee: number | null,
     hasSpouse: boolean,
@@ -33,21 +33,24 @@ export class MembershipSummarizer {
     }
 
     public summarize(): ApplicationSummary {
-        const members = this.categorizeMembers();
-        const hasSpouse = members.spouse !== null;
+        let hasSpouse = false;
+        if (this.application.members.spouse) {
+            hasSpouse = true;
+        }
 
-        if (members.creator === null) {
+
+        if (this.application.members.creator === null) {
             this.log('Invalid application: Membership applications must have exactly one creator');
             this.membershipFee = null;
             return {
                 membershipFee: this.membershipFee,
-                numberOfChildren: members.children.length,
+                numberOfChildren: this.application.members.children.length,
                 hasSpouse: hasSpouse,
                 isChildOnlyMembership: this.isChildOnlyMembership,
             }
         }
 
-        this.isChildOnlyMembership = members.creator.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP;
+        this.isChildOnlyMembership = this.application.members.creator.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP;
 
         // if (this.application) {
         //     // if (this.application.membership_type === MembershipTypes.FAMILY) {
@@ -60,37 +63,37 @@ export class MembershipSummarizer {
         // }
         return {
             membershipFee: this.membershipFee,
-            numberOfChildren: members.children.length,
+            numberOfChildren: this.application.members.children.length,
             hasSpouse: hasSpouse,
             isChildOnlyMembership: this.isChildOnlyMembership,
         }
     }
 
-    private categorizeMembers(): { creator: Member | null, spouse: Member | null, children: Member[] } {
-        let spouse: Member | null = null;
-        let creator: Member | null = null;
-        const children: Member[] = [];
+    // private categorizeMembers(): { creator: Member | null, spouse: Member | null, children: Member[] } {
+    //     let spouse: Member | null = null;
+    //     let creator: Member | null = null;
+    //     const children: Member[] = [];
 
-        this.application.members.forEach(member => {
-            if (member.memberType === MemberType.SPOUSE) {
-                spouse = member;
-            } else if (member.memberType === MemberType.CREATOR) {
-                creator = member;
-            } else if (member.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP) {
-                creator = member;
-            } else if (member.memberType === MemberType.CHILD) {
-                children.push(member);
-            } else {
-                this.log("Invalid member type", member.memberType)
-            }
-        });
+    //     this.application.members.forEach(member => {
+    //         if (member.memberType === MemberType.SPOUSE) {
+    //             spouse = member;
+    //         } else if (member.memberType === MemberType.CREATOR) {
+    //             creator = member;
+    //         } else if (member.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP) {
+    //             creator = member;
+    //         } else if (member.memberType === MemberType.CHILD) {
+    //             children.push(member);
+    //         } else {
+    //             this.log("Invalid member type", member.memberType)
+    //         }
+    //     });
 
-        return {
-            creator: creator,
-            spouse: spouse,
-            children: children,
-        }
-    }
+    //     return {
+    //         creator: creator,
+    //         spouse: spouse,
+    //         children: children,
+    //     }
+    // }
 
     private calculateFees(): void {
         if (this.application.members.length === 0) {

@@ -47,6 +47,12 @@ export type Sections = {
     fitness: Checked
 }
 
+export type ApplicationMembers = {
+    creator: Member,
+    spouse?: Member | null,
+    children: Member[],
+}
+
 export type Application = {
     uuid?: string,
     membership_owner?: string,
@@ -62,5 +68,5 @@ export type Application = {
     dataProtectionAgreement?: Checked;
     publicationAgreement?: Checked;
 
-    members: Member[];
+    members: ApplicationMembers;
 }

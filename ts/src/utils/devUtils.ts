@@ -15,8 +15,8 @@ export function printIssues(issues: Set<string>): void {
 export function createDefaultMembership(): Application {
     return {
         membership_start: MembershipStartTypes.FROM,
-        members: [
-            {
+        members: {
+            creator: {
                 memberType: MemberType.CREATOR,
                 anrede: "Herr",
                 firstName: "Doktor",
@@ -36,26 +36,28 @@ export function createDefaultMembership(): Application {
                     theatre: Checked.NO,
                 },
             },
-            {
-                memberType: MemberType.CHILD,
-                anrede: "--",
-                title: "Dr.",
-                firstName: "Klein",
-                lastName: "Doktormann",
-                dateOfBirth: "28.08.2015",
-                street: "Invalidenstr",
-                streetNumber: "12",
-                zipCode: "86391",
-                city: "Augsburg",
-                isStudent: true,
-                sections: {
-                    football: Checked.NO,
-                    bowling: Checked.NO,
-                    fitness: Checked.NO,
-                    theatre: Checked.YES,
+            children: [
+                {
+                    memberType: MemberType.CHILD,
+                    anrede: "--",
+                    title: "Dr.",
+                    firstName: "Klein",
+                    lastName: "Doktormann",
+                    dateOfBirth: "28.08.2015",
+                    street: "Invalidenstr",
+                    streetNumber: "12",
+                    zipCode: "86391",
+                    city: "Augsburg",
+                    isStudent: true,
+                    sections: {
+                        football: Checked.NO,
+                        bowling: Checked.NO,
+                        fitness: Checked.NO,
+                        theatre: Checked.YES,
+                    },
                 },
-            },
-        ],
+            ]
+        },
         iban: "doktor-ban",
         bankAccountOwner: "Dr. Doktor Doktormann",
         bankName: "ABK ALLGEMEINE BEAMTEN BANK AG",

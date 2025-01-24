@@ -99,6 +99,7 @@ import {
 @Component({
   components: {}
 })
+//TODO: fix confirmation dialogue!
 export default class MembershipConfirmation extends Vue {
   @Prop({ required: true }) appMode!: AppMode
   @Prop({ required: true }) application!: Application

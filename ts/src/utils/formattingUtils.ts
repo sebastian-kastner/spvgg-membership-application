@@ -20,13 +20,13 @@ export function getName(member: Member): string {
     return parts.join(' ')
 }
 
-export function getMemberTitle(member: Member): string {
+export function getMemberTitle(member: Member, memberIndex: number): string {
     if (member.memberType === MemberType.CREATOR || member.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP) {
         return 'Antragsteller'
     } else if (member.memberType === MemberType.SPOUSE) {
         return '(Ehe-)Partner'
     }
-    return 'Kind'
+    return 'Kind ' + (memberIndex + 1);
 }
 
 export function getStreet(member: Member): string {
@@ -160,6 +160,7 @@ export function formatApplication(application: Application): string {
     return formatTuples(contents);
 }
 
+// TODO: fix summary!
 export function formatSummary(summary: ApplicationSummary): string {
     const contents: [string?, string?][] = [];
     contents.push(["Voraussichtlicher Jahresbeitrag", summary.membershipFee ? summary.membershipFee + "€" : "--"]);

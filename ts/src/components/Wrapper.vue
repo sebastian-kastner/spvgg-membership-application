@@ -24,16 +24,20 @@ export default class Wrapper extends Vue {
   // application: Application = createDefaultMembership()
   application: Application = {
     membership_start_date: new Date(),
-    members: [{
-      isStudent: false,
-      memberType: MemberType.CREATOR,
-      sections: {
-        football: Checked.NO,
-        bowling: Checked.NO,
-        theatre: Checked.NO,
-        fitness: Checked.NO
-      }
-    }]
+    members: {
+      creator: {
+        isStudent: false,
+        memberType: MemberType.CREATOR,
+        sections: {
+          football: Checked.NO,
+          bowling: Checked.NO,
+          theatre: Checked.NO,
+          fitness: Checked.NO
+        }
+      },
+      spouse: null,
+      children: []
+    }
   }
 
   get isEditMode(): boolean {

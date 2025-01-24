@@ -1,3 +1,5 @@
+import type { Member } from "../types"
+
 /**
  * Validate a date of birth string in format dd.mm.yyyy. Checks wheter:
  * - dateOfBirth is set
@@ -9,7 +11,8 @@
  * @param dateOfBirth 
  * @returns 
  */
-export function getDateOfBirthValidationMessage(dateOfBirth?: string): string | null {
+export function getDateOfBirthValidationMessage(member: Member): string | null {
+    const dateOfBirth = member.dateOfBirth;
     if (!dateOfBirth || dateOfBirth.trim() === '') {
         return ''
     }
@@ -31,6 +34,10 @@ export function getDateOfBirthValidationMessage(dateOfBirth?: string): string | 
     if (date > new Date()) {
         return 'Das Geburtsdatum muss in der Vergangenheit liegen.'
     }
+
+    // TODO: check that date is > 18 for creator
+    // TODO: check that date is > 18 for spouse
+    // TODO: check that date is < 18 for children
     return null
 }
 
