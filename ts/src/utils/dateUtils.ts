@@ -1,4 +1,4 @@
-import type { Member } from "../types"
+import { MemberType, type Member } from "../types"
 
 /**
  * Validate a date of birth string in format dd.mm.yyyy. Checks wheter:
@@ -35,9 +35,20 @@ export function getDateOfBirthValidationMessage(member: Member): string | null {
         return 'Das Geburtsdatum muss in der Vergangenheit liegen.'
     }
 
-    // TODO: check that date is > 18 for creator
-    // TODO: check that date is > 18 for spouse
-    // TODO: check that date is < 18 for children
+    if (member.memberType === MemberType.CREATOR || member.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP ||member.memberType === MemberType.SPOUSE) {
+        if (!isAdult(date)) {
+            if (member.memberType === MemberType.CREATOR || member.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP) {
+                return 'Der Antragssteller muss volljährig sein!';
+            } else {
+                return '(Ehe-)partner müssen volljährig sein!';
+            }
+        }
+    } else if (member.memberType === MemberType.CHILD) {
+        if (isAdult(date)) {
+            return 'Für volljährige Kinder muss ein separater Antrag gestellt werden!';
+        }
+    }
+
     return null
 }
 
@@ -75,4 +86,17 @@ export function parseDate(dateOfBirth?: string): ParsedDate | null {
         year: year,
         date: new Date(year, month, day)
     }
+}
+
+export function isAdult(birthDate: Date): boolean {
+    // calculate age
+    const currentDate = new Date();
+    let age = currentDate.getFullYear() - birthDate.getFullYear();
+    const month = currentDate.getMonth() - birthDate.getMonth();
+    if (month < 0 || (month === 0 && currentDate.getDate() < birthDate.getDate())) {
+        age--;
+    }
+
+    // check if age is 18 or more
+    return age >= 18
 }

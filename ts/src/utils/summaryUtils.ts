@@ -1,5 +1,5 @@
 import { type Application, type Member, type Sections, Checked, MemberType } from "../types";
-import { parseDate } from "./dateUtils";
+import { parseDate, isAdult } from "./dateUtils";
 
 export const FAMILIY_MEMBERSHIP_WITHOUT_CHILDREN_FEE = 85;
 export const INDIVIDUAL_STUDENT_FEE = 45;
@@ -236,19 +236,7 @@ export class MembershipSummarizer {
             this.log("Parsed date invalid and all")
             return null;
         }
-        // Get the current date
-        const birthDate = parsedDate.date;
-
-        // calculate age of member
-        const currentDate = new Date();
-        let age = currentDate.getFullYear() - birthDate.getFullYear();
-        const month = currentDate.getMonth() - birthDate.getMonth();
-        if (month < 0 || (month === 0 && currentDate.getDate() < birthDate.getDate())) {
-            age--;
-        }
-
-        // check if member is 18 or older
-        return age >= 18
+        return isAdult(parsedDate.date);
     }
 
     private isStudent(member: Member): boolean {
