@@ -1,6 +1,6 @@
 import type { Application, Member, Sections } from '../types'
 import { Checked, MemberType, MembershipStartTypes } from '../types';
-import type { ApplicationSummary } from './summaryUtils';
+import { ApplicationType, MembershipSummarizer } from './summaryUtils';
 import { Buffer } from 'buffer'
 
 export function getName(member: Member): string {
@@ -129,20 +129,44 @@ export function formatApplication(application: Application): string {
 
     contents.push([])
 
-    // member data
-    application.members.forEach((member) => {
-        contents.push(["Name", getName(member)])
-        contents.push(["Geburtsdatum", member.dateOfBirth])
-        contents.push(["Adresse", `${getStreet(member)}, ${getCity(member)}`])
+    // summary for creator
+    contents.push(["Antragsteller"]);
+    contents.push(["Name", getName(application.members.creator)])
+    contents.push(["Geburtsdatum", application.members.creator.dateOfBirth])
+    if (application.members.creator.street && application.members.creator.streetNumber) {
+        contents.push(["Adresse", `${getStreet(application.members.creator)}, ${getCity(application.members.creator)}`])
+    }
+    if (application.members.creator.phoneNumber) {
+        contents.push(["Telefonnummer", application.members.creator.phoneNumber])
+    }
+    if (application.members.creator.email) {
+        contents.push(["eMail", application.members.creator.email])
+    }
+    contents.push(["Schüler/Student", getIsStudent(application.members.creator)])
+    if (application.members.creator.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP) {
+        contents.push(["Mitgliedschaft für Antragssteller", "NEIN"]);
+    } else {
+        contents.push(["Mitgliedschaft für Antragssteller", "JA"]);
+        contents.push(["Abteilungen", getSections(application.members.creator.sections)])
+    }
+    contents.push([])
 
-        if (member.phoneNumber) {
-            contents.push(["Telefonnummer", member.phoneNumber])
-        }
-        if (member.email) {
-            contents.push(["eMail", member.email])
-        }
-        contents.push(["Schüler/Student", getIsStudent(member)])
-        contents.push(["Abteilungen", getSections(member.sections)])
+    // summary for spouse
+    if (application.members.spouse) {
+        contents.push(["(Ehe)partner"]);
+        contents.push(["Name", getName(application.members.spouse)])
+        contents.push(["Geburtsdatum", application.members.spouse.dateOfBirth])
+        contents.push(["Schüler/Student", getIsStudent(application.members.spouse)])
+        contents.push(["Abteilungen", getSections(application.members.spouse.sections)])
+        contents.push([])
+    }
+
+    // summary for children
+    application.members.children.forEach((child) => {
+        contents.push(["(Ehe)partner"]);
+        contents.push(["Name", getName(child)])
+        contents.push(["Geburtsdatum", child.dateOfBirth])
+        contents.push(["Abteilungen", getSections(child.sections)])
         contents.push([])
     })
 
@@ -160,19 +184,50 @@ export function formatApplication(application: Application): string {
     return formatTuples(contents);
 }
 
-// TODO: fix summary!
-export function formatSummary(summary: ApplicationSummary): string {
+export function formatSummary(application: Application): string {
+    const summary = new MembershipSummarizer(application).summarize();
+    let membershipForCreator = "Ja";
+    if (application.members.creator.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP) {
+        membershipForCreator = "Nein";
+    }
+
+    const applicationType = applicationTypeToText(summary.applicationType);
+
     const contents: [string?, string?][] = [];
     contents.push(["Voraussichtlicher Jahresbeitrag", summary.membershipFee ? summary.membershipFee + "€" : "--"]);
-    contents.push(["Anzahl Erwachsene", summary.numberOfAdults.toString()]);
-    contents.push(["Anzahl Kinder", summary.numberOfMinors.toString()]);
-    contents.push(["Anzahl Studenten", summary.numberOfStudents.toString()]);
-    contents.push(["Mitgliedschaftstyp", getMembershipType(summary.membershipType?.valueOf())]);
+    contents.push(["Antragsteller wird selbst Mitglied", membershipForCreator]);
+    contents.push(["Anzahl Kinder", summary.numberOfChildren.toString()]);
+    contents.push(["Antragstyp", applicationType]);
 
     return formatTuples(contents);
+}
+
+function applicationTypeToText(applicationType?: ApplicationType): string {
+    if (applicationType === ApplicationType.CHILDREN_ONLY) {
+        return "Mitgliedschaft für Kinder";
+    } else if (applicationType === ApplicationType.COUPLE_WITHOUT_CHILDREN) {
+        return "(Ehe)paar ohne Kinder";
+    } else if (applicationType === ApplicationType.COUPLE_WITH_CHILDREN) {
+        return "(Ehe)paar mit Kindern";
+    } else if (applicationType === ApplicationType.PARENT_WITH_KIDS) {
+        return "Elternteil mit Kindern";
+    } else if (applicationType === ApplicationType.INDIVIDUAL) {
+        return "Einzelmitgliedschaft";
+    }
+    return 'Unbekannt';
 }
 
 export function base64Encode(str: string): string {
     const charset = document.characterSet;
     return Buffer.from(str, charset).toString('base64');
+}
+
+export function getAllMembers(application: Application) {
+    const members: Member[] = [];
+    members.push(application.members.creator);
+    if (application.members.spouse) {
+        members.push(application.members.spouse);
+    }
+    members.push(...application.members.children);
+    return members;
 }

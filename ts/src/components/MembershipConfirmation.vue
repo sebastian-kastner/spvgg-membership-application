@@ -9,47 +9,110 @@
         <div class="label conf-col-50">Start der Mitgliedschaft:</div>
         <div class="conf-col-50 value">{{ membershipStart }}</div>
       </div>
-      <div class="row">
-        <div class="label conf-col-50">Mitgliedschaftstyp:</div>
-        <div class="conf-col-50 value">{{ membershipType }}</div>
-      </div>
-      <div class="row header-row">Mitgliederdaten</div>
-      <div class="member-summary" v-for="(member, index) in application.members" :key="index">
-        <div class="row header-row">{{ getMemberTitle(index) }}</div>
+
+      <!-- Antragsteller -->
+      <div class="row header-row">Antragsteller</div>
+      <div class="member-summary">
         <div class="row">
           <div class="label conf-col-50">Name:</div>
           <div class="conf-col-50 value">
-            {{ getName(member) }}
+            {{ getName(application.members.creator) }}
           </div>
         </div>
         <div class="row">
           <div class="label conf-col-50">Geburtsdatum:</div>
-          <div class="conf-col-50 value">{{ member.dateOfBirth }}</div>
+          <div class="conf-col-50 value">{{ application.members.creator.dateOfBirth }}</div>
         </div>
         <div class="row">
           <div class="label conf-col-50">Addresse:</div>
           <div class="conf-col-50 value">
-            <div>{{ getStreet(member) }}</div>
-            <div>{{ getCity(member) }}</div>
+            <div>{{ getStreet(application.members.creator) }}</div>
+            <div>{{ getCity(application.members.creator) }}</div>
           </div>
         </div>
-        <div class="row" v-if="member.email">
+        <div class="row" v-if="application.members.creator.email">
           <div class="label conf-col-50">Telefonnummer:</div>
-          <div class="conf-col-50 value">{{ getValueOrPlaceholder(member.phoneNumber) }}</div>
+          <div class="conf-col-50 value">
+            {{ getValueOrPlaceholder(application.members.creator.phoneNumber) }}
+          </div>
         </div>
-        <div class="row" v-if="member.email">
+        <div class="row" v-if="application.members.creator.email">
           <div class="label conf-col-50">eMail:</div>
-          <div class="conf-col-50 value">{{ getValueOrPlaceholder(member.email) }}</div>
+          <div class="conf-col-50 value">
+            {{ getValueOrPlaceholder(application.members.creator.email) }}
+          </div>
         </div>
         <div class="row">
           <div class="label conf-col-50">Student:</div>
-          <div class="conf-col-50 value">{{ isStudent(member) }}</div>
+          <div class="conf-col-50 value">{{ isStudent(application.members.creator) }}</div>
+        </div>
+        <div class="row" v-if="membershipFor(application.members.creator)">
+          <div class="label conf-col-50">Abteilungen:</div>
+          <div class="conf-col-50 value">
+            {{ getValueOrPlaceholder(getSections(application.members.creator.sections)) }}
+          </div>
         </div>
         <div class="row">
-          <div class="label conf-col-50">Abteilungen:</div>
-          <div class="conf-col-50 value">{{ getValueOrPlaceholder(getSections(member.sections)) }}</div>
+          <div class="label conf-col-50">Mitgliedschaft für Antragsteller:</div>
+          <div class="conf-col-50 value" v-if="membershipFor(application.members.creator)">JA</div>
+          <div class="conf-col-50 value" v-else>NEIN</div>
         </div>
       </div>
+
+      <!-- (Ehe)partner -->
+      <div v-if="application.members.spouse">
+        <div class="row header-row">Ehepartner</div>
+        <div class="member-summary">
+          <div class="row">
+            <div class="label conf-col-50">Name:</div>
+            <div class="conf-col-50 value">
+              {{ getName(application.members.spouse) }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="label conf-col-50">Geburtsdatum:</div>
+            <div class="conf-col-50 value">{{ application.members.spouse.dateOfBirth }}</div>
+          </div>
+          <div class="row">
+            <div class="label conf-col-50">Student:</div>
+            <div class="conf-col-50 value">{{ isStudent(application.members.spouse) }}</div>
+          </div>
+          <div class="row">
+            <div class="label conf-col-50">Abteilungen:</div>
+            <div class="conf-col-50 value">
+              {{ getValueOrPlaceholder(getSections(application.members.spouse.sections)) }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kinder -->
+      <div v-if="application.members.children.length > 0"></div>
+      <div class="row header-row">Kinder</div>
+      <div
+        class="member-summary"
+        v-for="(child, index) in application.members.children"
+        :key="index"
+      >
+        <div class="row">
+          <div class="label conf-col-50">Name:</div>
+          <div class="conf-col-50 value">
+            {{ getName(child) }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="label conf-col-50">Geburtsdatum:</div>
+          <div class="conf-col-50 value">{{ child.dateOfBirth }}</div>
+        </div>
+        <div class="row">
+            <div class="label conf-col-50">Abteilungen:</div>
+            <div class="conf-col-50 value">
+              {{ getValueOrPlaceholder(getSections(child.sections)) }}
+            </div>
+          </div>
+      </div>
+
+      <!-- Bankdaten -->
       <div class="row header-row">Bankdaten</div>
       <div class="row">
         <div class="label conf-col-50">IBAN:</div>
@@ -81,8 +144,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-facing-decorator'
-import type { Application, AppMode, Member, Sections } from '../types'
-import { MembershipSummarizer } from '../utils/summaryUtils'
+import { MemberType, type Application, type AppMode, type Member, type Sections } from '../types'
 import {
   getName,
   getMembershipStart,
@@ -93,13 +155,13 @@ import {
   getMemberTitle,
   base64Encode,
   formatApplication,
-  formatSummary
+  formatSummary,
+  getAllMembers
 } from '../utils/formattingUtils'
 
 @Component({
   components: {}
 })
-//TODO: fix confirmation dialogue!
 export default class MembershipConfirmation extends Vue {
   @Prop({ required: true }) appMode!: AppMode
   @Prop({ required: true }) application!: Application
@@ -119,7 +181,7 @@ export default class MembershipConfirmation extends Vue {
     // handle browser back event
     window.addEventListener('popstate', this.handleBrowserBack)
 
-    this.summaryText = base64Encode(formatSummary(new MembershipSummarizer(this.application).summarize()))
+    this.summaryText = base64Encode(formatSummary(this.application))
     this.formattedValues = base64Encode(formatApplication(this.application))
     this.plainValues = base64Encode(JSON.stringify(this.application))
 
@@ -141,8 +203,19 @@ export default class MembershipConfirmation extends Vue {
     this.appMode.isEditMode = true
   }
 
+  get members(): Member[] {
+    return getAllMembers(this.application)
+  }
+
   get action(): string {
     return window.location.toString()
+  }
+
+  membershipFor(member: Member): boolean {
+    if (member.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP) {
+      return false;
+    }
+    return true;
   }
 
   getName(member: Member): string {
@@ -169,15 +242,15 @@ export default class MembershipConfirmation extends Vue {
   }
 
   getSections(sections: Sections): string {
-    return getSections(sections);
+    return getSections(sections)
   }
 
   isStudent(member: Member): string {
     return getIsStudent(member)
   }
 
-  getMemberTitle(index: number): string {
-    return getMemberTitle(index);
+  getMemberTitle(member: Member, index: number): string {
+    return getMemberTitle(member, index)
   }
 
   doEdit(): void {

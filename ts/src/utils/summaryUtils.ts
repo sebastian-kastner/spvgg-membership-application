@@ -11,6 +11,15 @@ export type ApplicationSummary = {
     hasSpouse: boolean,
     numberOfChildren: number,
     isChildOnlyMembership: boolean,
+    applicationType?: ApplicationType,
+}
+
+export enum ApplicationType {
+    INDIVIDUAL,
+    COUPLE_WITH_CHILDREN,
+    COUPLE_WITHOUT_CHILDREN,
+    PARENT_WITH_KIDS,
+    CHILDREN_ONLY,
 }
 
 const DEBUG = false;
@@ -25,7 +34,6 @@ export const SECTION_FEES = {
 export class MembershipSummarizer {
     private application: Application;
 
-    private membershipFee: number | null = null;
     private isChildOnlyMembership = false;
 
     constructor(application: Application) {
@@ -39,10 +47,9 @@ export class MembershipSummarizer {
         }
 
         if (this.application.members.creator === null) {
-            this.log('Invalid application: Membership applications must have exactly one creator');
-            this.membershipFee = null;
+            console.warn('Invalid application: Membership applications must have a creator');
             return {
-                membershipFee: this.membershipFee,
+                membershipFee: null,
                 numberOfChildren: this.application.members.children.length,
                 hasSpouse: hasSpouse,
                 isChildOnlyMembership: this.isChildOnlyMembership,
@@ -50,23 +57,28 @@ export class MembershipSummarizer {
         }
 
         this.isChildOnlyMembership = this.application.members.creator.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP;
-        this.calculateFees();
+
+        const feesAndType = this.getFeesAndType();
 
         return {
-            membershipFee: this.membershipFee,
+            membershipFee: feesAndType.fees,
             numberOfChildren: this.application.members.children.length,
             hasSpouse: hasSpouse,
             isChildOnlyMembership: this.isChildOnlyMembership,
         }
     }
 
-    private calculateFees(): void {
+    private getFeesAndType(): { fees: number | null, type: ApplicationType | null } {
+        const invalidReturn = {
+            fees: null,
+            type: null,
+        }
+        
         const creator = this.application.members.creator;
 
         if (!this.isAdult(creator)) {
             console.warn('Invalid application: Creator must be an adult!');
-            this.membershipFee = null;
-            return;
+            return invalidReturn;
         }
 
         const spouse = this.application.members.spouse;
@@ -82,8 +94,7 @@ export class MembershipSummarizer {
             if (spouse !== null && spouse !== undefined) {
                 if (!this.isAdult(spouse)) {
                     console.warn('Invalid application: Spouse must be an adult!');
-                    this.membershipFee = null;
-                    return;
+                    return invalidReturn;
                 }
                 adults.push(spouse);
             }
@@ -93,10 +104,11 @@ export class MembershipSummarizer {
         for (let i = 0; i < children.length; i++) {
             if (this.isAdult(children[i])) {
                 console.warn('Invalid application: Children must be minors!');
-                this.membershipFee = null;
-                return;
+                return invalidReturn;
             }
         }
+
+        let applicationType: ApplicationType | null = null;
 
         // calculate base fee
         let baseFee = 0;
@@ -106,7 +118,7 @@ export class MembershipSummarizer {
         if (isChildrenOnlyMembership) {
             // base fee is: student fee * number of children
             baseFee = INDIVIDUAL_STUDENT_FEE * children.length;
-            this.log("Children only membership for " + children.length + " children");
+            applicationType = ApplicationType.CHILDREN_ONLY;
         } else {
             // memberhsip without children
             if (children.length === 0) {
@@ -114,12 +126,12 @@ export class MembershipSummarizer {
                 if (!spouse) {
                     // base fee for the creator is always an adult fee!
                     baseFee = INDIVIDUAL_ADULT_FEE;
-                    this.log("Individual membership for adult");
+                    applicationType = ApplicationType.INDIVIDUAL;
                 }
                 // with spouse
                 else {
                     baseFee = PARTNER_FEE;
-                    this.log("Membership for creator and spouse, no children");
+                    applicationType = ApplicationType.COUPLE_WITHOUT_CHILDREN;
                 }
             }
 
@@ -128,10 +140,10 @@ export class MembershipSummarizer {
                 // for families, the creator is always considered as adult, even for students!
                 if (!spouse) {
                     baseFee = INDIVIDUAL_ADULT_FEE;
-                    this.log("Family membership, no spouse, " + children.length + " children");
+                    applicationType = ApplicationType.PARENT_WITH_KIDS;
                 } else {
                     baseFee = PARTNER_FEE;
-                    this.log("Family membership, with spouse and " + children.length + " children");
+                    applicationType = ApplicationType.COUPLE_WITH_CHILDREN;
                 }
                 // fee is only required for the first two children of the creator applies for himself with children
                 const childrenFee = Math.min(2, children.length) * REDUCED_CHILD_FEE;
@@ -147,9 +159,13 @@ export class MembershipSummarizer {
                 sectionFees = sectionFees + sectionFeesForAdult;
             }
         });
-        this.log("total section fees: " + sectionFees);
 
-        this.membershipFee = baseFee + sectionFees;
+        const membershipFee = baseFee + sectionFees;
+        
+        return {
+            fees: membershipFee,
+            type: applicationType,
+        }
     }
 
     private isAdult(member: Member): boolean | null {
