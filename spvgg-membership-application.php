@@ -108,7 +108,9 @@ function show_membership_application()
 		add_filter('wp_mail_content_type', 'custom_wp_mail_content_type');
 
 		// send mail to member
-		$memberMailStatus = send_mail($toMember, $subject, $memberMail, $headers);
+		// TODO: reactivate send mail!
+		$memberMailStatus = true;
+		// $memberMailStatus = send_mail($toMember, $subject, $memberMail, $headers);
 
 		if ($memberMailStatus) {
 			// send mail to membership management
@@ -118,7 +120,8 @@ function show_membership_application()
 				session_write_close();
 
 				// send additional mail to media mail address; no confirmation required
-				send_mail($mediaMailAddresse, $subject, $mgmtMail, $headers);
+				// TODO: reactivate send mail!
+				// send_mail($mediaMailAddresse, $subject, $mgmtMail, $headers);
 
 				$html = "<h3>Mitgliedschaft beantragt</h3>";
 				$html .= "<p>Dein Antrag und eine Bestätigung an " . $creator_email . " wurde erfolgreich verschickt. Prüfe gegebenenfalls den Spam Ordner falls die Bestätigung nicht ankommt. Wir bearbeiten den Antrag so schnell wie möglich!</p>";
