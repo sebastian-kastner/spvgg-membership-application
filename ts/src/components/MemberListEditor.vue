@@ -4,7 +4,7 @@
     <member-editor
       class="member"
       :member="members.creator"
-      :index="-1"
+      :index="0"
       :validation-active="validationActive"
       :validation-issues="validationIssues"
       @removeMember="removeMember"
@@ -25,7 +25,7 @@
       v-if="members.spouse"
       class="member"
       :member="members.spouse"
-      :index="-1"
+      :index="1"
       :validation-active="validationActive"
       :validation-issues="validationIssues"
       @removeMember="removeMember"
@@ -94,10 +94,6 @@ export default class MemberListEditor extends Vue {
 
     const creator = this.members.creator
     newMember.lastName = creator.lastName
-    newMember.street = creator.street
-    newMember.streetNumber = creator.streetNumber
-    newMember.city = creator.city
-    newMember.zipCode = creator.zipCode
 
     if (memberType === MemberType.SPOUSE) {
       this.members.spouse = newMember

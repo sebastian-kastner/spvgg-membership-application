@@ -2,7 +2,7 @@
   <div>
     <div class="row header-row member-title">
       <div class="member-title-text">{{ getMemberTitle() }}</div>
-      <div class="inline-button-container" v-if="!memberIsCreator()">
+      <div class="inline-button-container" v-if="!memberIsCreator">
         <input
           class="secondary-btn"
           type="button"
@@ -11,16 +11,16 @@
         />
       </div>
     </div>
-    <div class="row" v-if="memberIsCreator()">
+    <div class="row" v-if="memberIsCreator">
       <div class="info-text">
         Der Antragsteller muss volljährig sein, muss aber selbst keine Mitgliedschaft beantragen!
         Für Minderjährige muss der Antrag von einem Erziehungsberechtigten gestellt werden.
       </div>
     </div>
-    <div class="row no-border">
+    <div class="row no-border" v-if="isAdult">
       <div
         class="text-input col-50"
-        :class="{ invalid: !isFieldSet(member.anrede, getFieldName('anrede')) }"
+        :class="{ invalid: isAdult && !isFieldSet(member.anrede, getFieldName('anrede')) }"
       >
         <label :for="getFieldName('anrede')">Anrede: *</label>
         <select v-model="member.anrede" :id="getFieldName('anrede')">
@@ -55,7 +55,6 @@
       <div class="field-error" v-if="dateInvalidMessage">
         {{ dateInvalidMessage }}
       </div>
-      <!-- TODO: validate that children are minors! -->
       <div class="text-input">
         <label :for="getFieldName('dateOfBirth')">Geburtsdatum: *</label>
         <input
@@ -67,7 +66,7 @@
         />
       </div>
     </div>
-    <div class="row no-border">
+    <div class="row no-border" v-if="memberIsCreator">
       <div
         class="text-input col-50"
         :class="{ invalid: !isFieldSet(member.street, getFieldName('street')) }"
@@ -83,7 +82,7 @@
         <input type="text" :id="getFieldName('streetNumber')" v-model="member.streetNumber" />
       </div>
     </div>
-    <div class="row no-border">
+    <div class="row no-border" v-if="memberIsCreator">
       <div
         class="text-input col-50"
         :class="{ invalid: !isFieldSet(member.zipCode, getFieldName('zipCode')) }"
@@ -99,7 +98,7 @@
         <input type="text" :id="getFieldName('city')" v-model="member.city" />
       </div>
     </div>
-    <div
+    <div v-if="memberIsCreator"
       class="row"
       :class="{ invalid: !isFieldSet(member.phoneNumber, getFieldName('phoneNumber'), true) }"
     >
@@ -110,7 +109,7 @@
         <input type="text" :id="getFieldName('phoneNumber')" v-model="member.phoneNumber" />
       </div>
     </div>
-    <div
+    <div v-if="memberIsCreator"
       class="row"
       :class="{ invalid: !isFieldSet(member.email, getFieldName('email'), true) || invalidEmail }"
     >
@@ -122,21 +121,21 @@
         <input type="text" :id="getFieldName('email')" v-model="member.email" />
       </div>
     </div>
-    <div class="row">
+    <div class="row" v-if="isAdult">
       <div class="text-input">
         <label :for="getFieldName('isStudent')">Student/Schüler:</label>
         <div class="is-student">
           <div>
             <label> <input type="radio" v-model="member.isStudent" :value="true" /> Ja </label>
           </div>
-          <div>
+          <div style="margin-left:10px;">
             <label> <input type="radio" v-model="member.isStudent" :value="false" /> Nein </label>
           </div>
         </div>
       </div>
     </div>
-    <div class="row header-row" v-if="memberIsCreator()">Mitgliedschaft für Antragsteller</div>
-    <div class="row" v-if="memberIsCreator()">
+    <div class="row header-row" v-if="memberIsCreator">Mitgliedschaft für Antragsteller</div>
+    <div class="row" v-if="memberIsCreator">
       <div class="form-input labeled-radio">
         <input
           type="radio"
@@ -243,7 +242,7 @@ export default class MemberEditor extends Vue {
     this.$emit('removeMember', member)
   }
 
-  public memberIsCreator(): boolean {
+  get memberIsCreator(): boolean {
     return this.member.memberType === MemberType.CREATOR || this.member.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP
   }
 
@@ -270,6 +269,10 @@ export default class MemberEditor extends Vue {
     }
     this.validationIssues.issues.delete(issueKey)
     return false
+  }
+
+  get isAdult(): boolean {
+    return this.member.memberType !== MemberType.CHILD;
   }
 
   /**
@@ -313,10 +316,6 @@ export default class MemberEditor extends Vue {
     return validateField(this.validationActive, value, key, this.validationIssues.issues)
   }
 
-  @Watch('validationActive')
-  public validateAge(): void {
-
-  }
 }
 </script>
 
