@@ -27,7 +27,7 @@
           <li>
             <fee-details
               label="Ehepaare, eingetragene Lebensgemeinschaften *"
-              :fee="fees.FAMILIY_MEMBERSHIP_WITHOUT_CHILDREN_FEE"
+              :fee="fees.PARTNER_FEE"
             />
           </li>
           <li>
@@ -38,7 +38,7 @@
           </li>
           <li class="no-list" style="margin-top: 10px;">
             <span class="bold">*</span> a und b können zu einem Familienbeitrag erweitert werden. Dabei sind für das erste und
-            zweite Kind jeweils 25,00 € zusätzlich zu entrichten. Weitere Kinder sind beitragsfrei.
+            zweite Kind jeweils {{ fees.REDUCED_CHILD_FEE }} € zusätzlich zu entrichten. Weitere Kinder sind beitragsfrei.
           </li>
           <li class="no-list">
             <span class="bold">**</span>

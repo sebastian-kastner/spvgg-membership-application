@@ -4,7 +4,7 @@ export function fieldHasValue(validationActive: boolean, value: any): boolean {
         return true
     }
     // return false if no value is set
-    if (!value || value.trim() === "") {
+    if (!value || ((typeof value === 'string' || value instanceof String) && value.trim() === "")) {
         return false
     }
     return true

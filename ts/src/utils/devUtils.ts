@@ -14,7 +14,7 @@ export function printIssues(issues: Set<string>): void {
 
 export function createDefaultMembership(): Application {
     return {
-        membership_start: MembershipStartTypes.FROM,
+        membership_start: MembershipStartTypes.NOW,
         members: {
             creator: {
                 memberType: MemberType.CREATOR,
