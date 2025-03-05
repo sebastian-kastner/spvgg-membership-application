@@ -52,7 +52,7 @@
 
   .form-input,
   .text-input {
-    padding: 3px 3px 3px 0;
+    padding: 3px;
   }
 
   .text-input {
@@ -175,6 +175,7 @@
       width: 100%;
       text-align: center;
       font-style: italic;
+      line-height: 1.5rem;
     }
   }
 }

@@ -331,6 +331,7 @@ export default class MemberEditor extends Vue {
   padding: 10px;
   border: 1px solid darkgray;
   background-color: lighten(lightblue, 15);
+  line-height: 1.5rem;
 }
 
 .section-container {
