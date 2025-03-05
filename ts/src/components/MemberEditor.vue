@@ -103,9 +103,7 @@
       :class="{ invalid: !isFieldSet(member.phoneNumber, getFieldName('phoneNumber'), true) }"
     >
       <div class="text-input">
-        <label :for="getFieldName('phoneNumber')">{{
-          getFieldWithConditionalRequiredMarker('Telefonnr.:')
-        }}</label>
+        <label :for="getFieldName('phoneNumber')">Telefonnr. *:</label>
         <input type="text" :id="getFieldName('phoneNumber')" v-model="member.phoneNumber" />
       </div>
     </div>
@@ -115,9 +113,7 @@
     >
       <div class="field-error" v-if="invalidEmail">Die Adresse hat kein gültiges Format!</div>
       <div class="text-input">
-        <label :for="getFieldName('email')">{{
-          getFieldWithConditionalRequiredMarker('eMail:')
-        }}</label>
+        <label :for="getFieldName('email')">eMail *:</label>
         <input type="text" :id="getFieldName('email')" v-model="member.email" />
       </div>
     </div>
@@ -244,13 +240,6 @@ export default class MemberEditor extends Vue {
 
   get memberIsCreator(): boolean {
     return this.member.memberType === MemberType.CREATOR || this.member.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP
-  }
-
-  public getFieldWithConditionalRequiredMarker(fieldName: string): string {
-    if (this.index == 0) {
-      return fieldName + ' *'
-    }
-    return fieldName
   }
 
   /**
