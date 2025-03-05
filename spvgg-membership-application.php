@@ -37,7 +37,9 @@ define('SPVGG_MEMBERSHIP_APPLICATION_VERSION', '1.0.0');
 
 function show_membership_application()
 {
-	$mgmtMailAddresse = "mitgliederverwaltung@spvggdeuringen.de";
+	// TODO: change mgmt mail addresse
+	// $mgmtMailAddresse = "mitgliederverwaltung@spvggdeuringen.de";
+	$mgmtMailAddresse = "sebastian_kastner@gmx.net";
 	$mediaMailAddresse = "medien@spvggdeuringen.de";
 
 	enqueue_form_assets();
@@ -88,19 +90,6 @@ function show_membership_application()
 		$mgmtMail .= "Details: \n\n";
 		$mgmtMail .= $formatted_data;
 
-		// TODO: Remove debug output!
-		print("<h3>Mail an den Verein</h3>");
-		print("<pre>");
-		print($mgmtMail);
-		print("</pre>");
-
-		print("<h3>Mail an Antragsteller</h3>");
-		print($creator_email);
-		print("<pre>");
-		print($memberMail);
-		print("</pre>");
-
-
 		// add filters for wp mail delivery
 		// this is not done on a global scope to make sure the settings are only applied to this form
 		add_filter('wp_mail_from', 'custom_wp_mail_from');
@@ -108,9 +97,8 @@ function show_membership_application()
 		add_filter('wp_mail_content_type', 'custom_wp_mail_content_type');
 
 		// send mail to member
-		// TODO: reactivate send mail!
 		$memberMailStatus = true;
-		// $memberMailStatus = send_mail($toMember, $subject, $memberMail, $headers);
+		$memberMailStatus = send_mail($toMember, $subject, $memberMail, $headers);
 
 		if ($memberMailStatus) {
 			// send mail to membership management
@@ -120,8 +108,7 @@ function show_membership_application()
 				session_write_close();
 
 				// send additional mail to media mail address; no confirmation required
-				// TODO: reactivate send mail!
-				// send_mail($mediaMailAddresse, $subject, $mgmtMail, $headers);
+				send_mail($mediaMailAddresse, $subject, $mgmtMail, $headers);
 
 				$html = "<h3>Mitgliedschaft beantragt</h3>";
 				$html .= "<p>Dein Antrag und eine Bestätigung an " . $creator_email . " wurde erfolgreich verschickt. Prüfe gegebenenfalls den Spam Ordner falls die Bestätigung nicht ankommt. Wir bearbeiten den Antrag so schnell wie möglich!</p>";
@@ -257,13 +244,6 @@ function custom_wp_mail_from_name()
 function custom_wp_mail_content_type()
 {
 	return "text/plain; charset=UTF-8";
-}
-
-// TODO: Remove debug method
-function debug($var) {
-	print('<pre>');
-	var_dump($var);
-	print('</pre>');
 }
 
 // register shortcode
