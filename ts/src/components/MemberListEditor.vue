@@ -4,7 +4,7 @@
     <member-editor
       class="member"
       :member="members.creator"
-      :index="0"
+      :index="-2"
       :validation-active="validationActive"
       :validation-issues="validationIssues"
       @removeMember="removeMember"
@@ -25,7 +25,7 @@
       v-if="members.spouse"
       class="member"
       :member="members.spouse"
-      :index="1"
+      :index="-1"
       :validation-active="validationActive"
       :validation-issues="validationIssues"
       @removeMember="removeMember"

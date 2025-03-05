@@ -11,7 +11,7 @@ export type ApplicationSummary = {
     hasSpouse: boolean,
     numberOfChildren: number,
     isChildOnlyMembership: boolean,
-    applicationType?: ApplicationType,
+    applicationType?: ApplicationType | null,
 }
 
 export enum ApplicationType {
@@ -64,6 +64,7 @@ export class MembershipSummarizer {
             membershipFee: feesAndType.fees,
             numberOfChildren: this.application.members.children.length,
             hasSpouse: hasSpouse,
+            applicationType: feesAndType.type,
             isChildOnlyMembership: this.isChildOnlyMembership,
         }
     }

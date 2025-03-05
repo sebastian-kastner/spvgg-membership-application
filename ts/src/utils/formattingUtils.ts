@@ -202,7 +202,7 @@ export function formatSummary(application: Application): string {
     return formatTuples(contents);
 }
 
-function applicationTypeToText(applicationType?: ApplicationType): string {
+function applicationTypeToText(applicationType?: ApplicationType | null): string {
     if (applicationType === ApplicationType.CHILDREN_ONLY) {
         return "Mitgliedschaft für Kinder";
     } else if (applicationType === ApplicationType.COUPLE_WITHOUT_CHILDREN) {
