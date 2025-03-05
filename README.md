@@ -1,5 +1,7 @@
 # Membership form
 
+Wordpress plugin for a membership application for SpVgg Deuringen, using a single page vue.js application.
+
 ## Develop the html form without wordpress
 
 ```shell
