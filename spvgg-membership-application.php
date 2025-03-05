@@ -37,9 +37,7 @@ define('SPVGG_MEMBERSHIP_APPLICATION_VERSION', '1.0.0');
 
 function show_membership_application()
 {
-	// TODO: change mgmt mail addresse
-	// $mgmtMailAddresse = "mitgliederverwaltung@spvggdeuringen.de";
-	$mgmtMailAddresse = "sebastian_kastner@gmx.net";
+	$mgmtMailAddresse = "mitgliederverwaltung@spvggdeuringen.de";
 	$mediaMailAddresse = "medien@spvggdeuringen.de";
 
 	enqueue_form_assets();
