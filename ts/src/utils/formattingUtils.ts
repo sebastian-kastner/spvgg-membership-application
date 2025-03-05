@@ -163,7 +163,7 @@ export function formatApplication(application: Application): string {
 
     // summary for children
     application.members.children.forEach((child) => {
-        contents.push(["(Ehe)partner"]);
+        contents.push(["Kind"]);
         contents.push(["Name", getName(child)])
         contents.push(["Geburtsdatum", child.dateOfBirth])
         contents.push(["Abteilungen", getSections(child.sections)])
