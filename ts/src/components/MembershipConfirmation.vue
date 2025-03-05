@@ -87,29 +87,30 @@
       </div>
 
       <!-- Kinder -->
-      <div v-if="application.members.children.length > 0"></div>
-      <div class="row header-row">Kinder</div>
-      <div
-        class="member-summary"
-        v-for="(child, index) in application.members.children"
-        :key="index"
-      >
-        <div class="row">
-          <div class="label conf-col-50">Name:</div>
-          <div class="conf-col-50 value">
-            {{ getName(child) }}
+      <div v-if="application.members.children.length > 0">
+        <div class="row header-row">Kinder</div>
+        <div
+          class="member-summary"
+          v-for="(child, index) in application.members.children"
+          :key="index"
+        >
+          <div class="row">
+            <div class="label conf-col-50">Name:</div>
+            <div class="conf-col-50 value">
+              {{ getName(child) }}
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="label conf-col-50">Geburtsdatum:</div>
-          <div class="conf-col-50 value">{{ child.dateOfBirth }}</div>
-        </div>
-        <div class="row">
+          <div class="row">
+            <div class="label conf-col-50">Geburtsdatum:</div>
+            <div class="conf-col-50 value">{{ child.dateOfBirth }}</div>
+          </div>
+          <div class="row">
             <div class="label conf-col-50">Abteilungen:</div>
             <div class="conf-col-50 value">
               {{ getValueOrPlaceholder(getSections(child.sections)) }}
             </div>
           </div>
+        </div>
       </div>
 
       <!-- Bankdaten -->
@@ -213,9 +214,9 @@ export default class MembershipConfirmation extends Vue {
 
   membershipFor(member: Member): boolean {
     if (member.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP) {
-      return false;
+      return false
     }
-    return true;
+    return true
   }
 
   getName(member: Member): string {
