@@ -144,9 +144,9 @@ export function formatApplication(application: Application): string {
     }
     contents.push(["Schüler/Student", getIsStudent(application.members.creator)])
     if (application.members.creator.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP) {
-        contents.push(["Mitgliedschaft für Antragssteller", "NEIN"]);
+        contents.push(["Mitgliedschaft für Antragsteller", "NEIN"]);
     } else {
-        contents.push(["Mitgliedschaft für Antragssteller", "JA"]);
+        contents.push(["Mitgliedschaft für Antragsteller", "JA"]);
         contents.push(["Abteilungen", getSections(application.members.creator.sections)])
     }
     contents.push([])

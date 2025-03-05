@@ -38,7 +38,7 @@ export function getDateOfBirthValidationMessage(member: Member): string | null {
     if (member.memberType === MemberType.CREATOR || member.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP ||member.memberType === MemberType.SPOUSE) {
         if (!isAdult(date)) {
             if (member.memberType === MemberType.CREATOR || member.memberType === MemberType.CREATOR_WITHOUT_MEMBERSHIP) {
-                return 'Der Antragssteller muss volljährig sein!';
+                return 'Der Antragsteller muss volljährig sein! Anträge für Minderjährige müssen von einem Erziehungsberechtigten gestellt werden.';
             } else {
                 return '(Ehe-)partner müssen volljährig sein!';
             }
