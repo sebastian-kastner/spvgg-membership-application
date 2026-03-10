@@ -22,8 +22,6 @@ export enum ApplicationType {
     CHILDREN_ONLY,
 }
 
-const DEBUG = false;
-
 export const SECTION_FEES = {
     football: 65,
     bowling: 65,
@@ -86,7 +84,6 @@ export class MembershipSummarizer {
         const children = this.application.members.children;
 
         const adults: Member[] = [];
-        this.log(creator.memberType);
 
         // add creator to list of members for the application, unless no membership for creator was requested
         if (creator.memberType !== MemberType.CREATOR_WITHOUT_MEMBERSHIP) {
@@ -125,9 +122,14 @@ export class MembershipSummarizer {
             if (children.length === 0) {
                 // without spouse
                 if (!spouse) {
-                    // base fee for the creator is always an adult fee!
-                    baseFee = INDIVIDUAL_ADULT_FEE;
                     applicationType = ApplicationType.INDIVIDUAL;
+                    if (this.isStudent(creator)) {
+                        // base fee for adult students
+                        baseFee = INDIVIDUAL_STUDENT_FEE;
+                    } else {
+                        // base fee for adult non-students
+                        baseFee = INDIVIDUAL_ADULT_FEE;
+                    }
                 }
                 // with spouse
                 else {
@@ -172,7 +174,7 @@ export class MembershipSummarizer {
     private isAdult(member: Member): boolean | null {
         const parsedDate = parseDate(member.dateOfBirth);
         if (!parsedDate) {
-            this.log("Parsed date invalid and all")
+            console.warn("Invalid date given!")
             return null;
         }
         return isAdult(parsedDate.date);
@@ -208,11 +210,5 @@ export class MembershipSummarizer {
         
         const maxFee = Math.max(...fees);
         return maxFee > 0 ? maxFee : 0;
-    }
-
-    private log(...args: any[]) {
-        if (DEBUG) {
-            console.log(...args);
-        }
     }
 }
