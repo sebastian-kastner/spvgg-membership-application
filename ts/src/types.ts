@@ -26,6 +26,7 @@ export type Member = {
     lastName?: string,
     sections: Sections,
     dateOfBirth?: string,
+    maritalStatus?: string,
     city?: string,
     zipCode?: string,
     street?: string,

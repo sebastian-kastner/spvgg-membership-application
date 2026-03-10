@@ -24,6 +24,10 @@
           <div class="conf-col-50 value">{{ application.members.creator.dateOfBirth }}</div>
         </div>
         <div class="row">
+          <div class="label conf-col-50">Familienstand:</div>
+          <div class="conf-col-50 value">{{ application.members.creator.maritalStatus }}</div>
+        </div>
+        <div class="row">
           <div class="label conf-col-50">Addresse:</div>
           <div class="conf-col-50 value">
             <div>{{ getStreet(application.members.creator) }}</div>

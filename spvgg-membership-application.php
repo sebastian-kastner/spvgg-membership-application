@@ -65,7 +65,7 @@ function show_membership_application()
 		if ($application_sent) {
 			session_write_close();
 			$html = "<h3>Mitgliedschaft beantragt</h3>";
-			$html .= "<p>Dein Mitgliedschaftsantrag und eine Bestätigungs an " . $creator_email . " wurde bereits abgeschickt. Es kann bis zu 15 Minuten dauern bis die Bestätigungsmail ankommt.</p>";
+			$html .= "<p>Dein Mitgliedschaftsantrag und eine Bestätigungs an " . $creator_email . " wurde bereits abgeschickt. Es kann bis zu 15 Minuten dauern bis die Bestätigungsmail bei Dir ankommt.</p>";
 			$html .= "<p>Bitte wende Dich an " . $mgmtMailAddresse . " falls Du keine Bestätigung erhalten hast.</p>";
 			return $html;
 		}

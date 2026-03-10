@@ -9,7 +9,6 @@ serve:
 	cd ts && npm run serve
 
 .PHONY: build
-# run npm build
 build:
 	find public/assets/ -type f \( -name "*.js" -o -name "*.css" \) -exec rm -f {} \; && cd ts && npm run build
 

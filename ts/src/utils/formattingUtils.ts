@@ -133,6 +133,7 @@ export function formatApplication(application: Application): string {
     contents.push(["Antragsteller"]);
     contents.push(["Name", getName(application.members.creator)])
     contents.push(["Geburtsdatum", application.members.creator.dateOfBirth])
+    contents.push(["Familienstand", application.members.creator.maritalStatus])
     if (application.members.creator.street && application.members.creator.streetNumber) {
         contents.push(["Adresse", `${getStreet(application.members.creator)}, ${getCity(application.members.creator)}`])
     }

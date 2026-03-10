@@ -17,6 +17,8 @@
         Für Minderjährige muss der Antrag von einem Erziehungsberechtigten gestellt werden.
       </div>
     </div>
+
+    <!-- anrede -->
     <div class="row no-border" v-if="isAdult">
       <div
         class="text-input col-50"
@@ -34,18 +36,24 @@
         <input type="text" :id="getFieldName('title')" v-model="member.title" />
       </div>
     </div>
+
+    <!-- first name -->
     <div class="row" :class="{ invalid: !isFieldSet(member.firstName, getFieldName('firstName')) }">
       <div class="text-input">
         <label :for="getFieldName('firstName')">Vorname: *</label>
         <input type="text" :id="getFieldName('firstName')" v-model="member.firstName" />
       </div>
     </div>
+
+    <!-- last name -->
     <div class="row" :class="{ invalid: !isFieldSet(member.lastName, getFieldName('lastName')) }">
       <div class="text-input">
         <label :for="getFieldName('lastName')">Nachname: *</label>
         <input type="text" :id="getFieldName('lastName')" v-model="member.lastName" />
       </div>
     </div>
+
+    <!-- Date of birth -->
     <div
       class="row"
       :class="{
@@ -66,6 +74,28 @@
         />
       </div>
     </div>
+
+    <!-- Marital Status -->
+    <div
+      class="row"
+      v-if="memberIsCreator"
+      :class="{
+        invalid: !isFieldSet(member.maritalStatus, getFieldName('maritalStatus'))
+      }"
+    >
+      <div class="text-input">
+        <label :for="getFieldName('maritalStatus')">Familienstand: *</label>
+        <select :name="getFieldName('maritalStatus')" :id="getFieldName('maritalStatus')" v-model="member.maritalStatus">
+          <option value="Ledig">Ledig</option>
+          <option value="Verheiratet / Eingetragenen Lebensgemeinschaft">Verheiratet / Eingetragene Lebensgemeinschaft</option>
+          <option value="Geschieden">Geschieden</option>
+          <option value="Verwitwet">Verwitwet</option>
+        </select>
+      </div>
+      
+    </div>
+
+    <!-- Addresse (street and street number) -->
     <div class="row no-border" v-if="memberIsCreator">
       <div
         class="text-input col-50"
@@ -82,6 +112,8 @@
         <input type="text" :id="getFieldName('streetNumber')" v-model="member.streetNumber" />
       </div>
     </div>
+
+    <!-- Addresse (city and zip code) -->
     <div class="row no-border" v-if="memberIsCreator">
       <div
         class="text-input col-50"
@@ -98,6 +130,8 @@
         <input type="text" :id="getFieldName('city')" v-model="member.city" />
       </div>
     </div>
+
+    <!-- Phone number -->
     <div v-if="memberIsCreator"
       class="row"
       :class="{ invalid: !isFieldSet(member.phoneNumber, getFieldName('phoneNumber'), true) }"
@@ -107,6 +141,8 @@
         <input type="text" :id="getFieldName('phoneNumber')" v-model="member.phoneNumber" />
       </div>
     </div>
+
+    <!-- eMail addresse -->
     <div v-if="memberIsCreator"
       class="row"
       :class="{ invalid: !isFieldSet(member.email, getFieldName('email'), true) || invalidEmail }"
@@ -117,6 +153,8 @@
         <input type="text" :id="getFieldName('email')" v-model="member.email" />
       </div>
     </div>
+
+    <!-- is student? -->
     <div class="row" v-if="isAdult">
       <div class="text-input">
         <label :for="getFieldName('isStudent')">Student/Schüler:</label>
@@ -124,12 +162,14 @@
           <div>
             <label> <input type="radio" v-model="member.isStudent" :value="true" /> Ja </label>
           </div>
-          <div style="margin-left:10px;">
+          <div>
             <label> <input type="radio" v-model="member.isStudent" :value="false" /> Nein </label>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Membership for creator of application -->
     <div class="row header-row" v-if="memberIsCreator">Mitgliedschaft für Antragsteller</div>
     <div class="row" v-if="memberIsCreator">
       <div class="form-input labeled-radio">
@@ -151,6 +191,7 @@
         <label for="creator_without_membership">Ich möchte den Antrag für meine Kinder stellen und nicht selbst Mitglied werden</label>
       </div>
     </div>
+
     <!-- MEMBERSHIP SECTIONS -->
     <div class="row header-row" :class="{ hidden: member.memberType === creatorWithoutMembershipType }">Abteilungen (Mehrfachauswahl möglich)</div>
     <div class="row" :class="{ hidden: member.memberType === creatorWithoutMembershipType }">
@@ -312,6 +353,7 @@ export default class MemberEditor extends Vue {
 .is-student {
   display: flex;
   flex-wrap: wrap;
+  margin-left:10px;
 
   label {
     padding-right: 20px;
